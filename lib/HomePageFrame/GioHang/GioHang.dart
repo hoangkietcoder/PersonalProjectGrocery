@@ -45,6 +45,7 @@ class _CartViewState extends State<CartView> {
     {'name': 'Sữa', 'price': 19000, 'quantity': 1, 'image': 'assets/images/milk.png'},
     {'name': 'Sữa', 'price': 19000, 'quantity': 1, 'image': 'assets/images/milk.png'},
 
+
   ];
 
   int get totalPrice => cartItems.fold(
