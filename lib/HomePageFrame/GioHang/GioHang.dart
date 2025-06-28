@@ -34,16 +34,7 @@ class _CartViewState extends State<CartView> {
   List<Map<String, dynamic>> cartItems = [
     {'name': 'Táo', 'price': 15000, 'quantity': 1, 'image': 'assets/images/milk.png'},
     {'name': 'Chuối', 'price': 12000, 'quantity': 2, 'image': 'assets/images/milk.png'},
-    {'name': 'Sữa', 'price': 19000, 'quantity': 1, 'image': 'assets/images/milk.png'},
-    {'name': 'bánh', 'price': 19000, 'quantity': 1, 'image': 'assets/images/milk.png'},
-    {'name': 'kẹo', 'price': 19000, 'quantity': 1, 'image': 'assets/images/milk.png'},
-    {'name': 'bột giặt', 'price': 19000, 'quantity': 1, 'image': 'assets/images/milk.png'},
-    {'name': 'đường', 'price': 19000, 'quantity': 1, 'image': 'assets/images/milk.png'},
-    {'name': 'muối', 'price': 19000, 'quantity': 1, 'image': 'assets/images/milk.png'},
-    {'name': 'sữa chua', 'price': 19000, 'quantity': 1, 'image': 'assets/images/milk.png'},
-    {'name': 'Sữa', 'price': 19000, 'quantity': 1, 'image': 'assets/images/milk.png'},
-    {'name': 'Sữa', 'price': 19000, 'quantity': 1, 'image': 'assets/images/milk.png'},
-    {'name': 'Sữa', 'price': 19000, 'quantity': 1, 'image': 'assets/images/milk.png'},
+
 
 
   ];
