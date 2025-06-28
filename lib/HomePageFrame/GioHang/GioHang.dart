@@ -59,6 +59,7 @@ class _CartViewState extends State<CartView> {
       if (cartItems[index]['quantity'] <= 0) {
         cartItems.removeAt(index);
       }
+
     });
   }
 
