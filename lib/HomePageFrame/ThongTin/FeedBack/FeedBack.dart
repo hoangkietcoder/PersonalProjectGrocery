@@ -84,11 +84,11 @@ class _SendFeedbackState extends State<Send_Feedback> {
               barrierDismissible: false,
               builder: (BuildContext context) {
                 return const DialogLoadingAddProduct();// khi đang xử lí sẽ hiện nút loading
-
               },
             );
           } else if (state.statusFeedBack == StatusFeedBack.success) {
-
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Đã gửi phản hồi thành công!')));
             Navigator.popUntil(context, ModalRoute.withName('/HomeScreenPage'));
           } else if (state.statusFeedBack == StatusFeedBack.failure) {
             Navigator.pop(context);

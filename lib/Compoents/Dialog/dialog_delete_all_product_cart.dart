@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class DialogDeleteBill extends StatelessWidget {
-  const DialogDeleteBill({super.key});
+class DialogDeleteAllProductCart extends StatelessWidget {
+  const DialogDeleteAllProductCart({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class DialogDeleteBill extends StatelessWidget {
         ],
       ),
       content: Text(
-        "Bạn có muốn xóa hóa đơn này không?", style: TextStyle(color: Colors.black,fontSize: 12.sp),),
+        "Bạn có muốn xóa tất cả sản phẩm trong giỏ hàng này không?", style: TextStyle(color: Colors.black,fontSize: 12.sp),),
       actions: [
         TextButton(
           onPressed: () {

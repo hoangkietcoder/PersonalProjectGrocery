@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:personalprojectgrocery/ObjectBox/ObjectBox.dart';
 import '../ForgotPassword/ForgotPassword.dart';
 import '../HomePageFrame/GioHang/GioHang.dart';
 import '../HomePageFrame/HoaDon/ChiTietHoaDon/ChiTietHoaDon.dart';
@@ -25,6 +26,7 @@ import 'custom_page_route.dart';
 class RouteGenerator {
   Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
+
     switch (settings.name) {
       case '/':
         return CustomPageRoute(
@@ -64,7 +66,7 @@ class RouteGenerator {
         GioHangArgument argument = args as GioHangArgument;
         return CustomPageRoute(
             settings: const RouteSettings(name: '/GioHang'),
-            child: GioHangPage(product: argument.product));
+            child: GioHangPage(dataProduct: argument.product));
       case '/ThemSanPham':
         ThemSanPhamArgument argument = args as ThemSanPhamArgument; // khi cần truyền mới cần tạo argument
         return CustomPageRoute(

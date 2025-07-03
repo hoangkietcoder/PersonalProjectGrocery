@@ -59,6 +59,7 @@ class DetailProduct extends Equatable{
   }
 
 
+  
   // convert thành object ( from là lấy về , to là gửi lên )
   factory DetailProduct.fromJson(Map<String, dynamic> json) {
     return DetailProduct(

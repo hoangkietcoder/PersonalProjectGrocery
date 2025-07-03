@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:personalprojectgrocery/ObjectBox/ObjectBox.dart';
+import 'package:personalprojectgrocery/Repository/DataLocal/data_local_repository.dart';
+import '../../ObjectBox/bloc_ModelProductLocal/model_product_local_bloc.dart';
 import '../../Repository/DanhMuc/danhmuc_repository.dart';
 import '../../Repository/Firebase_Database/Product/product_repository.dart';
 import '../../Repository/Notification/notification_repository.dart';
@@ -20,7 +23,6 @@ import 'cubit/navbottom_cubit.dart';
 class HomeScreenPage extends StatelessWidget {
   const HomeScreenPage({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     // thêm bloc cubit vào, RepositoryProvider
@@ -32,6 +34,7 @@ class HomeScreenPage extends StatelessWidget {
         RepositoryProvider(
           create: (context) => DanhMucRepository(),
         ),
+
       ],
       child: MultiBlocProvider(providers: [
         BlocProvider(
@@ -44,6 +47,9 @@ class HomeScreenPage extends StatelessWidget {
         BlocProvider(
             create: (context) =>
                 DanhmucBloc(danhmucRepository: context.read<DanhMucRepository>())),
+        BlocProvider(
+            create: (context) =>
+                ModelProductLocalBloc(DataLocalRepository: context.read<DataLocalRepository>())),
       ], child: const HomeScreenView()),
     );
   }
@@ -64,8 +70,7 @@ class _HomeScreenViewState extends State<HomeScreenView> {
         // đổi màu status bar khi không có app bar
         statusBarColor: Colors.blueAccent,
         statusBarIconBrightness: Brightness.light, // android
-        statusBarBrightness:
-            Brightness.dark, //IOS ( bên IOS thì ngược statusbar )
+        statusBarBrightness: Brightness.dark, //IOS ( bên IOS thì ngược statusbar )
       ),
       child: Scaffold(
         floatingActionButton: BlocBuilder<NavbottomCubit, NavbottomState>(
@@ -78,13 +83,10 @@ class _HomeScreenViewState extends State<HomeScreenView> {
                 : FloatingActionButton(
                     backgroundColor: Colors.blue[300],
                     onPressed: () {
-                      final productRepo =
-                          RepositoryProvider.of<ProductRepository>(context);
+                      final productRepo = RepositoryProvider.of<ProductRepository>(context);
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                            builder: (context) => ThemSanPhamPage(
-                                productRepository: productRepo)),
+                        MaterialPageRoute(builder: (context) => ThemSanPhamPage(productRepository: productRepo)),
                       );
                     },
                     shape: const CircleBorder(),
@@ -101,7 +103,7 @@ class _HomeScreenViewState extends State<HomeScreenView> {
           builder: (context, state) {
             return SafeArea(
                 child: [
-              Home(productRepository: RepositoryProvider.of<ProductRepository>(context),),
+              Home(productRepository: RepositoryProvider.of<ProductRepository>(context), dataLocalRepository: RepositoryProvider.of<DataLocalRepository>(context),),
               DanhMucPage(danhMucRepository: RepositoryProvider.of<DanhMucRepository>(context)),
               const HoaDonPage(),
               const ThongTinPage()

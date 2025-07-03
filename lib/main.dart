@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:personalprojectgrocery/ObjectBox/ObjectBox.dart';
+import 'package:personalprojectgrocery/Repository/DataLocal/data_local_repository.dart';
 import 'Authentication/bloc/authentication_bloc.dart';
 import 'Config/responsive_widget.dart';
 import 'Main_Bloc/main_bloc.dart';
@@ -18,11 +20,18 @@ import 'my_bloc_observer.dart';
 import 'firebase_options.dart';
 import 'package:timezone/data/latest.dart' as tz;
 
-
+/// Provides access to the ObjectBox Store throughout the app.
 
 Future<void> main() async {
-  tz.initializeTimeZones(); // khởi tạo để dùng thư viện timezone để bắt time
   WidgetsFlutterBinding.ensureInitialized();
+  final objectBox = ObjectBoxService();// đảm bảo mở app lên thành công rồi mới chạy lệnh duới
+  tz.initializeTimeZones(); // khởi tạo để dùng thư viện timezone để bắt time
+  await objectBox.create(); // khởi tạo lưu dữ liệu dưới local khi vừa chạy app
+
+  // // xài được nhưng command lại
+  // // 🔍 TEST NHANH DỮ LIỆU LOCAL
+  // final allProducts = objectBox.productBox.getAll();
+  // print('🔍 [main()] ObjectBox có: ${allProducts.length} sản phẩm');
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -53,13 +62,14 @@ Future<void> main() async {
 // lúc chạy app thì xác nhận xem có cho phép thông báo hay không
 //   await NotificationRepository().requestPermissionNotification();
 
-  runApp( GroceryStore(navigatorkey: navigatorkey,));
+  runApp( GroceryStore(navigatorkey: navigatorkey, objectBoxService: objectBox));
 }
 
 class GroceryStore extends StatefulWidget {
 
-  const GroceryStore({super.key, required this.navigatorkey});
+  const GroceryStore({super.key, required this.navigatorkey, required this.objectBoxService});
   final Navigatorkey navigatorkey;
+  final ObjectBoxService objectBoxService;
   @override
   State<GroceryStore> createState() => _GroceryStoreState();
 }
@@ -75,6 +85,7 @@ class _GroceryStoreState extends State<GroceryStore> {
 
   //   dau _ xai rieng cho class đó thôi
   late final RegisterRepository _registerRepository;
+  late final DataLocalRepository _dataLocalRepository;
 
 
 
@@ -89,6 +100,7 @@ class _GroceryStoreState extends State<GroceryStore> {
         registerRepository: _registerRepository,
     );
     _billRepository = BillRepository();
+    _dataLocalRepository = DataLocalRepository(objectBoxService: widget.objectBoxService);
 
   }
 
@@ -97,6 +109,8 @@ class _GroceryStoreState extends State<GroceryStore> {
     return MultiRepositoryProvider(
       // dùng cho toàn app
         providers: [
+          RepositoryProvider<ObjectBoxService>.value(
+              value: widget.objectBoxService),
           RepositoryProvider<AuthenticationRepository>.value(
               value: _authenticationRepository),
           RepositoryProvider<RegisterRepository>.value(
@@ -107,6 +121,8 @@ class _GroceryStoreState extends State<GroceryStore> {
               value: widget.navigatorkey),
           RepositoryProvider<BillRepository>.value(
               value: _billRepository),
+          RepositoryProvider<DataLocalRepository>.value(
+              value: _dataLocalRepository),
 
         ],
         // tạo bloc provider cho toàn app
@@ -132,7 +148,7 @@ class GroceryStoreView extends StatefulWidget {
 
 class GroceryStoreViewState extends State<GroceryStoreView> {
     final _navigatorKey = Navigatorkey();
-  final _route = RouteGenerator();
+    final _route = RouteGenerator();
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(

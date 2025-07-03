@@ -16,8 +16,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
         super(const AuthenticationState.unknown()) {
     on<_AuthenticationStatusChanged>(_onAuthenticationStatusChanged);
 
-    _userSubscription = _authenticationRepository.user.listen(
-          (data) => add(_AuthenticationStatusChanged(data)),
+    _userSubscription = _authenticationRepository.user.listen((data) => add(_AuthenticationStatusChanged(data)),
     );
   }
 

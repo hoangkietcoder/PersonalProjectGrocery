@@ -74,6 +74,7 @@ dependencies:
   firebase_core: ^3.13.1
   firebase_auth: ^5.5.4
   cloud_firestore: ^5.1.0
+  firebase_storage: ^12.4.8
 
     # thư viện nút trừ
   font_awesome_flutter: ^10.8.0
@@ -111,8 +112,29 @@ dependencies:
     # thư viện sinh id hóa đơn tự động
   uuid: ^4.5.1
 
+    # thư viện dùng để lưu dữ liệu ở local
+  objectbox: ^4.3.0
+
+    # thư viện dùng để hỗ trợ lưu dữ liệu
+  path: ^1.9.1
+
+    # thư viện dùng để hỗ trợ lưu dữ liệu
+  path_provider: ^2.1.5
+
+    # thư viện để ObjectBox hoạt động trong Flutter
+  objectbox_sync_flutter_libs: any
+
+
+
+
 
 dev_dependencies:
+  # kết hợp với thư viện objectbox
+  build_runner: ^2.5.4
+  # kết hợp với thư viện objectbox
+  objectbox_generator: any
+
+
   flutter_test:
     sdk: flutter
 

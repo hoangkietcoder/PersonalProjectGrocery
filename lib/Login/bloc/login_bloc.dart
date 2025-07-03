@@ -76,7 +76,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         email: state.email,
         password: state.password,
       );
-      await _notificationRepository.scheduleDailyNotification(1, "hoh", "hihih", "", 14, 10);
+      // await _notificationRepository.scheduleDailyNotification(1, "hoh", "hihih", "", 14, 10);
 
     }on LogInWithEmailAndPasswordFailure catch (e) {
       if(isClosed) return;

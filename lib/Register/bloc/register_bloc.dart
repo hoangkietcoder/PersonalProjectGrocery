@@ -9,8 +9,7 @@ part 'register_event.dart';
 part 'register_state.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
-  RegisterBloc({required AuthenticationRepository authen})
-      : _authenticationRepository = authen,
+  RegisterBloc({required AuthenticationRepository authen}): _authenticationRepository = authen,
         super(const RegisterState()) {
     // đăng kí sự kiện
     on<HidePassword>(_onPassword);

@@ -1,22 +1,32 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:personalprojectgrocery/ObjectBox/ObjectBox.dart';
+import 'package:personalprojectgrocery/ObjectBox/model/ModelProductLocal.dart';
+import 'package:personalprojectgrocery/Repository/DataLocal/data_local_repository.dart';
+import 'package:personalprojectgrocery/Routes/argument/GioHangArgument.dart';
+import '../../Models/Product/getData_ProductFromFirebase.dart';
+import '../../ObjectBox/bloc_ModelProductLocal/model_product_local_bloc.dart';
 import '../../Repository/Firebase_Database/Product/product_repository.dart';
-import '../../Routes/argument/GioHangArgument.dart';
 import 'ChiTietSanPham/ChiTietSanPham.dart';
 import 'bloc_home/home_bloc.dart';
 
 class Home extends StatelessWidget {
-  final ProductRepository productRepository;
 
   const Home({
-    super.key,
-    required this.productRepository,
-  });
+    super.key, required this.productRepository, required this.dataLocalRepository, });
+
+  final ProductRepository productRepository;
+  final DataLocalRepository dataLocalRepository;
 
   @override
   Widget build(BuildContext context) {
-    return const HomeView();
+    return BlocProvider(
+      create: (context) => ModelProductLocalBloc(DataLocalRepository: dataLocalRepository),
+      child: const HomeView(),
+    );
   }
 }
 
@@ -60,7 +70,8 @@ class _HomepageframeViewState extends State<HomeView> {
               IconButton(
                 icon: Icon(Icons.shopping_cart_sharp, color: Colors.white, size: 25.sp),
                 onPressed: () {
-                  // Navigator.pushNamed(context, '/GioHang');
+                  final arg = GioHangArgument();
+                  Navigator.pushNamed(context, '/GioHang', arguments: arg);
                 },
               ),
               Positioned(
@@ -124,8 +135,7 @@ class _HomepageframeViewState extends State<HomeView> {
                   builder: (context, state) {
                     return Scrollbar(
                       controller: _scrollController,
-                      thumbVisibility:
-                          false, // khi người dùng kéo xuống mới hiện thanh cuộn
+                      thumbVisibility: false, // khi người dùng kéo xuống mới hiện thanh cuộn
                       thickness: 3.0,
                       radius: Radius.circular(10.r),
                       child: ListView.builder(
@@ -137,12 +147,7 @@ class _HomepageframeViewState extends State<HomeView> {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => ChitietsanphamPage(
-                                            productRepository:
-                                                ProductRepository(),
-                                            productId: product.id,
-                                          )));
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChitietsanphamPage(productRepository: ProductRepository(), productId: product.id,)));
                                 },
                                 child: Container(
                                   color: Colors.white,
@@ -239,10 +244,11 @@ class _HomepageframeViewState extends State<HomeView> {
                                                 Padding(
                                                   padding: REdgeInsets.only(right: 6.0),
                                                   child: ElevatedButton.icon(
-                                                    onPressed: () {
-                                                      final argument = GioHangArgument(product: product);
-                                                      Navigator.pushNamed(context, "/GioHang", arguments: argument);
-                                                      // context.read<HomeBloc>().add(getProduct(product.id));
+                                                    onPressed: () async {
+                                                      final bloc = BlocProvider.of<ModelProductLocalBloc>(context);
+                                                      final data = ModelProductLocal(fireBaseId: product.id, img_url: product.img_url, nameProduct: product.nameProduct, quantityProduct: product.quantityProduct, priceProduct: product.priceProduct, supplierName: product.supplierName, phoneSupplier: product.phoneSupplier, noteProduct: product.noteProduct);
+                                                      print("dwadwadawd ${data.noteProduct}");
+                                                      bloc.add(SaveProductLocalEvent(data));
                                                     },
                                                     label: Padding(
                                                       padding: REdgeInsets.only(right: 3), // Adjust the left padding as needed

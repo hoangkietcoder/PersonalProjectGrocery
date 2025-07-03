@@ -93,8 +93,7 @@ class _LoginViewState extends State<_LoginView> {
                     ),
                   ),
                   Container(
-                    height: MediaQuery.of(context).size.height -
-                        150.h, // Chiều cao còn lại
+                    height: MediaQuery.of(context).size.height - 150.h, // Chiều cao còn lại
                     padding: const EdgeInsets.fromLTRB(25.0, 40.0, 25.0, 20.0),
                     decoration: const BoxDecoration(
                       color: Colors.white,
@@ -109,8 +108,7 @@ class _LoginViewState extends State<_LoginView> {
                         children: [
                           SizedBox(height: 2.h),
                           Text(
-                            "Đăng Nhập",
-                            style: TextStyle(
+                            "Đăng Nhập", style: TextStyle(
                               fontSize: 22.sp,
                               fontWeight: FontWeight.bold,
                             ),
@@ -212,8 +210,7 @@ class _LoginViewState extends State<_LoginView> {
                                 backgroundColor: Colors.blueAccent,
                                 minimumSize: const Size(327, 50),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(30.r)),
+                                  borderRadius: BorderRadius.all(Radius.circular(30.r)),
                                 ),
                               ),
                               onPressed: () {
@@ -221,9 +218,7 @@ class _LoginViewState extends State<_LoginView> {
                                 // validate(): Xác thực tất cả các trường biểu mẫu và trả về true nếu tất cả đều hợp lệ.
                                 if (_formSignInKey.currentState!.validate()) {
                                   // Gọi hàm xác thực
-                                  context
-                                      .read<LoginBloc>()
-                                      .add(const SubmitLogin());
+                                  context.read<LoginBloc>().add(const SubmitLogin());
                                 }
                               },
                               child: Text(

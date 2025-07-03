@@ -119,9 +119,12 @@ class _ThemHoaDonViewState extends State<ThemHoaDonView> {
             // navigator đúng khi xóa hết mấy trang trước đi dùng pushNamedAndRemoveUntil
             // Navigator.pushNamedAndRemoveUntil(context, "/HomeScreenPage", (route) => false); // false là xóa , true là k xóa
 
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Thêm hóa đơn thành công!')));
+
             // vì do realtime rồi nên chỉ cần popuntil về thôi
-            // Navigator.popUntil(context, ModalRoute.withName('/HoaDon'));
-            Navigator.pushNamedAndRemoveUntil(context, '/HoaDon',(route) => false);
+            Navigator.popUntil(context, ModalRoute.withName('/HomeScreenPage'));
+
 
           } else {
             if (state.billStatus == BillStatus.failure) {

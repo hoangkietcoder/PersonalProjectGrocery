@@ -94,7 +94,8 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
           }else if(state.statusSubmit == CreateStatus.success){
             // navigator đúng khi xóa hết mấy trang trước đi dùng pushNamedAndRemoveUntil
            // Navigator.pushNamedAndRemoveUntil(context, "/HomeScreenPage", (route) => false); // false là xóa , true là k xóa
-
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Thêm sản phẩm thành công!')));
             // vì do realtime rồi nên chỉ cần popuntil về thôi
             Navigator.popUntil(context, ModalRoute.withName('/HomeScreenPage'));
 
@@ -137,20 +138,6 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
 
                     ),
                   ),
-                  Positioned(
-                    left: 80.w,
-                    bottom: -10.h,
-                    right: -5.0.w, // kéo qua phải
-                    child: IconButton(
-                      onPressed: () {
-                        // _requestPermissionsAndPickImage(context);
-                      },
-                      icon: const Icon(
-                        Icons.camera_alt,
-                        color: Colors.black,
-                      ),
-                    ),
-                  )
                 ]),
                 Container(
                   // height: MediaQuery.of(context).size.height - 150.h, // Chiều cao còn lại
@@ -292,9 +279,7 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
                         ),
                         SizedBox(height: 10.h),
                         TextFormField(
-                          onChanged: (value) => context
-                              .read<ThemsanphamBloc>()
-                              .add(CreateSupplierNameProduct(
+                          onChanged: (value) => context.read<ThemsanphamBloc>().add(CreateSupplierNameProduct(
                                   value)), // lưu thay đổi vào state
                           controller:
                               _createSupplierNameController, // đăng kí dùng controller
@@ -337,8 +322,7 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
                         TextFormField(
                           keyboardType: TextInputType.number, // chỉ đc nhập số
                           maxLines: 1, // tối đa 1 dòng
-                          onChanged: (value) => context
-                              .read<ThemsanphamBloc>().add(CreatePhoneSupplierProduct(
+                          onChanged: (value) => context.read<ThemsanphamBloc>().add(CreatePhoneSupplierProduct(
                                   value)), // lưu thay đổi vào state
                           controller:
                               _createPhoneSupplierController, // đăng kí dùng controller

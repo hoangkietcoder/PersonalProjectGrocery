@@ -17,7 +17,7 @@ import 'Model/auth_data.dart';
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
 class AuthenticationRepository {
-  AuthenticationRepository({
+   AuthenticationRepository({
     firebase_auth.FirebaseAuth? firebaseAuth,
     required RegisterRepository registerRepository,
   }) :  _firebaseAuth = firebaseAuth ?? firebase_auth.FirebaseAuth.instance, _registerRepository = registerRepository;
@@ -30,8 +30,9 @@ class AuthenticationRepository {
     // await _notificationRepository.initNotification(selectNotification: selectNotification, onDidReceiveLocalNotification: onDidReceiveLocalNotification);
     yield* _firebaseAuth.authStateChanges().map((firebaseUser) {
       final user = firebaseUser == null ? UserAccount.empty : firebaseUser.toUser;
+      log("usersadasda $user");
       return AuthData(
-          status: user == UserAccount.empty ? AuthenticationStatus.unauthenticated:
+          status: user.id.isEmpty ? AuthenticationStatus.unauthenticated:
           AuthenticationStatus.authenticated,
           user: user
       );

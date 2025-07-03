@@ -3,8 +3,10 @@
 
 
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../../Models/Product/create_product.dart';
 import '../../../Models/Product/detail_product.dart';
@@ -15,8 +17,10 @@ import '../../../Models/Product/getData_ProductFromFirebase.dart';
  // phương thức thêm dữ liệu lên firebase bằng đối tượng
 class ProductRepository {
 
+
   // khởi tạo firebase database
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
 
   // xài stream dùng để realtime để lấy dữ liệu từ firebase ( cho chức năng tạo sản phẩm )
@@ -57,6 +61,47 @@ class ProductRepository {
   // phương thức xóa 1 sản phẩm
   Future<void> deleteProductById(String id) async {
     return await _db.collection('Product').doc(id).delete();
+  }
+
+
+
+  // ✅ Upload ảnh lên Firebase Storage → trả về download URL
+  Future<String> uploadProductImage(File imageFile, String productId) async {
+    try {
+      final imageRef =
+      _storage.ref().child("product_images/$productId.jpg");
+
+      // Upload ảnh
+      await imageRef.putFile(imageFile);
+
+      // ✅ Lấy URL đúng từ imageRef
+      final downloadUrl = await imageRef.getDownloadURL();
+
+      print("✅ Upload thành công. URL: $downloadUrl");
+
+      return downloadUrl;
+    } catch (e) {
+      print("❌ Lỗi upload ảnh: $e");
+      throw Exception('Ảnh đưa lên thất bại: $e');
+    }
+  }
+
+
+
+  // ✅ Cập nhật trường img_url trong Firestore
+  Future<void> saveImageUrlToFirestore({
+    required String productId,
+    required String imageUrl,
+  }) async {
+    try {
+      await _db.collection('Product').doc(productId).update({
+        'img_url': imageUrl,
+      });
+      print("✅ Đã lưu img_url vào Firestore.");
+    } catch (e) {
+      print("❌ Lỗi lưu URL vào Firestore: $e");
+      throw Exception('Lỗi lưu URL vào Firestore: $e');
+    }
   }
 
 }

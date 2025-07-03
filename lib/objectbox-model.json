@@ -1,0 +1,72 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:2545508379180948370",
+      "lastPropertyId": "9:6328744930370918159",
+      "name": "ModelProductLocal",
+      "properties": [
+        {
+          "id": "1:4657328724080809921",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:2995362695091059",
+          "name": "Firebaseid",
+          "type": 9
+        },
+        {
+          "id": "3:7980478028128814526",
+          "name": "img_url",
+          "type": 9
+        },
+        {
+          "id": "4:2145566950868833663",
+          "name": "nameProduct",
+          "type": 9
+        },
+        {
+          "id": "5:7718031110783817097",
+          "name": "quantityProduct",
+          "type": 9
+        },
+        {
+          "id": "6:890984766206615466",
+          "name": "priceProduct",
+          "type": 9
+        },
+        {
+          "id": "7:7299267404112779295",
+          "name": "supplierName",
+          "type": 9
+        },
+        {
+          "id": "8:5104738351007871324",
+          "name": "phoneSupplier",
+          "type": 9
+        },
+        {
+          "id": "9:6328744930370918159",
+          "name": "noteProduct",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "1:2545508379180948370",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

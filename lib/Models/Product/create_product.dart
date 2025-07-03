@@ -81,6 +81,8 @@ class CreateProduct extends Equatable{
   };
 
 
+
+
   @override
   List<Object?> get props =>[img_url, nameProduct,quantityProduct,priceProduct,supplierName,phoneSupplier,noteProduct];
 

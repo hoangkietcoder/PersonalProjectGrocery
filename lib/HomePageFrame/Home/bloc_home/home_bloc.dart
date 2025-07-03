@@ -54,10 +54,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
 
   // xử lí thanh tìm kiếm
-  Future<void> _onSearchProductChanged(
-      SearchProductHomeEventChange event,
-      Emitter<HomeState> emit,
-      ) async{
+  Future<void> _onSearchProductChanged(SearchProductHomeEventChange event, Emitter<HomeState> emit,) async{
     try{
       emit(state.copyWith(statusHome: StatusHome.initial));
       final data = await _productRepository.searchItemsByName(event.query);

@@ -1,20 +1,23 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../Compoents/Dialog/dialog_delete_product.dart';
+import '../../../Compoents/UploadImage/upload_image.dart';
 import '../../../Repository/Firebase_Database/Product/product_repository.dart';
 import 'bloc/chitietsanpham_bloc.dart';
 
 class ChitietsanphamPage extends StatelessWidget {
-  const ChitietsanphamPage({super.key, required this.productRepository, required this.productId});
+  const ChitietsanphamPage(
+      {super.key, required this.productRepository, required this.productId});
 
   final String productId;
 
-
   // truyền repo qua
   final ProductRepository productRepository;
-
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,9 @@ class ChitietsanphamPage extends StatelessWidget {
         providers: [
           BlocProvider<ChitietsanphamBloc>(
             // ..add(DetailProductEventChange(productId)), initial vừa vô trang sẽ lấy dữ liệu về
-            create: (BuildContext context) => ChitietsanphamBloc(producRepo: productRepository)..add(DetailProductEventChange(productId)),
+            create: (BuildContext context) =>
+                ChitietsanphamBloc(producRepo: productRepository)
+                  ..add(DetailProductEventChange(productId)),
           ),
         ],
         child: ChitietsanphamView(),
@@ -41,13 +46,9 @@ class ChitietsanphamView extends StatefulWidget {
 }
 
 class _ChitietsanphamViewState extends State<ChitietsanphamView> {
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         systemOverlayStyle: const SystemUiOverlayStyle(
           // Status bar color
@@ -57,8 +58,7 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
           statusBarIconBrightness: Brightness.light, // For Android (dark icons)
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
-        iconTheme:
-        const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
         // chỉnh màu cho dấu back
         title: const Text(
           "Chi Tiết Sản Phẩm",
@@ -69,13 +69,14 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
       ),
       body: BlocBuilder<ChitietsanphamBloc, ChitietsanphamState>(
         buildWhen: (pre, cur) {
+          final bloc = context.read<ChitietsanphamBloc>();
+
           return pre.detailStatusInitial != cur.detailStatusInitial;
         },
         builder: (context, state) {
           if (state.detailStatusInitial == DetailStatusInitial.initial) {
             return Center(child: const CircularProgressIndicator());
-          }
-          else if (state.detailStatusInitial == DetailStatusInitial.failure) {
+          } else if (state.detailStatusInitial == DetailStatusInitial.failure) {
             // trả về view lỗi
             return Center(child: Text(state.error));
           }
@@ -84,11 +85,62 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
             padding: REdgeInsets.only(top: 20, right: 18, left: 20),
             child: Column(children: [
               Center(
-                  child: Image(
-                    image: const AssetImage("assets/images/milk.png"),
-                    height: 200.h,
-                    width: 150.w,
-                  )),
+                child: Stack(
+                  children: [
+                    // Hình ảnh chính
+                    product.img_url.isNotEmpty ? Image.network(
+                      product.img_url,
+                      height: 200.h,
+                      width: 150.w,
+                      fit: BoxFit.cover,
+                    ) : Image.asset("assets/images/avamacdinhsanpham.jpg", // ảnh mặc định local
+                          height: 200.h,
+                          width: 150.w,
+                          fit: BoxFit.cover,
+                    ),
+                    // Nút camera ở góc dưới phải
+                    Positioned(
+                        left: 0,
+                        bottom: 0,
+                        right: 0,
+                        child: GestureDetector(
+                          onTap: () async {
+                            final productId = state.detailProduct!.id;
+                            final bool? fromCamera = await showImagePickerOptions(context, productId);
+                            if (fromCamera != null) {
+                              final XFile? pickedFile = await ImagePicker().pickImage(
+                                source: fromCamera ? ImageSource.camera : ImageSource.gallery,
+                              );
+
+                              if (pickedFile != null) {
+                                final File imageFile = File(pickedFile.path);
+
+                                context.read<ChitietsanphamBloc>().add(
+                                  UploadImageEvent(
+                                    imageFile: imageFile,
+                                    ProductId: productId,
+                                  ),
+                                );
+                              }
+                            }
+
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.black.withOpacity(0.6),
+                            ),
+                            child: const Icon(
+                              Icons.camera_alt,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                          ),
+                        )),
+                  ],
+                ),
+              ),
               SizedBox(
                 height: 15.h,
               ),
@@ -267,8 +319,7 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
                   Expanded(
                       flex: 1,
                       child: ImageIcon(
-                        const AssetImage(
-                            "assets/images/description-alt.png"),
+                        const AssetImage("assets/images/description-alt.png"),
                         size: 15.sp,
                       )),
                   Expanded(
@@ -313,8 +364,19 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
                             },
                           ).then((value) {
                             if (value != null && value) {
-                              bloc.add(DeleteDetailProduct(product.id,state.lstData.length));
-                              Navigator.pushNamedAndRemoveUntil(context,"/HomeScreenPage",(route) => false); // false là xóa , true là k xóa
+                              bloc.add(DeleteDetailProduct(
+                                  product.id, state.lstData.length));
+                              // Hiện thông báo
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                    content:
+                                        Text('Đã xóa sản phẩm thành công')),
+                              );
+                              Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  "/HomeScreenPage",
+                                  (route) =>
+                                      false); // false là xóa , true là k xóa
                             }
                           });
                         },
@@ -325,7 +387,6 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
                               fontWeight: FontWeight.bold,
                               fontSize: 16.sp),
                         ),
-
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20.r),

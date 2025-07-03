@@ -355,8 +355,7 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
                                         Expanded(
                                           child: ElevatedButton.icon(
                                             onPressed: () {
-                                              Navigator.pushNamed(
-                                                  context, '/ChiTietHoaDon');
+                                              Navigator.pushNamed(context, '/ChiTietHoaDon');
                                             },
                                             icon: Icon(Icons.edit,
                                                 size: 15.sp,

@@ -18,7 +18,7 @@ class LogoutCubit extends Cubit<LogoutState> {
     try {
       emit(state.copyWith(statusLogout: StatusInfo.isProccessing));
       await _authenticationRepository.logOut();
-      emit(state.copyWith(statusLogout: StatusInfo.success));
+
     } catch (error) {
       if (isClosed) return;
       emit(state.copyWith(

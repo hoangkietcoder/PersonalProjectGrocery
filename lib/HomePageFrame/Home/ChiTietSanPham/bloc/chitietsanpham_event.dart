@@ -34,3 +34,14 @@ final class DeleteDetailProduct extends ChitietsanphamEvent{
 
 }
 
+  // up hình ảnh
+final class UploadImageEvent extends ChitietsanphamEvent{
+  const UploadImageEvent({ required this.ProductId,required this.imageFile });
+  final String ProductId; // Id sản phẩm cần cập nhật ảnh
+  final File imageFile;
+
+
+  @override
+  List<Object> get props => [ProductId,imageFile];
+}
+

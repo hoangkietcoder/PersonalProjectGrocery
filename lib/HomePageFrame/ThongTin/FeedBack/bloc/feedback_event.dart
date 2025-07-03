@@ -13,14 +13,6 @@ class FeedBackRequested extends FeedbackEvent{
    const FeedBackRequested();
 }
 
-// class SubmitFeedbackEvent extends FeedbackEvent {
-//
-//   SubmitFeedbackEvent({required this.subject, required this.body});
-//
-//   final String subject;
-//   final String body;
-// }
-
 class FeedBack_Email extends FeedbackEvent{
   const FeedBack_Email(this.email);
 
