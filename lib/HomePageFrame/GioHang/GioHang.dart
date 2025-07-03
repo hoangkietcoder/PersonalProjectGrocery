@@ -35,8 +35,7 @@ class GioHangView extends StatefulWidget {
 }
 
 class _GioHangViewState extends State<GioHangView> {
-  int get totalPrice =>
-      0; // Tạm thời, bạn có thể tính lại dựa vào state nếu muốn
+
 
   @override
   void initState() {
@@ -55,9 +54,16 @@ class _GioHangViewState extends State<GioHangView> {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: BlocBuilder<ModelProductLocalBloc, ModelProductLocalState>(
-        buildWhen: (pre, cur) =>
-            pre.statusGetDataLocal != cur.statusGetDataLocal,
+        // buildWhen: (pre, cur) => pre.statusGetDataLocal != cur.statusGetDataLocal,
         builder: (context, state) {
+
+          // tính tổng
+          final int totalPrice = state.lstModelProductLocal.fold(0, (sum, item) {
+            final quantity = int.tryParse(item.quantityProduct) ?? 0;
+            final price = int.tryParse(item.priceProduct) ?? 0;
+            return sum + (quantity * price);
+          });
+
           if (state.statusGetDataLocal == StatusGetDataLocal.loading) {
             return const Center(child: CircularProgressIndicator());
           } else if (state.statusGetDataLocal == StatusGetDataLocal.failure) {
@@ -76,7 +82,7 @@ class _GioHangViewState extends State<GioHangView> {
                     Flexible(
                       flex: 5,
                       child: Text(
-                        "Sản phẩm đã đặt ${state.lstModelProductLocal.length} ",
+                        "Sản phẩm đã lấy:  ${state.lstModelProductLocal.length} ",
                         style: TextStyle(
                             color: Colors.black, fontWeight: FontWeight.bold),
                       ),
@@ -125,9 +131,7 @@ class _GioHangViewState extends State<GioHangView> {
                           children: [
                             SlidableAction(
                               onPressed: (context) {
-                                context.read<ModelProductLocalBloc>().add(
-                                      DeleteLocalProductEvent(item.id),
-                                    );
+                                context.read<ModelProductLocalBloc>().add(DeleteLocalProductEvent(item.id),);
                               },
                               backgroundColor: Colors.red,
                               foregroundColor: Colors.white,
@@ -142,8 +146,16 @@ class _GioHangViewState extends State<GioHangView> {
                           color: Colors.blue[50],
                           elevation: 2,
                           child: ListTile(
-                            leading: Image.asset(item.img_url,
-                                width: 50, height: 50),
+                            leading: state.img_url.isNotEmpty ? Image.network(
+                              state.img_url,
+                              height: 50.h,
+                              width: 50.w,
+                              fit: BoxFit.cover,
+                            ) : Image.asset("assets/images/avamacdinhsanpham.jpg", // ảnh mặc định local
+                              height: 50.h,
+                              width: 50.w,
+                              fit: BoxFit.cover,
+                            ),
                             title: Text(item.nameProduct,
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold)),
@@ -163,7 +175,7 @@ class _GioHangViewState extends State<GioHangView> {
                                         );
                                   },
                                 ),
-                                Text(item.quantityProduct,
+                                Text(item.quantityProduct ,
                                     style: const TextStyle(fontSize: 16)),
                                 IconButton(
                                   icon: const Icon(Icons.add_circle_outline,

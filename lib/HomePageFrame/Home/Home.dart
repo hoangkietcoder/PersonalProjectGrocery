@@ -7,6 +7,8 @@ import 'package:personalprojectgrocery/ObjectBox/ObjectBox.dart';
 import 'package:personalprojectgrocery/ObjectBox/model/ModelProductLocal.dart';
 import 'package:personalprojectgrocery/Repository/DataLocal/data_local_repository.dart';
 import 'package:personalprojectgrocery/Routes/argument/GioHangArgument.dart';
+import '../../Compoents/Dialog/dialog_addProductLocal.dart';
+import '../../Compoents/Dialog/dialog_loading_login.dart';
 import '../../Models/Product/getData_ProductFromFirebase.dart';
 import '../../ObjectBox/bloc_ModelProductLocal/model_product_local_bloc.dart';
 import '../../Repository/Firebase_Database/Product/product_repository.dart';
@@ -108,14 +110,13 @@ class _HomepageframeViewState extends State<HomeView> {
                 filled: true,
                 fillColor: Colors.white,
                 suffixIcon: IconButton(icon: Icon(Icons.keyboard_voice) , onPressed: () {
-
                 },),
                 contentPadding: REdgeInsets.symmetric(
                   horizontal: 15,
                   vertical: 3,
                 ),
                 prefixIcon: Icon(Icons.search),
-                hintText: 'Tìm kiếm sản phẩm ...',
+                hintText: 'Tìm kiếm theo tên sản phẩm ...',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.r),
                 ),
@@ -156,10 +157,13 @@ class _HomepageframeViewState extends State<HomeView> {
                                       // ảnh
                                       Expanded(
                                         flex: 1,
-                                        child: Image(
-                                          image: AssetImage("assets/images/img.png"),
-                                          width: 65.w,
+                                        child: product.img_url.isNotEmpty ? Image.network(
+                                          product.img_url,
                                           height: 65.h,
+                                          width: 65.w,
+                                        ) : Image.asset("assets/images/avamacdinhsanpham.jpg", // ảnh mặc định local
+                                          height: 65.h,
+                                          width: 65.w,
                                         ),
                                       ),
                                       // thông tin
@@ -243,7 +247,33 @@ class _HomepageframeViewState extends State<HomeView> {
                                                 Spacer(),
                                                 Padding(
                                                   padding: REdgeInsets.only(right: 6.0),
-                                                  child: ElevatedButton.icon(
+                                                  child: BlocListener<ModelProductLocalBloc, ModelProductLocalState>(
+                                                    listenWhen: (pre, cur) => pre.statusSaveDataLocal != cur.statusSaveDataLocal,
+                                                    listener: (context, state) {
+                                                        if (state.statusSaveDataLocal == StatusSaveDataLocal.failure) {
+                                                          Navigator.pop(context);
+                                                          ScaffoldMessenger.of(context)
+                                                            ..hideCurrentSnackBar()
+                                                            ..showSnackBar(SnackBar(
+                                                                duration: const Duration(seconds: 2),
+                                                                content: Text(
+                                                                  state.error,
+                                                                )));
+                                                        } else {
+                                                          if(state.statusSaveDataLocal == StatusSaveDataLocal.success){
+                                                            showDialog(
+                                                              context: context,
+                                                              builder: (_) => const DialogAddproductlocal(),
+                                                            );
+                                                            Future.delayed(const Duration(seconds: 1), () {
+                                                              if (Navigator.of(context).canPop()) {
+                                                                Navigator.of(context).pop(); // Tự động đóng sau 3s
+                                                              }
+                                                            });
+                                                          }
+                                                        }
+                                                      },
+                                                      child: ElevatedButton.icon(
                                                     onPressed: () async {
                                                       final bloc = BlocProvider.of<ModelProductLocalBloc>(context);
                                                       final data = ModelProductLocal(fireBaseId: product.id, img_url: product.img_url, nameProduct: product.nameProduct, quantityProduct: product.quantityProduct, priceProduct: product.priceProduct, supplierName: product.supplierName, phoneSupplier: product.phoneSupplier, noteProduct: product.noteProduct);
@@ -274,6 +304,7 @@ class _HomepageframeViewState extends State<HomeView> {
                                                       ),
                                                       backgroundColor: Colors.blueAccent,
                                                     ),
+                                                  ),
                                                   ),
                                                 ),
                                               ],

@@ -103,6 +103,9 @@ class ChitietsanphamBloc extends Bloc<ChitietsanphamEvent, ChitietsanphamState> 
         imageStatus: ImageStatus.successful,
         message: "Tải ảnh thành công",
       ));
+
+
+
     } catch (e) {
       emit(state.copyWith(
         imageStatus: ImageStatus.failure,

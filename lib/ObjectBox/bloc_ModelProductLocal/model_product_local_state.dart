@@ -24,6 +24,7 @@ enum StatusDeleteDataLocal {inittial , loading, success, failure}
    this.error = "",
 
 
+
   });
 
   final List<ModelProductLocal> lstModelProductLocal;
@@ -71,6 +72,7 @@ enum StatusDeleteDataLocal {inittial , loading, success, failure}
     error: error ?? this.error,
 
 
+
    );
   }
 
@@ -90,6 +92,6 @@ enum StatusDeleteDataLocal {inittial , loading, success, failure}
        supplierName,
        phoneSupplier,
        noteProduct,
-       error
+       error,
       ];
  }

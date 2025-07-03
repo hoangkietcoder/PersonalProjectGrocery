@@ -84,9 +84,6 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
           return SingleChildScrollView(
             padding: REdgeInsets.only(top: 20, right: 18, left: 20),
             child: Column(children: [
-              Center(
-                child: Stack(
-                  children: [
                     // Hình ảnh chính
                     product.img_url.isNotEmpty ? Image.network(
                       product.img_url,
@@ -98,12 +95,9 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
                           width: 150.w,
                           fit: BoxFit.cover,
                     ),
+                    SizedBox(height: 10.h,),
                     // Nút camera ở góc dưới phải
-                    Positioned(
-                        left: 0,
-                        bottom: 0,
-                        right: 0,
-                        child: GestureDetector(
+              GestureDetector(
                           onTap: () async {
                             final productId = state.detailProduct!.id;
                             final bool? fromCamera = await showImagePickerOptions(context, productId);
@@ -123,7 +117,6 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
                                 );
                               }
                             }
-
                           },
                           child: Container(
                             padding: const EdgeInsets.all(6),
@@ -137,10 +130,8 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
                               size: 20,
                             ),
                           ),
-                        )),
-                  ],
-                ),
-              ),
+                        ),
+
               SizedBox(
                 height: 15.h,
               ),
