@@ -35,6 +35,7 @@ class DataLocalRepository {
   ModelProductLocal? getProductById(int id) {
     final box = _objectBoxService.productBox;
     return box.get(id);
+
   }
 
   // ✅ Xoá theo ID
