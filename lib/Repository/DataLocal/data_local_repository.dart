@@ -28,7 +28,14 @@ class DataLocalRepository {
   Stream<List<ModelProductLocal>> getAllProducts()  {
     final box = _objectBoxService.productBox;
     final products = box.query(); //
-    return products.watch(triggerImmediately: true).map((e) => e.find());;
+    return products.watch(
+        // theo dõi stream,  map((e) => e.find() : trả về danh sách mỗi khi cập nhật
+        triggerImmediately: true).map((e) => e.find());;
+  }
+
+  Future<void> deleteAllProductsLocal() async {
+    final box = _objectBoxService.productBox;
+    await box.removeAll();
   }
 
   // ✅ Lấy theo ID (nếu cần)
@@ -46,10 +53,7 @@ class DataLocalRepository {
 
 
 
-  Future<void> deleteAllProductsLocal() async {
-    final box = _objectBoxService.productBox;
-    await box.removeAll();
-  }
+
 
   // ✅ Cập nhật sản phẩm
   Future<void> updateProduct(ModelProductLocal product) async {

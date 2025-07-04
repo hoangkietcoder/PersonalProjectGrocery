@@ -32,7 +32,7 @@ class DialogDeleteAllProductCart extends StatelessWidget {
         ),
         TextButton(
           onPressed: () {
-            Navigator.pop(context, false);
+            Navigator.pop(context, true);
           },
           child: Text("Xóa",style: TextStyle(color: Colors.red,fontSize: 13.sp),),
         ),

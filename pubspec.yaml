@@ -124,6 +124,9 @@ dependencies:
     # thư viện để ObjectBox hoạt động trong Flutter
   objectbox_sync_flutter_libs: any
 
+    # thư viện phân trang
+  infinite_scroll_pagination: ^5.1.0
+
 
 
 

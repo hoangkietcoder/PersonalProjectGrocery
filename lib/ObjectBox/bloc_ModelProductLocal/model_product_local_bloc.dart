@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
@@ -21,12 +22,15 @@ class ModelProductLocalBloc extends Bloc<ModelProductLocalEvent, ModelProductLoc
     on<RefreshListProDuctLocalCartEvent>(_getAllProductsLocal); // refresh lại danh sách
     on<UpdateQuantityProductLocalEvent>(_updateQuantityProductLocal);
 
+    // lắng nghe sự kiện ()
+    _productLocalSubscription = dataLocalRepository.getAllProducts().listen((productLocals){ emit(state.copyWith(lstModelProductLocal: productLocals));});
+
   }
 
 
   // truyền repo từ bên ngoài vào
   final DataLocalRepository dataLocalRepository;
-
+  late final StreamSubscription<List<ModelProductLocal>> _productLocalSubscription; // thêm biến stream
 
   // xử lí lưu dữ liệu dưới local
   Future<void> _onSaveProductLocal(SaveProductLocalEvent event, Emitter<ModelProductLocalState> emit) async {
@@ -54,11 +58,20 @@ class ModelProductLocalBloc extends Bloc<ModelProductLocalEvent, ModelProductLoc
           emit(state.copyWith(statusDeleteDataLocal: StatusDeleteDataLocal.loading));
           // Gọi repo xóa dữ liệu
           await dataLocalRepository.deleteAllProductsLocal();
+          //  KHÔNG cần getAllProducts() nữa
+          //  Stream sẽ tự update lại danh sách → emit tự động
+          emit(state.copyWith(statusDeleteDataLocal: StatusDeleteDataLocal.success));
         }catch(error) {
           emit(state.copyWith(
               error: error.toString(),
               statusDeleteDataLocal: StatusDeleteDataLocal.failure));
         }
+  }
+
+  @override
+  Future<void> close() {
+    _productLocalSubscription.cancel();
+    return super.close();
   }
 
   //=========================== xử lí xóa tất cả sản phẩm và refesh lại danh sách ( dùng stream tự động cập nhật )
@@ -79,6 +92,8 @@ class ModelProductLocalBloc extends Bloc<ModelProductLocalEvent, ModelProductLoc
       },
     );
   }
+
+
 
   //============== xử lí xóa dữ liệu 1 sản phẩm trong giỏ hàng dưới local
   Future<void> _deleteSaveProductLocal(DeleteLocalProductEvent event, Emitter<ModelProductLocalState> emit) async {
