@@ -30,8 +30,7 @@ class ChuaThanhToanBloc extends Bloc<ChuaThanhToanEvent, ChuaThanhToanState> {
       CreateBillChange event,
       Emitter<ChuaThanhToanState> emit,
       ) {
-    return emit.onEach(
-      _billRepository.createBill,
+    return emit.onEach(_billRepository.createBill,
       onData: (data) async {
           return emit(state.copyWith(
               lstBillChuaThanhToan: data,
@@ -48,17 +47,6 @@ class ChuaThanhToanBloc extends Bloc<ChuaThanhToanEvent, ChuaThanhToanState> {
       },
     );
   }
-
-
-  // void _onBillChange(
-  //     CreateBillChange event,
-  //     Emitter<ChuaThanhToanState> emit,
-  //     ){
-  //   return emit(state.copyWith(
-  //       lstBillChuaThanhToan: event.lstBillChuaThanhToan,
-  //       statusBill: StatusChuaThanhToan.successful
-  //   ));
-  // }
 
 
   // xử lí thanh tìm kiếm hóa đơn chưa thánh toán ( theo tên hóa đơn )
@@ -87,18 +75,21 @@ class ChuaThanhToanBloc extends Bloc<ChuaThanhToanEvent, ChuaThanhToanState> {
   // xử lí xóa 1 hóa đơn chưa thanh toán
   Future<void> _onDeleteBill(DeleteBillChuaThanhToan event, Emitter<ChuaThanhToanState> emit) async {
     try {
-      emit(state.copyWith(deleteProduct: DetailStatusInitial.loading));
+      emit(state.copyWith(deleteStatusBill: DeleteStatusBill.loading));
       final newList = List<ModelChuathanhtoan>.of(state.lstBillChuaThanhToan);
       await _billRepository.deleteBillById(event.deleteBillChuaThanhToanId);
-      newList.removeAt(event.index);
+      if (event.index < newList.length) {
+        newList.removeAt(event.index);
+      }
       emit(state.copyWith(
-        deleteProduct: DetailStatusInitial.successful,
+        deleteStatusBill: DeleteStatusBill.successful,
         lstBillChuaThanhToan: newList,
       ));
+      print("✅ Bloc: Đã xóa bill ở index ${event.index}");
     } catch (error) {
       if (isClosed) return;
       emit(state.copyWith(
-        deleteProduct: DetailStatusInitial.failure,
+        deleteStatusBill: DeleteStatusBill.failure,
         error: error.toString(),
       ));
     }

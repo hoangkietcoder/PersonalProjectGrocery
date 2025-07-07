@@ -1,14 +1,14 @@
 part of 'chua_thanh_toan_bloc.dart';
 
 enum StatusChuaThanhToan { initial, failure, successful }
-enum DetailStatusInitial { initial,loading, failure ,successful} // trạng thái xóa bill
+enum DeleteStatusBill { initial,loading, failure ,successful} // trạng thái xóa bill
 class ChuaThanhToanState extends Equatable {
   const ChuaThanhToanState({
         this.lstBillChuaThanhToan = const [],
         this.statusBill = StatusChuaThanhToan.initial,
         this.error = "",
         this.modelChuathanhtoan = ModelChuathanhtoan.empty,
-        this.deleteProduct = DetailStatusInitial.initial,
+        this.deleteStatusBill = DeleteStatusBill.initial,
 
       });
 
@@ -20,14 +20,14 @@ class ChuaThanhToanState extends Equatable {
   // final StatusHomePost statusDeleteProduct;
   final String error;
   final ModelChuathanhtoan modelChuathanhtoan;
-  final DetailStatusInitial deleteProduct;
+  final DeleteStatusBill deleteStatusBill;
 
   ChuaThanhToanState copyWith({
     List<ModelChuathanhtoan>? lstBillChuaThanhToan,
     StatusChuaThanhToan? statusBill,
     String? error,
     ModelChuathanhtoan? modelChuathanhtoan,
-    DetailStatusInitial? deleteProduct,
+    DeleteStatusBill? deleteStatusBill,
 
   }) {
     return ChuaThanhToanState(
@@ -36,11 +36,11 @@ class ChuaThanhToanState extends Equatable {
       // statusHome: statusHome ?? this.statusHome,
       // statusDeleteProduct: statusDeleteProduct ?? this.statusDeleteProduct,
       error: error ?? this.error,
-     modelChuathanhtoan: modelChuathanhtoan ?? this.modelChuathanhtoan,
-      deleteProduct: deleteProduct ?? this.deleteProduct,
+      modelChuathanhtoan: modelChuathanhtoan ?? this.modelChuathanhtoan,
+      deleteStatusBill: deleteStatusBill ?? this.deleteStatusBill,
     );
   }
 
   @override
-  List<Object> get props => [lstBillChuaThanhToan, statusBill, error,modelChuathanhtoan,deleteProduct];
+  List<Object> get props => [lstBillChuaThanhToan, statusBill, error,modelChuathanhtoan,deleteStatusBill];
 }

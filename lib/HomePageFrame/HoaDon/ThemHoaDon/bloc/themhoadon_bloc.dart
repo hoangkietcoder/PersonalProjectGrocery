@@ -87,7 +87,7 @@ class ThemhoadonBloc extends Bloc<ThemhoadonEvent, ThemhoadonState> {
       );
       final uuid = Uuid();
       await _billRepository.createBillToFirebase(createBill: CreateBill(
-          idBill: uuid.v4(), // Mã bill tự động,
+          idBillRandom: uuid.v4(), // Mã bill tự động,
           nameBill: state.nameBill,
           nameSeller: state.nameSeller,
           nameBuyer: state.nameBuyer,

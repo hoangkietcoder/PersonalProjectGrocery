@@ -30,7 +30,7 @@ class BillRepository {
       return snapshot.docs.map((doc) {
         log("asdadsadasdsadsa ${doc.data()}");
         return ModelChuathanhtoan.fromJson(doc.data()).copyWith(
-            idDocBill: doc.id,
+            idBill: doc.id,
         );
       }).toList();
     });
@@ -46,7 +46,7 @@ class BillRepository {
         .where("nameBill", isGreaterThanOrEqualTo: name).where("nameBill", isLessThanOrEqualTo: "$name\uf7ff").get();
     return query.docs.map((e) {
       return ModelChuathanhtoan.fromJson(e.data()).copyWith(
-          idDocBill: e.id
+          idBill: e.id
       );
     }).toList();
   }
@@ -58,17 +58,18 @@ class BillRepository {
         .where("nameBill", isGreaterThanOrEqualTo: name).where("nameBill", isLessThanOrEqualTo: "$name\uf7ff").get();
     return query.docs.map((e) {
       return ModelChuathanhtoan.fromJson(e.data()).copyWith(
-          idDocBill: e.id
+          idBill: e.id
       );
     }).toList();
   }
 
+
+  // xử lí khi người dùng bấm nút thanh toán sẽ chuyển trang đồng thời thay đổi status lên thành 1 ( sau đó so sánh để phân biệt bill )
   Future<void> updateBillDaThanhToan({ required String doc}) async {
         final updateBill = _db.collection(_collection);
 
         try {
-          await updateBill.doc(doc).update({
-            'status': "1", // hoặc dùng createBill.status nếu linh động
+          await updateBill.doc(doc).update({'status': "1", //
           });
         }on SocketException catch (_) {
           throw('Không có kết nối mạng');
@@ -86,14 +87,60 @@ class BillRepository {
         .map((snapshot) {
       return snapshot.docs.map((doc) {
         return ModelChuathanhtoan.fromJson(doc.data()).copyWith(
-            idDocBill: doc.id
+            idBill: doc.id
         );
       }).toList();
     });
   }
 
+
+
+  //
+  // xử lí khi người dùng bấm nút xóa bên trang đã thanh toán sẽ chuyển trang hủy đơn đồng thời thay đổi status lên thành 2 ( sau đó so sánh để phân biệt bill )
+  Future<void> deleteBillDaThanhToan({ required String doc}) async {
+    final updateBill = _db.collection(_collection);
+    try {
+      await updateBill.doc(doc).update({'status': "2", //
+      });
+    }on SocketException catch (_) {
+      throw('Không có kết nối mạng');
+    } catch (e) {
+      throw('Lỗi cập nhật hóa đơn: $e');
+    }
+  }
+
+  Stream<List<ModelChuathanhtoan>> get getBillHuyDon {
+    return _db
+        .collection(_collection)
+        .where("status", isEqualTo: "2") // lọc status = 1
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return ModelChuathanhtoan.fromJson(doc.data()).copyWith(
+            idBill: doc.id
+        );
+      }).toList();
+    });
+  }
+
+
+
+
+
+
+
+
+
+
   // xóa 1 bill chưa thanh toán
   Future<void> deleteBillById(String id) async {
-    return await _db.collection('Bill').doc(id).delete();
+    try {
+      await _db.collection("Bill").doc(id).delete();
+      print("🔥 Xóa thành công document: $id");
+    } catch (e) {
+      print("❌ Lỗi khi xóa document: $e");
+      rethrow;
+    }
+
   }
 }

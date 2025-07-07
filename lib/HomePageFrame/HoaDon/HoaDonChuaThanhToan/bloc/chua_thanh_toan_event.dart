@@ -30,15 +30,14 @@ final class SearchBillChuaThanhToanEventChange extends ChuaThanhToanEvent {
  }
 
  // xóa bill chưa thanh toán
-final class DeleteBillChuaThanhToan extends ChuaThanhToanEvent{
- const DeleteBillChuaThanhToan(this.deleteBillChuaThanhToanId, this.index);
+ final class DeleteBillChuaThanhToan extends ChuaThanhToanEvent{
+ const DeleteBillChuaThanhToan(this.deleteBillChuaThanhToanId,this.index);
 
  // truyền thêm ID vào trang chi tiết ( index dùng để bắt độ dài list )
  final String deleteBillChuaThanhToanId;
  final int index;
  @override
  List<Object> get props => [deleteBillChuaThanhToanId,index];
-
-}
+ }
 
 

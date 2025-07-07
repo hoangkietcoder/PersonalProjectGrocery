@@ -53,8 +53,26 @@ class ProductRepository {
 
 
     // phương thức tạo sản phẩm ( lấy các trường dữ liệu convert thành đối tượng ) up lên firebase
-    Future<void> createProductToFirebase({required CreateProduct createProduct}) {
-      return _db.collection("Product").doc().set(createProduct.toJsonCreateProduct());
+    Future<getDataProduct?> createProductToFirebase({required CreateProduct createProduct}) async {
+      // Tạo một document mới, tự sinh ID
+      final docRef = _db.collection("Product").doc();
+
+      // Tạo map từ model và thêm createdAt từ server
+      final data = {...createProduct.copyWith(id: docRef.id).toJsonCreateProduct(),
+        'createdAt': FieldValue.serverTimestamp(), // ✅ thêm thời gian tạo
+      };
+
+      // Ghi dữ liệu lên Firestore
+      await docRef.set(data);
+      // Đọc lại document để lấy giá trị createdAt chính xác từ server
+      final snapshot = await docRef.get();
+
+      if (snapshot.exists) {
+        // Chuyển về model của bạn
+        return getDataProduct.fromJson(snapshot.data()!, snapshot.id);
+      }
+
+      return null;
     }
 
 
@@ -104,4 +122,33 @@ class ProductRepository {
     }
   }
 
+
+
+  // xử lý phân trang
+  DocumentSnapshot? _lastDocument; // bắt key cuối của 1 trang
+  Timestamp? _lastCreatedAt;
+  Future<List<getDataProduct>> fetchProducts({ int limit = 3}) async {
+    // Giả sử fetch từ Firebase hoặc API
+    Query query = FirebaseFirestore.instance
+        .collection('Product')
+        .orderBy('createdAt', descending: true)  // sắp xếp mới nhất trước
+        .limit(limit);
+
+    if(_lastDocument != null ){
+      query = query.startAfterDocument(_lastDocument!);
+    }
+
+    final querySnapshot = await query.get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      _lastDocument = querySnapshot.docs.last; // Giữ document cuối để load trang sau
+      _lastCreatedAt = _lastDocument?['createdAt'] as Timestamp?;
+    }
+
+    return querySnapshot.docs.map((doc) => getDataProduct.fromJson(doc.data() as Map<String, dynamic>, doc.id)).toList();
+  }
+
+  void resetPagination() {
+    _lastDocument = null;
+  }
 }

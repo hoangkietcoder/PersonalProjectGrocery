@@ -25,7 +25,7 @@ class DetailProduct extends Equatable{
       final String noteProduct;
 
   /// Tạo đối tượng rỗng.
-  static const empty = DetailProduct(nameProduct: '', quantityProduct: '', priceProduct: '', supplierName: '', phoneSupplier: '', noteProduct: '', id: '');
+  static const empty = DetailProduct(id: '',img_url:'',nameProduct: '', quantityProduct: '', priceProduct: '', supplierName: '', phoneSupplier: '', noteProduct: '', );
 
   ///
   bool get isEmpty => this == DetailProduct.empty;

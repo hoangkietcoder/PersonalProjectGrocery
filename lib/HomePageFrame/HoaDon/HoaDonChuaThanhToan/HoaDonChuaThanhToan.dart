@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../Compoents/Dialog/dialog_auto_deleteBill.dart';
 import '../../../Compoents/Dialog/dialog_delete_bill.dart';
 import '../HoaDonDaThanhToan/bloc/hoa_don_da_thanh_toan_bloc.dart';
 import 'bloc/chua_thanh_toan_bloc.dart';
@@ -70,17 +71,31 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
           ],
         ),
         SizedBox(height: 10.h),
-        BlocBuilder<ChuaThanhToanBloc, ChuaThanhToanState>(
+        BlocListener<ChuaThanhToanBloc, ChuaThanhToanState>(
+        listenWhen: (pre , cur ) => pre.deleteStatusBill != cur.deleteStatusBill,
+        listener: (context, state) {
+          if(state.deleteStatusBill == DeleteStatusBill.successful){
+            showDialog(
+              context: context,
+              builder: (_) => const DialogAutoDeletebill(),
+            );
+            Future.delayed(const Duration(seconds: 2), () {
+              if (Navigator.of(context).canPop()) {
+                Navigator.of(context).pop(); // Tự động đóng sau 2s
+              }
+            });
+          }
+
+          },
+        child: BlocBuilder<ChuaThanhToanBloc, ChuaThanhToanState>(
           buildWhen: (pre, cur) => pre.statusBill != cur.statusBill,
           builder: (context, state) {
             if (state.statusBill == StatusChuaThanhToan.initial) {
               return Center(child: const CircularProgressIndicator());
             }
             return BlocBuilder<ChuaThanhToanBloc, ChuaThanhToanState>(
-              buildWhen: (pre, cur) =>
-                  pre.lstBillChuaThanhToan != cur.lstBillChuaThanhToan,
+              buildWhen: (pre, cur) => pre.lstBillChuaThanhToan != cur.lstBillChuaThanhToan,
               builder: (context, state) {
-                final bill = state.modelChuathanhtoan;
                 return Expanded(
                   child: ListView.builder(
                     itemCount: state.lstBillChuaThanhToan.length,
@@ -243,7 +258,7 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
                                                 ),
                                                 TextSpan(
                                                   text:
-                                                      billchuathanhtoan.idBill,
+                                                      billchuathanhtoan.idBillRandom,
                                                   style: TextStyle(
                                                     fontSize: 13.sp,
                                                     fontWeight:
@@ -273,8 +288,7 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
                                                   ),
                                                 ),
                                                 TextSpan(
-                                                  text: billchuathanhtoan
-                                                      .nameSeller,
+                                                  text: billchuathanhtoan.nameSeller,
                                                   style: TextStyle(
                                                     fontSize: 13.sp,
                                                     fontWeight:
@@ -334,8 +348,7 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
                                                   ),
                                                 ),
                                                 TextSpan(
-                                                  text: billchuathanhtoan
-                                                      .noteBill,
+                                                  text: billchuathanhtoan.noteBill,
                                                   style: TextStyle(
                                                     fontSize: 13.sp,
                                                     fontWeight:
@@ -381,10 +394,9 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
                                                   return const DialogDeleteBill();
                                                 },
                                               ).then((value) {
-                                                if (value != null && value) {
-                                                  bloc.add(DeleteBillChuaThanhToan(bill.idDocBill,state.lstBillChuaThanhToan.length));
-                                                  print("ID được truyền: ${bill.idDocBill}");
-                                                  Navigator.pushNamedAndRemoveUntil(context, '/HoaDon',(route) => false); // false là xóa , true là k xóa
+                                                if (value == true) {
+                                                  print("dawdadaw  ${billchuathanhtoan.idBill}");
+                                                  bloc.add(DeleteBillChuaThanhToan(billchuathanhtoan.idBill,index));
                                                 }
                                               });
                                             },
@@ -407,9 +419,9 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
                                              context.read<HoaDonDaThanhToanBloc>().add(SubmitHoaDonDaThanhToan(billchuathanhtoan));
                                             },
                                             icon: Icon(Icons.check,
-                                                size: 15.sp,
+                                                size: 14.sp,
                                                 color: Colors.white),
-                                            label: Text('TToán',
+                                            label: Text('Thanh Toán',
                                                 style: TextStyle(
                                                     fontSize: 12.sp,
                                                     color: Colors.white)),
@@ -434,6 +446,7 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
             );
           },
         ),
+),
       ],
     );
   }

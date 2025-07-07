@@ -341,53 +341,22 @@ class _HuyDonViewState extends State<HuyDonView> {
                                 Expanded(
                                   child: ElevatedButton.icon(
                                     onPressed: () {
-                                      Navigator.pushNamed(context, '/ChiTietHoaDon');
+                                      Navigator.pushNamed(
+                                          context, '/ChiTietHoaDon');
                                     },
-                                    icon: Icon(Icons.edit, size: 15.sp, color: Colors.white),
-                                    label: Text('Xem', style: TextStyle(fontSize: 12.sp, color: Colors.white)),
+                                    icon: Icon(Icons.edit,
+                                        size: 15.sp, color: Colors.white),
+                                    label: Text('Xem',
+                                        style: TextStyle(
+                                            fontSize: 12.sp,
+                                            color: Colors.white)),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.blue,
                                     ),
                                   ),
                                 ),
                                 SizedBox(width: 10.w),
-                                Expanded(
-                                  child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      // final bloc = context.read<ChitietsanphamBloc>();
-                                      showDialog<bool>(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return const DialogDeleteBill();
-                                        },
-                                      );
-                                      //     .then((value) {
-                                      //   if (value != null && value) {
-                                      //     bloc.add(DeleteDetailProduct(product.id,state.lstData.length));
-                                      //     Navigator.pushNamedAndRemoveUntil(context,"/HomeScreenPage",(route) => false); // false là xóa , true là k xóa
-                                      //   }
-                                      // });
-                                    },
-                                    icon: Icon(Icons.delete, size: 15.sp, color: Colors.white),
-                                    label: Text('Xóa', style: TextStyle(fontSize: 12.sp, color: Colors.white)),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.red,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 10.w),
-                                Expanded(
-                                  child: ElevatedButton.icon(
-                                    onPressed: () {
-                                      // Xử lý sự kiện khi nhấn nút Thanh Toán
-                                    },
-                                    icon: Icon(Icons.check, size: 15.sp, color: Colors.white),
-                                    label: Text('TToán', style: TextStyle(fontSize: 12.sp, color: Colors.white)),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.green,
-                                    ),
-                                  ),
-                                ),
+
                               ],
                             ),
                           ],

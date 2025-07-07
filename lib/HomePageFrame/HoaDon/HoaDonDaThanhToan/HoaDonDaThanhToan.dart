@@ -233,7 +233,7 @@ class _HoaDonDaThanhToanViewState extends State<HoaDonChuaDaThanhToanView> {
                                               ),
                                             ),
                                             TextSpan(
-                                              text: item.idBill,
+                                              text: item.idBillRandom,
                                               style: TextStyle(
                                                 fontSize: 13.sp,
                                                 fontWeight: FontWeight.normal,

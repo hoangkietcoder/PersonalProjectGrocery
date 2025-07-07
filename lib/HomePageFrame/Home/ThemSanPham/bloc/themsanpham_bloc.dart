@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import '../../../../Models/Product/create_product.dart';
 import '../../../../Repository/Firebase_Database/Product/product_repository.dart';
@@ -82,7 +83,7 @@ class ThemsanphamBloc extends Bloc<ThemsanphamEvent, ThemsanphamState> {
         priceProduct: state.giasanpham,
         supplierName: state.tennhacungcap,
         phoneSupplier: state.sdtnhacungcap,
-        noteProduct: state.chuthich
+        noteProduct: state.chuthich,
       ));
       if(isClosed) return;
       emit(

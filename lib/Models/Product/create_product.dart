@@ -2,11 +2,13 @@
 
 
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class CreateProduct extends Equatable{
 
   const CreateProduct({
+    this.id = "",
     this.img_url = "",
     required this.nameProduct,
     required this.quantityProduct,
@@ -14,9 +16,10 @@ class CreateProduct extends Equatable{
     required this.supplierName,
     required this.phoneSupplier,
     required this.noteProduct,
+    this.createdAt
   });
 
-
+  final String id;
   final String img_url;
   final String nameProduct;
   final String quantityProduct;
@@ -24,11 +27,11 @@ class CreateProduct extends Equatable{
   final String supplierName;
   final String phoneSupplier;
   final String noteProduct;
-
+  final Timestamp? createdAt ;
 
 
   /// Tạo đối tượng rỗng
-  static const empty = CreateProduct(nameProduct: '', quantityProduct: '', priceProduct: '', supplierName: '', phoneSupplier: '', noteProduct: '');
+  static const empty = CreateProduct(id: '',nameProduct: '', quantityProduct: '', priceProduct: '', supplierName: '', phoneSupplier: '', noteProduct: '' ,img_url: "");
 
   /// Tạo trống đối tượng
   bool get isEmpty => this == CreateProduct.empty;
@@ -36,19 +39,11 @@ class CreateProduct extends Equatable{
   /// Đối tượng không trống.
   bool get isNotEmpty => this != CreateProduct.empty;
 
-  // convert thành object ( from là lấy về , to là gửi lên )
-  factory CreateProduct.fromJson(Map<String, dynamic> json) => CreateProduct(
-      img_url: json["img_url"] ?? "",
-      nameProduct: json["nameProduct"] ?? "",
-      quantityProduct: json["quantityProduct"] ?? "",
-      priceProduct: json["priceProduct"] ?? "",
-      supplierName: json["supplierName"] ?? "",
-      phoneSupplier: json["phoneSupplier"] ?? -1,
-      noteProduct: json["noteProduct"] ?? ""
-  );
+
 
   // copywith để thay chỗ cần thay
   CreateProduct copyWith({
+    String? id,
     String? img_url,
     String? nameProduct,
     String? quantityProduct,
@@ -56,21 +51,39 @@ class CreateProduct extends Equatable{
     String? supplierName,
     String? phoneSupplier,
     String? noteProduct,
+    Timestamp? createdAt
   }) {
     return CreateProduct(
+        id: id ?? this.id,
         img_url: img_url ?? this.img_url,
         nameProduct: nameProduct ?? this.nameProduct,
         quantityProduct:  quantityProduct ?? this.quantityProduct,
         priceProduct: priceProduct ?? this.priceProduct,
         supplierName: supplierName ?? this.supplierName,
         phoneSupplier:  phoneSupplier ?? this.phoneSupplier,
-        noteProduct: noteProduct ?? this.noteProduct
+        noteProduct: noteProduct ?? this.noteProduct,
+        createdAt: createdAt ?? this.createdAt,
     );
   }
+
+  // convert thành object ( from là lấy về , to là gửi lên )
+  factory CreateProduct.fromJson(Map<String, dynamic> json,String id) => CreateProduct(
+    id: id,
+    img_url: json["img_url"] ?? "",
+    nameProduct: json["nameProduct"] ?? "",
+    quantityProduct: json["quantityProduct"] ?? "",
+    priceProduct: json["priceProduct"] ?? "",
+    supplierName: json["supplierName"] ?? "",
+    phoneSupplier: json["phoneSupplier"] ?? -1,
+    noteProduct: json["noteProduct"] ?? "",
+    createdAt:  json["createdAt"], // <-- không cần ép kiểu vì đã là Timestamp
+  );
+
 
 
   // convert object thành map để đưa lên firebase ( màu xanh lá là trg trên firebase )
   Map<String, dynamic> toJsonCreateProduct() => {
+    'id': id,
     "img_url": img_url,
     "nameProduct": nameProduct,
     "quantityProduct": quantityProduct,
@@ -78,12 +91,13 @@ class CreateProduct extends Equatable{
     "supplierName": supplierName,
     "phoneSupplier": phoneSupplier,
     "noteProduct": noteProduct,
+    "createdAt": createdAt, // hoặc FieldValue.serverTimestamp() nếu là lúc tạo
   };
 
 
 
 
   @override
-  List<Object?> get props =>[img_url, nameProduct,quantityProduct,priceProduct,supplierName,phoneSupplier,noteProduct];
+  List<Object?> get props =>[id,img_url, nameProduct,quantityProduct,priceProduct,supplierName,phoneSupplier,noteProduct,createdAt];
 
 }

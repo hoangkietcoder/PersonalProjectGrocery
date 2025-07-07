@@ -43,7 +43,7 @@ class HoaDonDaThanhToanBloc extends Bloc<HoaDonDaThanhToanEvent, HoaDonDaThanhTo
       ) async{
     try{
       emit(state.copyWith(statusThanhToan: StatusSubmit.isProcessing, statusBill: null));
-      await _billRepository.updateBillDaThanhToan(doc: event.modelChuathanhtoan.idDocBill);
+      await _billRepository.updateBillDaThanhToan(doc: event.modelChuathanhtoan.idBill);
       if(isClosed) return;
       return emit(state.copyWith(
           statusThanhToan: StatusSubmit.success,

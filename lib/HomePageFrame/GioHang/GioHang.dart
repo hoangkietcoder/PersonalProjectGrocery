@@ -124,9 +124,7 @@ class _GioHangViewState extends State<GioHangView> {
                               ).then((value) {
                                 if (value == true ) {
                                   // Gửi sự kiện xóa dữ liệu ObjectBox qua Bloc
-                                  context
-                                      .read<ModelProductLocalBloc>()
-                                      .add(DeleteAllLocalProductCartEvent());
+                                  context.read<ModelProductLocalBloc>().add(DeleteAllLocalProductCartEvent());
                                 }
                               });
                             },

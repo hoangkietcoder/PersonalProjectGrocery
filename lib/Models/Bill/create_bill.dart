@@ -7,6 +7,7 @@ import 'package:equatable/equatable.dart';
 class CreateBill extends Equatable{
 
   const CreateBill({
+    required this.idBillRandom,
     this.idBill = "",
     this.idDocBill = "",
     this.status = "0",
@@ -18,6 +19,7 @@ class CreateBill extends Equatable{
     required this.noteBill,
   });
 
+  final String idBillRandom;
   final String idBill;
   final String idDocBill;
   final String status;
@@ -29,7 +31,7 @@ class CreateBill extends Equatable{
   final String noteBill;
 
   /// Tạo đối tượng rỗng
-  static const empty = CreateBill(idBill:'',nameBill: '', nameSeller: '', nameBuyer: '', date: '', totalPriceBill: '', noteBill: '');
+  static const empty = CreateBill(idBillRandom:'',idBill:'',nameBill: '', nameSeller: '', nameBuyer: '', date: '', totalPriceBill: '', noteBill: '');
 
   /// Tạo trống đối tượng
   bool get isEmpty => this == CreateBill.empty;
@@ -39,6 +41,7 @@ class CreateBill extends Equatable{
 
   // convert thành object ( from là lấy về , to là gửi lên )
   factory CreateBill.fromJson(Map<String, dynamic> json) => CreateBill(
+      idBillRandom: json["idBill"] ?? "",
       idBill: json["idBill"] ?? "",
       idDocBill: json["idDocBill"] ?? "",
       status: json["status"] ?? "",
@@ -50,8 +53,23 @@ class CreateBill extends Equatable{
       noteBill: json["noteBill"] ?? ""
   );
 
+  // convert object thành map để đưa lên firebase ( màu xanh lá là trg trên firebase )
+  Map<String, dynamic> toJsonCreateProduct() => {
+    "idBillRandom" : idBillRandom,
+    "idBill": idBill,
+    "idDocBill": idDocBill,
+    "status": status,
+    "nameBill": nameBill,
+    "nameSeller": nameSeller,
+    "nameBuyer": nameBuyer,
+    "date": date,
+    "totalPriceBill": totalPriceBill,
+    "noteBill": noteBill,
+  };
+
   // copywith để thay chỗ cần thay
   CreateBill copyWith({
+    String? idBillRandom,
     String? idBill,
     String? idDocBill,
     String? status,
@@ -63,6 +81,7 @@ class CreateBill extends Equatable{
     String? noteBill,
   }) {
     return CreateBill(
+        idBillRandom:idBillRandom ?? this.idBillRandom ,
         idBill: idBill ?? this.idBill,
         idDocBill: idDocBill ?? this.idDocBill,
         status: status ?? this.status,
@@ -76,21 +95,10 @@ class CreateBill extends Equatable{
   }
 
 
-  // convert object thành map để đưa lên firebase ( màu xanh lá là trg trên firebase )
-  Map<String, dynamic> toJsonCreateProduct() => {
-    "idBill": idBill,
-    "idDocBill": idDocBill,
-    "status": status,
-    "nameBill": nameBill,
-    "nameSeller": nameSeller,
-    "nameBuyer": nameBuyer,
-    "date": date,
-    "totalPriceBill": totalPriceBill,
-    "noteBill": noteBill,
-  };
+
 
 
   @override
-  List<Object?> get props =>[idBill, idDocBill, status, nameBill, nameSeller, nameBuyer, date, totalPriceBill, noteBill];
+  List<Object?> get props =>[idBillRandom,idBill, idDocBill, status, nameBill, nameSeller, nameBuyer, date, totalPriceBill, noteBill];
 
 }

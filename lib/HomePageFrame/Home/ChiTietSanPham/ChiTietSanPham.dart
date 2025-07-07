@@ -69,8 +69,6 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
       ),
       body: BlocBuilder<ChitietsanphamBloc, ChitietsanphamState>(
         buildWhen: (pre, cur) {
-          final bloc = context.read<ChitietsanphamBloc>();
-
           return pre.detailStatusInitial != cur.detailStatusInitial;
         },
         builder: (context, state) {
@@ -355,19 +353,14 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
                             },
                           ).then((value) {
                             if (value != null && value) {
-                              bloc.add(DeleteDetailProduct(
-                                  product.id, state.lstData.length));
+                              bloc.add(DeleteDetailProduct(product.id, state.lstData.length));
                               // Hiện thông báo
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                     content:
                                         Text('Đã xóa sản phẩm thành công')),
                               );
-                              Navigator.pushNamedAndRemoveUntil(
-                                  context,
-                                  "/HomeScreenPage",
-                                  (route) =>
-                                      false); // false là xóa , true là k xóa
+                              Navigator.pushNamedAndRemoveUntil(context, "/HomeScreenPage", (route) => false); // false là xóa , true là k xóa
                             }
                           });
                         },
