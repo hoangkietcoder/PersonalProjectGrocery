@@ -12,17 +12,17 @@ final class HoaDonDaThanhToanSubscriptionRequested extends HoaDonDaThanhToanEven
   const HoaDonDaThanhToanSubscriptionRequested();
 }
 
+//
+// final class SubmitHoaDonDaThanhToan extends HoaDonDaThanhToanEvent{
+//   const SubmitHoaDonDaThanhToan(this.modelChuathanhtoan);
+//   final ModelChuathanhtoan modelChuathanhtoan;
+//
+//   @override
+//   List<Object?> get props => [modelChuathanhtoan];
+// }
 
-final class SubmitHoaDonDaThanhToan extends HoaDonDaThanhToanEvent{
-  const SubmitHoaDonDaThanhToan(this.modelChuathanhtoan);
-  final ModelChuathanhtoan modelChuathanhtoan;
 
-  @override
-  List<Object?> get props => [modelChuathanhtoan];
-}
-
-
-// cho chức năng search hóa đơn đã thanh toán
+// xử lí cho chức năng search hóa đơn đã thanh toán
 final class SearchBillDaThanhToanEventChange extends HoaDonDaThanhToanEvent {
   const SearchBillDaThanhToanEventChange(this.query);
 
@@ -30,4 +30,24 @@ final class SearchBillDaThanhToanEventChange extends HoaDonDaThanhToanEvent {
 
   @override
   List<Object?> get props => [query];
+}
+
+// cho cái nút xóa ở trang đã thanh toán
+class DeleteBillChange extends HoaDonDaThanhToanEvent{
+  const DeleteBillChange();
+}
+
+
+// xử lí nút xóa ở trang đã thanh toán
+class DeleteBillDaThanhToan extends HoaDonDaThanhToanEvent {
+  final String billId;
+  const DeleteBillDaThanhToan(this.billId);
+
+  @override
+  List<Object?> get props => [billId];
+}
+
+// vì xóa hóa đơn thứ 2 không hiển thị thông báo nên phải thêm sự kiện này
+final class resetStatusDeleteNotification extends HoaDonDaThanhToanEvent {
+  const resetStatusDeleteNotification();
 }

@@ -103,8 +103,7 @@ class _ThemHoaDonViewState extends State<ThemHoaDonView> {
         ),
       ),
       body: BlocListener<ThemhoadonBloc, ThemhoadonState>(
-        listenWhen: (pre, cur) {
-          return pre.billStatus != cur.billStatus;
+        listenWhen: (pre, cur) {return pre.billStatus != cur.billStatus;
         },
         listener: (context, state) {
           if (state.billStatus == BillStatus.loading) {
@@ -121,6 +120,7 @@ class _ThemHoaDonViewState extends State<ThemHoaDonView> {
 
             ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Thêm hóa đơn thành công!')));
+            Future.delayed(Duration(seconds: 1));
 
             // vì do realtime rồi nên chỉ cần popuntil về thôi
             Navigator.popUntil(context, ModalRoute.withName('/HomeScreenPage'));
@@ -133,8 +133,7 @@ class _ThemHoaDonViewState extends State<ThemHoaDonView> {
                 ..hideCurrentSnackBar()
                 ..showSnackBar(SnackBar(
                     duration: const Duration(seconds: 2),
-                    content: Text(
-                      state.message,)));
+                    content: Text(state.message,)));
             }
           }
         },

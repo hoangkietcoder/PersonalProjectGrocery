@@ -62,4 +62,31 @@ class DataLocalRepository {
       box.put(product); // put sẽ update nếu id tồn tại
     }
   }
+
+  // xử lí khi bị trùng dữ liệu có sẵn thì chỉ việc tăng số lượng lên 1
+  Future<void> addOrIncreaseProduct(ModelProductLocal product) async {
+    final box = _objectBoxService.productBox;
+    // Tìm sản phẩm đã tồn tại theo fireBaseId
+    final query = box.query(ModelProductLocal_.fireBaseId.equals(product.fireBaseId)).build();
+    final existing = query.findFirst();
+    query.close();
+
+
+    if(existing != null){
+      // Cộng dồn số lượng
+      final oldQty = int.tryParse(existing.quantityProduct) ?? 0;
+      final newQty = oldQty + 1;
+      final updatedProduct = existing.copyWith(
+        quantityProduct: newQty.toString(),
+      );
+      await saveProduct(updatedProduct); // ✅ dùng lại hàm đã có
+      print('✅ Đã tăng số lượng lên $newQty');
+    } else {
+      // Nếu chưa có, thêm mới với quantity = 1
+      final newProduct = product.copyWith(quantityProduct: '1');
+      await saveProduct(newProduct); // ✅ dùng lại hàm đã có
+      print('🆕 Đã thêm sản phẩm mới vào giỏ hàng');
+    }
+
+  }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../../Compoents/Dialog/dialog_delete_bill.dart';
+import 'bloc/huy_don_bloc.dart';
 
 
 class HuyDonPage extends StatelessWidget {
@@ -37,6 +37,7 @@ class _HuyDonViewState extends State<HuyDonView> {
               child: Padding(
                 padding: REdgeInsets.only(right: 8.0, left: 8.0),
                 child: TextField(
+                  onChanged: (value) => context.read<HuyDonBloc>().add(SearchBillDaHuyEventChange(value)),
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30.0),
@@ -70,11 +71,33 @@ class _HuyDonViewState extends State<HuyDonView> {
           ],
         ),
         SizedBox(height: 10.h),
-        Expanded(
+        BlocBuilder<HuyDonBloc, HuyDonState>(
+        buildWhen: (pre , cur ){
+          return pre.statusBillDaHuy != cur.statusBillDaHuy ||
+              pre.statusBillSearch != cur.statusBillSearch ||
+              pre.lsBillDaHuy != cur.lsBillDaHuy;
+        },
+        builder: (context, state) {
+          //  Hiển thị loading khi đang load danh sách ban đầu
+          if (state.statusBillDaHuy == StatusBillDaHuy.initial) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          // Hiển thị loading riêng khi đang search
+          if (state.statusBillSearch == StatusBillSearch.loading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          //  Nếu không có dữ liệu
+          if (state.lsBillDaHuy.isEmpty) {
+            return const Center(child: Text("Không có hóa đơn nào."));
+          }
+
+          return Expanded(
           child: ListView.builder(
-            itemCount: 9,
+            itemCount: state.lsBillDaHuy.length,
             itemBuilder: (context, index) {
-              // final item = items[index];
+              final item = state.lsBillDaHuy[index];
               return Container(
                 margin: REdgeInsets.only(top: 5, bottom: 5, left: 5, right: 5),
                 decoration: BoxDecoration(
@@ -116,7 +139,7 @@ class _HuyDonViewState extends State<HuyDonView> {
                                 style: TextStyle(color: Colors.black, fontSize: 14.sp),
                               ),
                               TextSpan(
-                                text: "#HD17534929",
+                                text: item.nameBill,
                                 style: TextStyle(color: Colors.black, fontSize: 14.sp),
                               ),
                             ],
@@ -131,7 +154,7 @@ class _HuyDonViewState extends State<HuyDonView> {
                                 style: TextStyle(color: Colors.black, fontSize: 14.sp),
                               ),
                               TextSpan(
-                                text: "Hoàng Kiệt",
+                                text: item.nameBuyer,
                                 style: TextStyle(color: Colors.black, fontSize: 14.sp),
                               ),
                             ],
@@ -146,7 +169,7 @@ class _HuyDonViewState extends State<HuyDonView> {
                                 style: TextStyle(color: Colors.black, fontSize: 15.sp,fontWeight: FontWeight.bold),
                               ),
                               TextSpan(
-                                text: "199.000 VNĐ",
+                                text: item.totalPriceBill,
                                 style: TextStyle(color: Colors.red, fontSize: 15.sp),
                               ),
                             ],
@@ -179,7 +202,7 @@ class _HuyDonViewState extends State<HuyDonView> {
                                           ),
                                         ),
                                         TextSpan(
-                                          text: "30-8-2024",
+                                          text: item.date,
                                           style: TextStyle(
                                             fontSize: 13.sp,
                                             fontWeight: FontWeight.normal,
@@ -232,7 +255,7 @@ class _HuyDonViewState extends State<HuyDonView> {
                                           ),
                                         ),
                                         TextSpan(
-                                          text: "#HD158094830",
+                                          text: item.idBillRandom,
                                           style: TextStyle(
                                             fontSize: 13.sp,
                                             fontWeight: FontWeight.normal,
@@ -262,7 +285,7 @@ class _HuyDonViewState extends State<HuyDonView> {
                                           ),
                                         ),
                                         TextSpan(
-                                          text: "Tống Hoàng Kiệt",
+                                          text: item.nameSeller,
                                           style: TextStyle(
                                             fontSize: 13.sp,
                                             fontWeight: FontWeight.normal,
@@ -322,7 +345,7 @@ class _HuyDonViewState extends State<HuyDonView> {
                                           ),
                                         ),
                                         TextSpan(
-                                          text: "Hóa đơn này chưa tính tiền",
+                                          text: item.noteBill,
                                           style: TextStyle(
                                             fontSize: 13.sp,
                                             fontWeight: FontWeight.normal,
@@ -368,7 +391,9 @@ class _HuyDonViewState extends State<HuyDonView> {
               );
             },
           ),
-        ),
+        );
+  },
+),
       ],
     );
   }

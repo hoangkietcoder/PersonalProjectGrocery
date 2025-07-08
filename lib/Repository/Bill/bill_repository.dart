@@ -51,7 +51,7 @@ class BillRepository {
     }).toList();
   }
 
-  // xài Future dùng để realtime để lấy dữ liệu từ firebase ( cho chức năng tìm kiếm )
+  // xài Future dùng để realtime để lấy dữ liệu từ firebase ( cho chức năng tìm kiếm hóa đơn đã thanh toán )
   Future<List<ModelChuathanhtoan>> searchBillDaThanhToanByName(String name) async {
     final query = await _db.collection(_collection)
         .where("status", isEqualTo: "1") // chỉ lấy hóa đơn chưa thanh toán
@@ -109,18 +109,32 @@ class BillRepository {
     }
   }
 
+  // lấy dữ liệu hủy đơn về dựa trên status =2
   Stream<List<ModelChuathanhtoan>> get getBillHuyDon {
     return _db
         .collection(_collection)
-        .where("status", isEqualTo: "2") // lọc status = 1
+        .where("status", isEqualTo: "2") // lọc status = 2
         .snapshots()
         .map((snapshot) {
+      // print(" SNAPSHOT CHANGE: Có ${snapshot.docs.length} documents với status = 2");
       return snapshot.docs.map((doc) {
         return ModelChuathanhtoan.fromJson(doc.data()).copyWith(
             idBill: doc.id
         );
       }).toList();
     });
+  }
+
+  // xài Future dùng để realtime để lấy dữ liệu từ firebase ( cho chức năng tìm kiếm hóa đơn đã thanh toán )
+  Future<List<ModelChuathanhtoan>> searchHuyBillByName(String name) async {
+    final query = await _db.collection(_collection)
+        .where("status", isEqualTo: "2") // chỉ lấy hóa đơn chưa thanh toán
+        .where("nameBill", isGreaterThanOrEqualTo: name).where("nameBill", isLessThanOrEqualTo: "$name\uf7ff").get();
+    return query.docs.map((e) {
+      return ModelChuathanhtoan.fromJson(e.data()).copyWith(
+          idBill: e.id
+      );
+    }).toList();
   }
 
 

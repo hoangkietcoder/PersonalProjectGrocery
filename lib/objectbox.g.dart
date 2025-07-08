@@ -12,6 +12,7 @@ import 'package:flat_buffers/flat_buffers.dart' as fb;
 import 'package:objectbox/internal.dart'
     as obx_int; // generated code can access "internal" functionality
 import 'package:objectbox/objectbox.dart' as obx;
+import 'package:objectbox_sync_flutter_libs/objectbox_sync_flutter_libs.dart';
 
 import 'ObjectBox/model/ModelProductLocal.dart';
 
@@ -32,7 +33,7 @@ final _entities = <obx_int.ModelEntity>[
       ),
       obx_int.ModelProperty(
         id: const obx_int.IdUid(2, 2995362695091059),
-        name: 'Firebaseid',
+        name: 'fireBaseId',
         type: 9,
         flags: 0,
       ),
@@ -95,7 +96,7 @@ final _entities = <obx_int.ModelEntity>[
 /// For Flutter apps, also calls `loadObjectBoxLibraryAndroidCompat()` from
 /// the ObjectBox Flutter library to fix loading the native ObjectBox library
 /// on Android 6 and older.
-obx.Store openStore({
+Future<obx.Store> openStore({
   String? directory,
   int? maxDBSizeInKB,
   int? maxDataSizeInKB,
@@ -103,10 +104,11 @@ obx.Store openStore({
   int? maxReaders,
   bool queriesCaseSensitiveDefault = true,
   String? macosApplicationGroup,
-}) {
+}) async {
+  await loadObjectBoxLibraryAndroidCompat();
   return obx.Store(
     getObjectBoxModel(),
-    directory: directory,
+    directory: directory ?? (await defaultStoreDirectory()).path,
     maxDBSizeInKB: maxDBSizeInKB,
     maxDataSizeInKB: maxDataSizeInKB,
     fileMode: fileMode,
@@ -144,7 +146,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         object.id = id;
       },
       objectToFB: (ModelProductLocal object, fb.Builder fbb) {
-        final FirebaseidOffset = fbb.writeString(object.fireBaseId);
+        final fireBaseIdOffset = fbb.writeString(object.fireBaseId);
         final img_urlOffset = fbb.writeString(object.img_url);
         final nameProductOffset = fbb.writeString(object.nameProduct);
         final quantityProductOffset = fbb.writeString(object.quantityProduct);
@@ -154,7 +156,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         final noteProductOffset = fbb.writeString(object.noteProduct);
         fbb.startTable(10);
         fbb.addInt64(0, object.id);
-        fbb.addOffset(1, FirebaseidOffset);
+        fbb.addOffset(1, fireBaseIdOffset);
         fbb.addOffset(2, img_urlOffset);
         fbb.addOffset(3, nameProductOffset);
         fbb.addOffset(4, quantityProductOffset);
@@ -174,7 +176,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           4,
           0,
         );
-        final FirebaseidParam = const fb.StringReader(
+        final fireBaseIdParam = const fb.StringReader(
           asciiOptimization: true,
         ).vTableGet(buffer, rootOffset, 6, '');
         final img_urlParam = const fb.StringReader(
@@ -200,7 +202,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
         ).vTableGet(buffer, rootOffset, 20, '');
         final object = ModelProductLocal(
           id: idParam,
-          fireBaseId: FirebaseidParam,
+          fireBaseId: fireBaseIdParam,
           img_url: img_urlParam,
           nameProduct: nameProductParam,
           quantityProduct: quantityProductParam,
@@ -225,8 +227,8 @@ class ModelProductLocal_ {
     _entities[0].properties[0],
   );
 
-  /// See [ModelProductLocal.Firebaseid].
-  static final Firebaseid = obx.QueryStringProperty<ModelProductLocal>(
+  /// See [ModelProductLocal.fireBaseId].
+  static final fireBaseId = obx.QueryStringProperty<ModelProductLocal>(
     _entities[0].properties[1],
   );
 

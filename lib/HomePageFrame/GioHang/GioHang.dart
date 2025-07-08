@@ -196,26 +196,15 @@ class _GioHangViewState extends State<GioHangView> {
                                           Icons.remove_circle_outline,
                                           color: Colors.blueAccent),
                                       onPressed: () {
-                                        context
-                                            .read<ModelProductLocalBloc>()
-                                            .add(
-                                              UpdateQuantityProductLocalEvent(
-                                                  product: item, change: -1),
-                                            );
+                                        context.read<ModelProductLocalBloc>().add(UpdateQuantityProductLocalEvent(product: item, change: -1),);
                                       },
                                     ),
-                                    Text(item.quantityProduct,
-                                        style: const TextStyle(fontSize: 16)),
+                                    Text(item.quantityProduct, style: const TextStyle(fontSize: 16)),
                                     IconButton(
                                       icon: const Icon(Icons.add_circle_outline,
                                           color: Colors.blueAccent),
                                       onPressed: () {
-                                        context
-                                            .read<ModelProductLocalBloc>()
-                                            .add(
-                                              UpdateQuantityProductLocalEvent(
-                                                  product: item, change: 1),
-                                            );
+                                        context.read<ModelProductLocalBloc>().add(UpdateQuantityProductLocalEvent(product: item, change: 1),);
                                       },
                                     ),
                                   ],

@@ -72,9 +72,10 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
         ),
         SizedBox(height: 10.h),
         BlocListener<ChuaThanhToanBloc, ChuaThanhToanState>(
-        listenWhen: (pre , cur ) => pre.deleteStatusBill != cur.deleteStatusBill,
+        listenWhen: (pre , cur ) => pre.deleteStatusBill != cur.deleteStatusBill || pre.statusSubmitThanhToan != cur.statusSubmitThanhToan,
         listener: (context, state) {
-          if(state.deleteStatusBill == DeleteStatusBill.successful){
+          if(state.statusBillType == StatusBillType.delete &&
+              state.deleteStatusBill == DeleteStatusBill.successful){
             showDialog(
               context: context,
               builder: (_) => const DialogAutoDeletebill(),
@@ -85,6 +86,17 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
               }
             });
           }
+          if(state.statusBillType == StatusBillType.submitPay &&
+              state.statusSubmitThanhToan == StatusSubmitThanhToan.successful){
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: const Text('Thanh toán hóa đơn thành công!'),
+              duration: const Duration(seconds: 1),
+              backgroundColor: Colors.green,
+              behavior: SnackBarBehavior.fixed
+            ));
+            // ✅ Reset trạng thái để lần sau vẫn hiện lại được
+            context.read<ChuaThanhToanBloc>().add(resetStatusNotification());
+          }
 
           },
         child: BlocBuilder<ChuaThanhToanBloc, ChuaThanhToanState>(
@@ -92,6 +104,9 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
           builder: (context, state) {
             if (state.statusBill == StatusChuaThanhToan.initial) {
               return Center(child: const CircularProgressIndicator());
+            }
+            if(state.statusBill == StatusChuaThanhToan.failure){
+              return Center(child: Text("Lỗi: ${state.error}"));
             }
             return BlocBuilder<ChuaThanhToanBloc, ChuaThanhToanState>(
               buildWhen: (pre, cur) => pre.lstBillChuaThanhToan != cur.lstBillChuaThanhToan,
@@ -416,7 +431,7 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
                                         Expanded(
                                           child: ElevatedButton.icon(
                                             onPressed: () {
-                                             context.read<HoaDonDaThanhToanBloc>().add(SubmitHoaDonDaThanhToan(billchuathanhtoan));
+                                             context.read<ChuaThanhToanBloc>().add(PayBillChuaThanhToan(billchuathanhtoan.idBill ?? ''));
                                             },
                                             icon: Icon(Icons.check,
                                                 size: 14.sp,

@@ -12,6 +12,7 @@ import 'HoaDonChuaThanhToan/bloc/chua_thanh_toan_bloc.dart';
 import 'HoaDonDaThanhToan/HoaDonDaThanhToan.dart';
 import 'HoaDonDaThanhToan/bloc/hoa_don_da_thanh_toan_bloc.dart';
 import 'HuyDon/HuyDon.dart';
+import 'HuyDon/bloc/huy_don_bloc.dart';
 
 class HoaDonPage extends StatelessWidget {
   const HoaDonPage({super.key});
@@ -23,9 +24,15 @@ class HoaDonPage extends StatelessWidget {
       BlocProvider<ChuaThanhToanBloc>(
         create: (BuildContext context) => ChuaThanhToanBloc(billrepo: billRepo)..add(CreateBillChange()),
       ),
+      // ngay khi khởi tạo bloc thì chạy sự kiện HoaDonDaThanhToanSubscriptionRequested để lấy dữ liệu
       BlocProvider<HoaDonDaThanhToanBloc>(
         create: (BuildContext context) => HoaDonDaThanhToanBloc(billRepository: billRepo)..add(HoaDonDaThanhToanSubscriptionRequested()),
       ),
+      // ngay khi khởi tạo bloc thì chạy sự kiện HuyDonSubscriptionRequested để lấy dữ liệu
+      BlocProvider<HuyDonBloc>(
+        create: (BuildContext context) => HuyDonBloc(billRepository: billRepo)..add(HuyDonSubscriptionRequested()),
+      ),
+
     ],
     child: const HoaDonView());
   }

@@ -2,6 +2,8 @@ part of 'chua_thanh_toan_bloc.dart';
 
 enum StatusChuaThanhToan { initial, failure, successful }
 enum DeleteStatusBill { initial,loading, failure ,successful} // trạng thái xóa bill
+enum StatusSubmitThanhToan {initial, failure, successful} // trạng thái khi bấm submit thanh toán
+enum StatusBillType {none , delete , submitPay } // phân loại cho bloc listner cái nào là xóa cái nào là thanh toán
 class ChuaThanhToanState extends Equatable {
   const ChuaThanhToanState({
         this.lstBillChuaThanhToan = const [],
@@ -9,6 +11,8 @@ class ChuaThanhToanState extends Equatable {
         this.error = "",
         this.modelChuathanhtoan = ModelChuathanhtoan.empty,
         this.deleteStatusBill = DeleteStatusBill.initial,
+        this.statusBillType = StatusBillType.none,
+        this.statusSubmitThanhToan = StatusSubmitThanhToan.initial
 
       });
 
@@ -21,6 +25,8 @@ class ChuaThanhToanState extends Equatable {
   final String error;
   final ModelChuathanhtoan modelChuathanhtoan;
   final DeleteStatusBill deleteStatusBill;
+  final StatusBillType statusBillType;
+  final StatusSubmitThanhToan statusSubmitThanhToan;
 
   ChuaThanhToanState copyWith({
     List<ModelChuathanhtoan>? lstBillChuaThanhToan,
@@ -28,19 +34,21 @@ class ChuaThanhToanState extends Equatable {
     String? error,
     ModelChuathanhtoan? modelChuathanhtoan,
     DeleteStatusBill? deleteStatusBill,
+    StatusBillType? statusBillType,
+    StatusSubmitThanhToan? statusSubmitThanhToan,
 
   }) {
     return ChuaThanhToanState(
       lstBillChuaThanhToan: lstBillChuaThanhToan ?? this.lstBillChuaThanhToan,
       statusBill: statusBill ?? this.statusBill,
-      // statusHome: statusHome ?? this.statusHome,
-      // statusDeleteProduct: statusDeleteProduct ?? this.statusDeleteProduct,
       error: error ?? this.error,
       modelChuathanhtoan: modelChuathanhtoan ?? this.modelChuathanhtoan,
       deleteStatusBill: deleteStatusBill ?? this.deleteStatusBill,
+      statusBillType: statusBillType ?? this.statusBillType,
+      statusSubmitThanhToan: statusSubmitThanhToan ?? this.statusSubmitThanhToan,
     );
   }
 
   @override
-  List<Object> get props => [lstBillChuaThanhToan, statusBill, error,modelChuathanhtoan,deleteStatusBill];
+  List<Object> get props => [lstBillChuaThanhToan, statusBill, error,modelChuathanhtoan,deleteStatusBill,statusBillType,statusSubmitThanhToan];
 }

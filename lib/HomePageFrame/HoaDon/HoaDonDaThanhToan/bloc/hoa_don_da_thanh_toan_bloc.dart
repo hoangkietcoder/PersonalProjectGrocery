@@ -14,19 +14,28 @@ class HoaDonDaThanhToanBloc extends Bloc<HoaDonDaThanhToanEvent, HoaDonDaThanhTo
         _billRepository = billRepository,
         super(HoaDonDaThanhToanState()) {
     on<HoaDonDaThanhToanSubscriptionRequested>(_onSubscriptionRequested);
-    on<SubmitHoaDonDaThanhToan>(_onSubmitPay);
-    on<SearchBillDaThanhToanEventChange>(_onSearchProductChanged, transformer: debounce(Duration(milliseconds: 500)));
+    on<SearchBillDaThanhToanEventChange>(_onSearchBillDaThanhToanChanged, transformer: debounce(Duration(milliseconds: 500)));
+    on<DeleteBillDaThanhToan>(_onDeleteBill);
 
+
+    //  Reset status sau khi hiển thị SnackBar
+    on<resetStatusDeleteNotification>((event, emit) {
+      emit(state.copyWith(
+        statusSubmitDeleteBillDaThanhToan: StatusSubmitDeleteBillDaThanhToan.initial,
+        statusBill: null,
+      ));
+    });
   }
 
   final BillRepository _billRepository;
 
+
+  // xử lý lấy dữ liệu đã thanh toán về
   Future<void> _onSubscriptionRequested(
       HoaDonDaThanhToanSubscriptionRequested event,
       Emitter<HoaDonDaThanhToanState> emit,
       ) {
-    return emit.onEach(
-      _billRepository.billDaThanhToan,
+    return emit.onEach(_billRepository.billDaThanhToan,
       onData: (data) async {
         return emit(state.copyWith(
             lsBillDaThanhToan: data,
@@ -37,27 +46,7 @@ class HoaDonDaThanhToanBloc extends Bloc<HoaDonDaThanhToanEvent, HoaDonDaThanhTo
     );
   }
 
-  Future<void> _onSubmitPay(
-      SubmitHoaDonDaThanhToan event,
-      Emitter<HoaDonDaThanhToanState> emit,
-      ) async{
-    try{
-      emit(state.copyWith(statusThanhToan: StatusSubmit.isProcessing, statusBill: null));
-      await _billRepository.updateBillDaThanhToan(doc: event.modelChuathanhtoan.idBill);
-      if(isClosed) return;
-      return emit(state.copyWith(
-          statusThanhToan: StatusSubmit.success,
-          msg: 'Thanh toán thành công', statusBill: null
-      ));
-    }catch(error){
-      if(isClosed) return;
-      return emit(state.copyWith(
-          statusThanhToan: StatusSubmit.failure,
-          msg: error.toString(), statusBill: null
-      ));
-    }
 
-  }
 
   // void _onBillChange(
   //     CreateBillChange event,
@@ -71,25 +60,43 @@ class HoaDonDaThanhToanBloc extends Bloc<HoaDonDaThanhToanEvent, HoaDonDaThanhTo
 
 
   // xử lí thanh tìm kiếm hóa đơn đã thánh toán ( theo tên hóa đơn )
-  Future<void> _onSearchProductChanged(
+  Future<void> _onSearchBillDaThanhToanChanged(
       SearchBillDaThanhToanEventChange event,
       Emitter<HoaDonDaThanhToanState> emit,
       ) async{
     try{
-      emit(state.copyWith(statusBill: StatusInitial.initial));
+      emit(state.copyWith(statusBillSearchDaThanhToan: StatusBillSearchDaThanhToan.loading, statusBill: null));
       final data = await _billRepository.searchBillDaThanhToanByName(event.query);
       return emit(state.copyWith(
           lsBillDaThanhToan: data,
-          statusBill: StatusInitial.success
+        statusBillSearchDaThanhToan: StatusBillSearchDaThanhToan.successful, statusBill: null,
       ));
     }catch(error){
       if(isClosed) return;
       return emit(state.copyWith(
           lsBillDaThanhToan: [],
-          statusBill: StatusInitial.failure
+          statusBillSearchDaThanhToan: StatusBillSearchDaThanhToan.failure,
+          statusBill: null,
       ));
     }
+  }
 
+  // xử lí xóa trong trang đã thanh toán
+  Future<void> _onDeleteBill(DeleteBillDaThanhToan event, Emitter<HoaDonDaThanhToanState> emit,) async {
+    try {
+      await _billRepository.deleteBillDaThanhToan(doc: event.billId);
+      // Không cần cập nhật lại danh sách ở đây vì stream sẽ tự động loại khỏi status = "0"
+      // ✅ emit trạng thái thành công và actionType là "pay"
+      emit(state.copyWith(
+        statusSubmitDeleteBillDaThanhToan: StatusSubmitDeleteBillDaThanhToan.successful, statusBill: null,
+      ));
+
+    } catch (e) {
+      emit(state.copyWith(
+        statusSubmitDeleteBillDaThanhToan: StatusSubmitDeleteBillDaThanhToan.failure, statusBill: null,
+        msg: e.toString(),
+      ));
+    }
   }
 
 }

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:personalprojectgrocery/HomePageFrame/HoaDon/HuyDon/bloc/huy_don_bloc.dart';
 import '../../../Compoents/Dialog/dialog_delete_bill.dart';
 import '../../../Constant/enum.dart';
-import '../HoaDonChuaThanhToan/bloc/chua_thanh_toan_bloc.dart';
 import 'bloc/hoa_don_da_thanh_toan_bloc.dart';
 
 class HoaDonDaThanhToanPage extends StatelessWidget {
@@ -71,333 +70,352 @@ class _HoaDonDaThanhToanViewState extends State<HoaDonChuaDaThanhToanView> {
           ],
         ),
         SizedBox(height: 10.h),
-        BlocBuilder<HoaDonDaThanhToanBloc, HoaDonDaThanhToanState>(
-          buildWhen: (pre, cur) => pre.statusThanhToan != cur.statusThanhToan,
-          builder: (context, state) {
-            if (state.statusInitial == StatusInitial.initial) {
-              return Center(child: const CircularProgressIndicator());
-            }
-            return BlocBuilder<HoaDonDaThanhToanBloc, HoaDonDaThanhToanState>(
-              buildWhen: (pre, cur) =>
-              pre.lsBillDaThanhToan != cur.lsBillDaThanhToan,
-              builder: (context, state) {
-                return Expanded(
-              child: ListView.builder(
-                itemCount: state.lsBillDaThanhToan.length,
-                itemBuilder: (context, index) {
-                  final item = state.lsBillDaThanhToan[index];
-                  return Container(
-                    margin:
-                        REdgeInsets.only(top: 5, bottom: 5, left: 5, right: 5),
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10.r),
-                        border: Border.all(
-                            // thay đổi màu viền cho list hóa đơn
-                            width: 0.5,
-                            color: Colors.black)),
-                    child: Theme(
-                      data: Theme.of(context)
-                          .copyWith(dividerColor: Colors.transparent),
-                      child: ExpansionTile(
-                        title: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(10.r),
-                              ),
-                              padding: REdgeInsets.symmetric(
-                                  vertical: 5, horizontal: 11),
-                              child: Text(
-                                "Đã Tính Tiền",
-                                style: TextStyle(
-                                  fontSize: 10.sp,
-                                  color: Colors.white,
+          BlocListener<HoaDonDaThanhToanBloc, HoaDonDaThanhToanState>(
+            listenWhen: (pre , cur ) => pre.statusSubmitDeleteBillDaThanhToan != cur.statusSubmitDeleteBillDaThanhToan,
+            listener: (context, state) {
+              if(state.statusSubmitDeleteBillDaThanhToan == StatusSubmitDeleteBillDaThanhToan.successful)
+                {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: const Text('Hủy hóa đơn thành công!'),
+                      duration: const Duration(seconds: 2),
+                      backgroundColor: Colors.red,
+                      behavior: SnackBarBehavior.fixed
+                  ));
+                  // ✅ Reset trạng thái để lần sau vẫn hiện lại được
+                  context.read<HoaDonDaThanhToanBloc>().add(resetStatusDeleteNotification());
+                }
+              },
+          child: BlocBuilder<HoaDonDaThanhToanBloc, HoaDonDaThanhToanState>(
+            buildWhen: (pre, cur){
+              return pre.statusThanhToan != cur.statusThanhToan ||
+                  pre.lsBillDaThanhToan != cur.lsBillDaThanhToan ||
+                  pre.statusSubmitDeleteBillDaThanhToan != cur.statusSubmitDeleteBillDaThanhToan ||// nếu muốn thêm search
+                  pre.statusBillSearchDaThanhToan != cur.statusBillSearchDaThanhToan;
+            },
+            builder: (context, state) {
+              if (state.statusBillSearchDaThanhToan == StatusBillSearchDaThanhToan.loading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (state.statusBillSearchDaThanhToan == StatusBillSearch.failure) {
+                return const Center(child: Text("Tìm kiếm thất bại!"));
+              }
+
+              if (state.lsBillDaThanhToan.isEmpty && state.lsBillDaThanhToan == StatusBillSearch.successful) {
+                return const Center(child: Text("Không tìm thấy hóa đơn nào."));
+              }
+
+
+
+              return BlocBuilder<HoaDonDaThanhToanBloc, HoaDonDaThanhToanState>(
+                buildWhen: (pre, cur) => pre.lsBillDaThanhToan != cur.lsBillDaThanhToan,
+                builder: (context, state) {
+                  return Expanded(
+                child: ListView.builder(
+                  itemCount: state.lsBillDaThanhToan.length,
+                  itemBuilder: (context, index) {
+                    final item = state.lsBillDaThanhToan[index];
+                    return Container(
+                      margin:
+                          REdgeInsets.only(top: 5, bottom: 5, left: 5, right: 5),
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10.r),
+                          border: Border.all(
+                              // thay đổi màu viền cho list hóa đơn
+                              width: 0.5,
+                              color: Colors.black)),
+                      child: Theme(
+                        data: Theme.of(context)
+                            .copyWith(dividerColor: Colors.transparent),
+                        child: ExpansionTile(
+                          title: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(10.r),
+                                ),
+                                padding: REdgeInsets.symmetric(
+                                    vertical: 5, horizontal: 11),
+                                child: Text(
+                                  "Đã Tính Tiền",
+                                  style: TextStyle(
+                                    fontSize: 10.sp,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 5.h,
-                            ),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Hóa đơn: ',
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 14.sp),
-                                  ),
-                                  TextSpan(
-                                    text: item.nameBill,
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 14.sp),
-                                  ),
-                                ],
+                              SizedBox(
+                                height: 5.h,
                               ),
-                            ),
-                            SizedBox(
-                              height: 5.h,
-                            ),
-                            RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Khách hàng: ',
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 14.sp),
-                                  ),
-                                  TextSpan(
-                                    text: item.nameBuyer,
-                                    style: TextStyle(
-                                        color: Colors.black, fontSize: 14.sp),
-                                  ),
-                                ],
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Hóa đơn: ',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14.sp),
+                                    ),
+                                    TextSpan(
+                                      text: item.nameBill,
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14.sp),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              height: 5.h,
-                            ),
-                            RichText(
-                              text: TextSpan(
+                              SizedBox(
+                                height: 5.h,
+                              ),
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Khách hàng: ',
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14.sp),
+                                    ),
+                                    TextSpan(
+                                      text: item.nameBuyer,
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 14.sp),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 5.h,
+                              ),
+                              RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                      text: 'Tổng tiền: ',
+                                      style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 15.sp,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    TextSpan(
+                                      text: item.totalPriceBill,
+                                      style: TextStyle(
+                                          color: Colors.green, fontSize: 15.sp),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                          trailing: Icon(
+                            Icons.expand_more,
+                            size: 18.sp,
+                          ),
+                          children: <Widget>[
+                            const Divider(color: Colors.grey),
+                            ListTile(
+                              title: Column(
                                 children: [
-                                  TextSpan(
-                                    text: 'Tổng tiền: ',
-                                    style: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 15.sp,
-                                        fontWeight: FontWeight.bold),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: "Ngày tạo đơn:",
+                                                style: TextStyle(
+                                                  fontSize: 13.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: item.date,
+                                                style: TextStyle(
+                                                  fontSize: 13.sp,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  TextSpan(
-                                    text: item.totalPriceBill,
-                                    style: TextStyle(
-                                        color: Colors.green, fontSize: 15.sp),
+                                  SizedBox(height: 5.h),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: 'Mã hóa đơn: ',
+                                                style: TextStyle(
+                                                  fontSize: 13.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: item.idBillRandom,
+                                                style: TextStyle(
+                                                  fontSize: 13.sp,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: 'Người bán: ',
+                                                style: TextStyle(
+                                                  fontSize: 13.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: item.nameSeller,
+                                                style: TextStyle(
+                                                  fontSize: 13.sp,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: 'Số lượng vật phẩm: ',
+                                                style: TextStyle(
+                                                  fontSize: 13.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: "5",
+                                                style: TextStyle(
+                                                  fontSize: 13.sp,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: RichText(
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(
+                                                text: 'Ghi chú: ',
+                                                style: TextStyle(
+                                                  fontSize: 13.sp,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: item.noteBill,
+                                                style: TextStyle(
+                                                  fontSize: 13.sp,
+                                                  fontWeight: FontWeight.normal,
+                                                  color: Colors.black,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 5.h),
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: ElevatedButton.icon(
+                                          onPressed: () {
+                                            Navigator.pushNamed(
+                                                context, '/ChiTietHoaDon');
+                                          },
+                                          icon: Icon(Icons.edit,
+                                              size: 15.sp, color: Colors.white),
+                                          label: Text('Xem',
+                                              style: TextStyle(
+                                                  fontSize: 12.sp,
+                                                  color: Colors.white)),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.blue,
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(width: 10.w),
+                                      Expanded(
+                                        child: ElevatedButton.icon(
+                                          onPressed: () {
+                                            context.read<HoaDonDaThanhToanBloc>().add(DeleteBillDaThanhToan(item.idBill));
+                                          },
+                                          icon: Icon(Icons.delete,
+                                              size: 15.sp, color: Colors.white),
+                                          label: Text('Xóa',
+                                              style: TextStyle(
+                                                  fontSize: 12.sp,
+                                                  color: Colors.white)),
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.red,
+                                          ),
+                                        ),
+                                      )
+                                    ],
                                   ),
                                 ],
                               ),
                             ),
                           ],
                         ),
-                        trailing: Icon(
-                          Icons.expand_more,
-                          size: 18.sp,
-                        ),
-                        children: <Widget>[
-                          const Divider(color: Colors.grey),
-                          ListTile(
-                            title: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: "Ngày tạo đơn:",
-                                              style: TextStyle(
-                                                fontSize: 13.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            TextSpan(
-                                              text: item.date,
-                                              style: TextStyle(
-                                                fontSize: 13.sp,
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 5.h),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: 'Mã hóa đơn: ',
-                                              style: TextStyle(
-                                                fontSize: 13.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            TextSpan(
-                                              text: item.idBillRandom,
-                                              style: TextStyle(
-                                                fontSize: 13.sp,
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 5.h),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: 'Người bán: ',
-                                              style: TextStyle(
-                                                fontSize: 13.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            TextSpan(
-                                              text: item.nameSeller,
-                                              style: TextStyle(
-                                                fontSize: 13.sp,
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 5.h),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: 'Số lượng vật phẩm: ',
-                                              style: TextStyle(
-                                                fontSize: 13.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            TextSpan(
-                                              text: "5",
-                                              style: TextStyle(
-                                                fontSize: 13.sp,
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 5.h),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: RichText(
-                                        text: TextSpan(
-                                          children: [
-                                            TextSpan(
-                                              text: 'Ghi chú: ',
-                                              style: TextStyle(
-                                                fontSize: 13.sp,
-                                                fontWeight: FontWeight.w500,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                            TextSpan(
-                                              text: item.noteBill,
-                                              style: TextStyle(
-                                                fontSize: 13.sp,
-                                                fontWeight: FontWeight.normal,
-                                                color: Colors.black,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                SizedBox(height: 5.h),
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: ElevatedButton.icon(
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                              context, '/ChiTietHoaDon');
-                                        },
-                                        icon: Icon(Icons.edit,
-                                            size: 15.sp, color: Colors.white),
-                                        label: Text('Xem',
-                                            style: TextStyle(
-                                                fontSize: 12.sp,
-                                                color: Colors.white)),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.blue,
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 10.w),
-                                    Expanded(
-                                      child: ElevatedButton.icon(
-                                        onPressed: () {
-                                          // final bloc = context.read<ChitietsanphamBloc>();
-                                          showDialog<bool>(
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return const DialogDeleteBill();
-                                            },
-                                          );
-                                          //     .then((value) {
-                                          //   if (value != null && value) {
-                                          //     bloc.add(DeleteDetailProduct(product.id,state.lstData.length));
-                                          //     Navigator.pushNamedAndRemoveUntil(context,"/HomeScreenPage",(route) => false); // false là xóa , true là k xóa
-                                          //   }
-                                          // });
-                                        },
-                                        icon: Icon(Icons.delete,
-                                            size: 15.sp, color: Colors.white),
-                                        label: Text('Xóa',
-                                            style: TextStyle(
-                                                fontSize: 12.sp,
-                                                color: Colors.white)),
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.red,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
                       ),
-                    ),
-                  );
-                },
-              ),
-            );
-  },
-);
-          },
-        ),
+                    );
+                  },
+                ),
+              );
+    },
+  );
+            },
+          ),
+  ),
       ],
     );
   }

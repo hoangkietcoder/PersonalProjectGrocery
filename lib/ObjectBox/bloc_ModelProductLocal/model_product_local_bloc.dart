@@ -12,38 +12,42 @@ part 'model_product_local_event.dart';
 part 'model_product_local_state.dart';
 
 class ModelProductLocalBloc extends Bloc<ModelProductLocalEvent, ModelProductLocalState> {
-  ModelProductLocalBloc({required DataLocalRepository DataLocalRepository}) : dataLocalRepository = DataLocalRepository,
+  ModelProductLocalBloc({required DataLocalRepository DataLocalRepository})
+      : dataLocalRepository = DataLocalRepository,
         super(ModelProductLocalState()) {
-
     // đăng kí sự kiện
     on<SaveProductLocalEvent>(_onSaveProductLocal);
     on<DeleteLocalProductEvent>(_deleteSaveProductLocal);
     on<DeleteAllLocalProductCartEvent>(_deleteAllProductsLocal);
-    on<RefreshListProDuctLocalCartEvent>(_getAllProductsLocal); // refresh lại danh sách
+    on<RefreshListProDuctLocalCartEvent>(
+        _getAllProductsLocal); // refresh lại danh sách
     on<UpdateQuantityProductLocalEvent>(_updateQuantityProductLocal);
 
     // lắng nghe sự kiện ()
-    _productLocalSubscription = dataLocalRepository.getAllProducts().listen((productLocals){ emit(state.copyWith(lstModelProductLocal: productLocals));});
-
+    _productLocalSubscription =
+        dataLocalRepository.getAllProducts().listen((productLocals) {
+          emit(state.copyWith(lstModelProductLocal: productLocals));
+        });
   }
 
 
   // truyền repo từ bên ngoài vào
   final DataLocalRepository dataLocalRepository;
-  late final StreamSubscription<List<ModelProductLocal>> _productLocalSubscription; // thêm biến stream
+  late final StreamSubscription<
+      List<ModelProductLocal>> _productLocalSubscription; // thêm biến stream
 
   // xử lí lưu dữ liệu dưới local
-  Future<void> _onSaveProductLocal(SaveProductLocalEvent event, Emitter<ModelProductLocalState> emit) async {
+  Future<void> _onSaveProductLocal(SaveProductLocalEvent event,
+      Emitter<ModelProductLocalState> emit) async {
     try {
       emit(state.copyWith(statusSaveDataLocal: StatusSaveDataLocal.loading)
       );
       await dataLocalRepository.saveProduct(event.product);
-
-      if(isClosed) return;
-      emit(state.copyWith(statusSaveDataLocal: StatusSaveDataLocal.success
+      if (isClosed) return;
+      emit(state.copyWith(statusSaveDataLocal: StatusSaveDataLocal.success,
       ));
-    }catch (error) {
-      if(isClosed) return;
+    } catch (error) {
+      if (isClosed) return;
       emit(
           state.copyWith(
               statusSaveDataLocal: StatusSaveDataLocal.failure,
@@ -53,19 +57,22 @@ class ModelProductLocalBloc extends Bloc<ModelProductLocalEvent, ModelProductLoc
     }
   }
 
-  Future<void> _deleteAllProductsLocal(DeleteAllLocalProductCartEvent event, Emitter<ModelProductLocalState> emit) async{
-        try{
-          emit(state.copyWith(statusDeleteDataLocal: StatusDeleteDataLocal.loading));
-          // Gọi repo xóa dữ liệu
-          await dataLocalRepository.deleteAllProductsLocal();
-          //  KHÔNG cần getAllProducts() nữa
-          //  Stream sẽ tự update lại danh sách → emit tự động
-          emit(state.copyWith(statusDeleteDataLocal: StatusDeleteDataLocal.success));
-        }catch(error) {
-          emit(state.copyWith(
-              error: error.toString(),
-              statusDeleteDataLocal: StatusDeleteDataLocal.failure));
-        }
+  Future<void> _deleteAllProductsLocal(DeleteAllLocalProductCartEvent event,
+      Emitter<ModelProductLocalState> emit) async {
+    try {
+      emit(
+          state.copyWith(statusDeleteDataLocal: StatusDeleteDataLocal.loading));
+      // Gọi repo xóa dữ liệu
+      await dataLocalRepository.deleteAllProductsLocal();
+      //  KHÔNG cần getAllProducts() nữa
+      //  Stream sẽ tự update lại danh sách → emit tự động
+      emit(
+          state.copyWith(statusDeleteDataLocal: StatusDeleteDataLocal.success));
+    } catch (error) {
+      emit(state.copyWith(
+          error: error.toString(),
+          statusDeleteDataLocal: StatusDeleteDataLocal.failure));
+    }
   }
 
   @override
@@ -75,16 +82,16 @@ class ModelProductLocalBloc extends Bloc<ModelProductLocalEvent, ModelProductLoc
   }
 
   //=========================== xử lí xóa tất cả sản phẩm và refesh lại danh sách ( dùng stream tự động cập nhật )
-  Future<void> _getAllProductsLocal(RefreshListProDuctLocalCartEvent event, Emitter<ModelProductLocalState> emit,)
-    {
-      return emit.onEach(dataLocalRepository.getAllProducts(),
+  Future<void> _getAllProductsLocal(RefreshListProDuctLocalCartEvent event,
+      Emitter<ModelProductLocalState> emit,) {
+    return emit.onEach(dataLocalRepository.getAllProducts(),
       onData: (data) async {
         return emit(state.copyWith(
-          statusGetDataLocal: StatusGetDataLocal.success,
-          lstModelProductLocal: data
+            statusGetDataLocal: StatusGetDataLocal.success,
+            lstModelProductLocal: data
         ));
       },
-      onError: (error, strace){
+      onError: (error, strace) {
         return emit(state.copyWith(
             statusGetDataLocal: StatusGetDataLocal.failure,
             error: "Lấy danh sách thất bại!"
@@ -94,16 +101,16 @@ class ModelProductLocalBloc extends Bloc<ModelProductLocalEvent, ModelProductLoc
   }
 
 
-
   //============== xử lí xóa dữ liệu 1 sản phẩm trong giỏ hàng dưới local
-  Future<void> _deleteSaveProductLocal(DeleteLocalProductEvent event, Emitter<ModelProductLocalState> emit) async {
+  Future<void> _deleteSaveProductLocal(DeleteLocalProductEvent event,
+      Emitter<ModelProductLocalState> emit) async {
     try {
       emit(state.copyWith(statusSaveDataLocal: StatusSaveDataLocal.loading));
       await dataLocalRepository.deleteProduct(event.id);
-      if(isClosed) return;
+      if (isClosed) return;
       emit(state.copyWith(statusSaveDataLocal: StatusSaveDataLocal.success));
-    }catch (error) {
-      if(isClosed) return;
+    } catch (error) {
+      if (isClosed) return;
       emit(
           state.copyWith(
               statusSaveDataLocal: StatusSaveDataLocal.failure,
@@ -141,28 +148,40 @@ class ModelProductLocalBloc extends Bloc<ModelProductLocalEvent, ModelProductLoc
 
 
   // ========================= xử lí nút thêm bớt số lượng
-  Future<void> _updateQuantityProductLocal(UpdateQuantityProductLocalEvent event, Emitter<ModelProductLocalState> emit) async {
+  Future<void> _updateQuantityProductLocal(
+      UpdateQuantityProductLocalEvent event,
+      Emitter<ModelProductLocalState> emit) async {
     try {
-      final currentQuantity = int.tryParse(event.product.quantityProduct) ?? 0; // ép kiểu về int
-      final updatedQuantity = currentQuantity + event.change ;
-      if(updatedQuantity <= 0 ){
-        // Nếu nhỏ hơn 1 thì xóa sản phẩm khỏi local
-        dataLocalRepository.deleteProduct(event.product.id);
+      // Lấy số lượng hiện tại từ sản phẩm, nếu lỗi thì mặc định là 0
+      final currentQty = int.tryParse(event.product.quantityProduct) ?? 0;
+
+      // Tính số lượng mới bằng cách cộng thêm change (+1 hoặc -1)
+      final updatedQty = currentQty + event.change;
+      print('Updated Qty: $updatedQty');
+
+
+      // Kiểm tra số lượng mới có hợp lệ không
+      if (updatedQty <= 0) {
+        // Xóa sản phẩm nếu số lượng <= 0
+        await dataLocalRepository.deleteProduct(event.product.id);
+      } else {
+        // Cập nhật sản phẩm với số lượng mới
+        final updatedProduct = event.product.copyWith(
+          quantityProduct: updatedQty.toString(),
+        );
+
+        await dataLocalRepository.saveProduct(updatedProduct);
       }
-     else {
-        final updatedProduct = event.product.copyWith(quantityProduct: updatedQuantity.toString()); // Chuyển int -> String khi lưu lại
-        dataLocalRepository.saveProduct(updatedProduct); // Ghi lại vào ObjectBox
-        // ✅ Luôn luôn gọi lại toàn bộ danh sách mới sau khi thao tác xong
-        final newList = await dataLocalRepository.getAllProducts().first; // sẽ đợi giá trị đầu tiên của stream (thường là ngay lập tức), sau đó lấy List<ModelProductLocal> ra và gán vào state
-        emit(state.copyWith(
-          lstModelProductLocal: newList,
-          statusGetDataLocal: StatusGetDataLocal.success,
-        ));
-      }
-    } catch (e) {
+      // Reload danh sách
+      final newList = await dataLocalRepository
+          .getAllProducts()
+          .first;
       emit(state.copyWith(
-        error: e.toString(),
+        lstModelProductLocal: newList,
+        statusGetDataLocal: StatusGetDataLocal.success,
       ));
+    } catch (e) {
+      emit(state.copyWith(error: e.toString()));
     }
   }
 

@@ -24,12 +24,23 @@ final class SearchBillChuaThanhToanEventChange extends ChuaThanhToanEvent {
  @override
  List<Object?> get props => [query];
 }
+
+// xử lí nút thanh toán ở trang chưa thanh toán
+class PayBillChuaThanhToan extends ChuaThanhToanEvent {
+ final String billId;
+ const PayBillChuaThanhToan(this.billId);
+
+ @override
+ List<Object?> get props => [billId];
+}
+
+
  // cho cái nút thanh toán
- class DaThanhToanBillChange extends ChuaThanhToanEvent{
-   const DaThanhToanBillChange();
+ class SubmitDaThanhToanBillChange extends ChuaThanhToanEvent{
+   const SubmitDaThanhToanBillChange();
  }
 
- // xóa bill chưa thanh toán
+ // xóa bill ở trang chưa thanh toán
  final class DeleteBillChuaThanhToan extends ChuaThanhToanEvent{
  const DeleteBillChuaThanhToan(this.deleteBillChuaThanhToanId,this.index);
 
@@ -38,6 +49,11 @@ final class SearchBillChuaThanhToanEventChange extends ChuaThanhToanEvent {
  final int index;
  @override
  List<Object> get props => [deleteBillChuaThanhToanId,index];
+ }
+
+ // vì thanh toán hóa đơn thứ 2 không hiển thị thông báo nên phải thêm sự kiện này
+ final class resetStatusNotification extends ChuaThanhToanEvent {
+  const resetStatusNotification();
  }
 
 

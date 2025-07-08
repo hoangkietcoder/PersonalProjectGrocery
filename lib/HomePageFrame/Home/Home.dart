@@ -308,7 +308,7 @@ class _HomepageframeViewState extends State<HomeView> {
                                                   child: ElevatedButton.icon(
                                                 onPressed: () async {
                                                   final bloc = BlocProvider.of<ModelProductLocalBloc>(context);
-                                                  final data = ModelProductLocal(fireBaseId: product.id, img_url: product.img_url, nameProduct: product.nameProduct, quantityProduct: product.quantityProduct, priceProduct: product.priceProduct, supplierName: product.supplierName, phoneSupplier: product.phoneSupplier, noteProduct: product.noteProduct);
+                                                  final data = ModelProductLocal(fireBaseId: product.id, img_url: product.img_url, nameProduct: product.nameProduct, quantityProduct: "1", priceProduct: product.priceProduct, supplierName: product.supplierName, phoneSupplier: product.phoneSupplier, noteProduct: product.noteProduct);
                                                   print("dwadwadawd ${data.noteProduct}");
                                                   bloc.add(SaveProductLocalEvent(data));
                                                 },

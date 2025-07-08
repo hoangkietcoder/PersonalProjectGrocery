@@ -22,7 +22,7 @@ class DialogAutoDeletebill extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Text(
-              'Sản phẩm đã được xóa .',
+              'Hóa đơn đã được xóa .',
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),

@@ -5,6 +5,7 @@ import 'package:objectbox/objectbox.dart';
 @Entity()
 class ModelProductLocal {
   int id = 0; // bắt buộc cho ObjectBox
+  @Property() // dành cho fireBaseId ( dùng để lưu ID của sản phẩm trên Firebase.)
   final String fireBaseId;
   final String img_url ;
   final String nameProduct;
@@ -46,7 +47,8 @@ class ModelProductLocal {
       quantityProduct: json["quantityProduct"] ?? "",
       priceProduct: json["priceProduct"] ?? "",
       supplierName: json["supplierName"] ?? "",
-      phoneSupplier: json["phoneSupplier"] ?? -1,
+      // lấy giá trị từ json["phoneSupplier"], ép kiểu nó thành String, và nếu không có thì gán mặc định là "" (chuỗi rỗng)
+      phoneSupplier: json["phoneSupplier"]?.toString() ?? "",
       noteProduct: json["noteProduct"] ?? ""
   );
 
