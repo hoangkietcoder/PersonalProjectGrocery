@@ -88,7 +88,10 @@ class _HoaDonDaThanhToanViewState extends State<HoaDonChuaDaThanhToanView> {
                       horizontal: 15,
                       vertical: 3,
                     ),
-                    hintText: 'Tìm kiếm hóa đơn ...',
+                    hintText: 'Tìm hóa đơn đã thanh toán theo tên ...',
+                    hintStyle: TextStyle(
+                      fontSize: 15.sp,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30.r),
                     ),

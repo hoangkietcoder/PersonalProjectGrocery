@@ -88,7 +88,10 @@ class _HuyDonViewState extends State<HuyDonView> {
                       horizontal: 15,
                       vertical: 3,
                     ),
-                    hintText: 'Tìm kiếm hóa đơn ...',
+                    hintText: 'Tìm hủy đơn theo tên ...',
+                    hintStyle: TextStyle(
+                      fontSize: 15.sp,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30.r),
                     ),
