@@ -1,9 +1,14 @@
-// import 'package:sumi_printer/Models/Register/register_user.dart';
-//
-// final class CapNhatThongTinArgument {
-//   CapNhatThongTinArgument({
-//     required this.registerUser
-//   });
-//   //
-//   final RegisterUser registerUser;
-// }
+
+
+
+
+import '../../Repository/CapNhatThongTin/CapNhatThongTin_repository.dart';
+
+final class CapNhatThongTinArgument {
+  CapNhatThongTinArgument({required this.capnhatthongtinRepository});
+
+
+  // truyền repo qua CapNhatThongTinArgument
+  final CapnhatthongtinRepository capnhatthongtinRepository;
+
+}

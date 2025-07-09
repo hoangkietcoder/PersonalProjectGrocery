@@ -35,6 +35,8 @@ class HomeScreenPage extends StatelessWidget {
           create: (context) => DanhMucRepository(),
         ),
 
+
+
       ],
       child: MultiBlocProvider(providers: [
         BlocProvider(

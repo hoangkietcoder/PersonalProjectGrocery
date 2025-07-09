@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:personalprojectgrocery/Repository/CapNhatThongTin/CapNhatThongTin_repository.dart';
 import '../../Authentication/bloc/authentication_bloc.dart';
 import '../../Compoents/Dialog/dialog_loading_logout.dart';
 import '../../Compoents/Dialog/dialog_logout.dart';
@@ -8,6 +9,7 @@ import '../../Logout/cubit/logout_cubit.dart';
 import '../../Main_Bloc/main_bloc.dart';
 import '../../Repository/Authentication/authentication_repository.dart';
 import '../../Repository/FeedBack/feedback_repository.dart';
+import '../../Routes/argument/CapNhatThongTinArgument.dart';
 import '../../Routes/argument/FeedBackArgument.dart';
 
 
@@ -110,7 +112,9 @@ class _ThongTinViewState extends State<ThongTinView> {
                       ),
                       ListTile(
                         onTap: () {
-                          Navigator.pushNamed(context, '/CapNhatThongTin');
+                          // khai báo repo
+                          final capnhathongtinRepository = CapnhatthongtinRepository();
+                          Navigator.pushNamed(context, '/CapNhatThongTin', arguments: CapNhatThongTinArgument(capnhatthongtinRepository: capnhathongtinRepository) );
                         },
                         leading: Container(
                           width: 30.w,

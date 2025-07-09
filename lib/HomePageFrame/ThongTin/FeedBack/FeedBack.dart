@@ -72,7 +72,6 @@ class _SendFeedbackState extends State<Send_Feedback> {
   Widget build(BuildContext context) {
     final statusTheme = context.select((MainBloc bloc) => bloc.state.statusTheme);
     final textColor = statusTheme ? Colors.white : Colors.black;
-    final backgroundColor = statusTheme ? Colors.black : Colors.white;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gửi Feedback'),

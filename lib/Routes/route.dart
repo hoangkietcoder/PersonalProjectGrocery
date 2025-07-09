@@ -16,6 +16,7 @@ import '../HomePageFrame/ThongTin/FeedBack/FeedBack.dart';
 import '../Login/loginApp.dart';
 import '../Register/register.dart';
 import '../Splash/splash_screen.dart';
+import 'argument/CapNhatThongTinArgument.dart';
 import 'argument/ChiTietSanPhamArgument.dart';
 import 'argument/FeedBackArgument.dart';
 import 'argument/GioHangArgument.dart';
@@ -100,9 +101,10 @@ class RouteGenerator {
             settings: const RouteSettings(name: '/DoiMatKhau'),
             child:  DoiMatKhauPage());
       case '/CapNhatThongTin':
+        CapNhatThongTinArgument argument = args as CapNhatThongTinArgument;
         return CustomPageRoute(
             settings: const RouteSettings(name: '/CapNhatThongTin'),
-            child:  CapNhatThongTinPage());
+            child:  CapNhatThongTinPage(capnhatthongtinRepository: argument.capnhatthongtinRepository,));
       case '/CaiDat':
         return CustomPageRoute(
             settings: const RouteSettings(name: '/CaiDat'),
