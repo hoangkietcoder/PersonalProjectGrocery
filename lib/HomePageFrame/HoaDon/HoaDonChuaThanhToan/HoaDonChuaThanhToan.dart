@@ -2,8 +2,10 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../../../Compoents/Dialog/dialog_auto_deleteBill.dart';
 import '../../../Compoents/Dialog/dialog_delete_bill.dart';
+import '../../../Compoents/speech_to_text/SpeechToTextService.dart';
 import '../../../Main_Bloc/main_bloc.dart';
 import '../HoaDonDaThanhToan/bloc/hoa_don_da_thanh_toan_bloc.dart';
 import 'bloc/chua_thanh_toan_bloc.dart';
@@ -26,10 +28,47 @@ class HoaDonChuaThanhToanView extends StatefulWidget {
 }
 
 class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
+
+
+  final TextEditingController _controller = TextEditingController();
+  final SpeechToTextService _speechService = SpeechToTextService();
+  bool _isListening = false;
+
+  // xử lí khi voice
+  Future<void> _handleVoiceInput() async {
+    final available = await _speechService.initSpeech();
+    if (!available) return;
+
+    setState(() => _isListening = true );
+
+    await _speechService.startListening(onResult: (text) {
+      setState(() {
+        _isListening = false;
+        _controller.text = text;
+        _controller.selection = TextSelection.fromPosition(TextPosition(offset: text.length));
+      });
+
+      // Gửi kết quả tới BLoC
+      context.read<ChuaThanhToanBloc>().add(SearchBillChuaThanhToanEventChange(text));
+      setState(() => _isListening = false);
+
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final statusTheme = context.select((MainBloc bloc) => bloc.state.statusTheme);
     final cardSearchColor = statusTheme ? Colors.grey[900] : Colors.white;
+
+
+
     return Column(
       children: [
         SizedBox(height: 8.h),
@@ -40,6 +79,7 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
               child: Padding(
                 padding: REdgeInsets.only(right: 8.0, left: 8.0),
                 child: TextField(
+                  controller: _controller,
                   onChanged: (value) => context.read<ChuaThanhToanBloc>().add(SearchBillChuaThanhToanEventChange(value)), // lưu thay đổi vào state, để tìm kiếm sản phẩm
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
@@ -50,6 +90,9 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
                     ),
                     filled: true,
                     fillColor: cardSearchColor,
+                    suffixIcon: IconButton(icon: Icon(Icons.keyboard_voice) , onPressed: (){
+                          _handleVoiceInput();
+                       }),
                     contentPadding: REdgeInsets.symmetric(
                       horizontal: 15,
                       vertical: 3,
@@ -60,15 +103,6 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
                     ),
                   ),
                 ),
-              ),
-            ),
-            Expanded(
-              flex: 1,
-              child: IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: () {
-                  // _openFilterDrawer(),
-                },
               ),
             ),
           ],

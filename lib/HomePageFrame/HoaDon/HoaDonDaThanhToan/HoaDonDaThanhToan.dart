@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:personalprojectgrocery/HomePageFrame/HoaDon/HuyDon/bloc/huy_don_bloc.dart';
 import '../../../Compoents/Dialog/dialog_delete_bill.dart';
+import '../../../Compoents/speech_to_text/SpeechToTextService.dart';
 import '../../../Constant/enum.dart';
 import '../../../Main_Bloc/main_bloc.dart';
 import 'bloc/hoa_don_da_thanh_toan_bloc.dart';
@@ -25,6 +26,36 @@ class HoaDonChuaDaThanhToanView extends StatefulWidget {
 }
 
 class _HoaDonDaThanhToanViewState extends State<HoaDonChuaDaThanhToanView> {
+  final TextEditingController _controller = TextEditingController();
+  final SpeechToTextService _speechService = SpeechToTextService();
+  bool _isListening = false;
+
+  // xử lí khi voice
+  Future<void> _handleVoiceInput() async {
+    final available = await _speechService.initSpeech();
+    if (!available) return;
+
+    setState(() => _isListening = true );
+
+    await _speechService.startListening(onResult: (text) {
+      setState(() {
+        _isListening = false;
+        _controller.text = text;
+        _controller.selection = TextSelection.fromPosition(TextPosition(offset: text.length));
+      });
+
+      // Gửi kết quả tới BLoC
+      context.read<HoaDonDaThanhToanBloc>().add(SearchBillDaThanhToanEventChange(text));
+      setState(() => _isListening = false);
+
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     final statusTheme = context.select((MainBloc bloc) => bloc.state.statusTheme);
@@ -39,6 +70,7 @@ class _HoaDonDaThanhToanViewState extends State<HoaDonChuaDaThanhToanView> {
               child: Padding(
                 padding: REdgeInsets.only(right: 8.0, left: 8.0),
                 child: TextField(
+                  controller: _controller,
                   onChanged: (value) => context.read<HoaDonDaThanhToanBloc>().add(SearchBillDaThanhToanEventChange(value)),
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
@@ -49,6 +81,9 @@ class _HoaDonDaThanhToanViewState extends State<HoaDonChuaDaThanhToanView> {
                     ),
                     filled: true,
                     fillColor: cardSearchColor,
+                    suffixIcon: IconButton(icon: Icon(Icons.keyboard_voice) , onPressed: (){
+                      _handleVoiceInput();
+                    }),
                     contentPadding: REdgeInsets.symmetric(
                       horizontal: 15,
                       vertical: 3,
@@ -61,15 +96,7 @@ class _HoaDonDaThanhToanViewState extends State<HoaDonChuaDaThanhToanView> {
                 ),
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: () {
-                  // _openFilterDrawer(),
-                },
-              ),
-            ),
+
           ],
         ),
         SizedBox(height: 10.h),

@@ -127,6 +127,9 @@ dependencies:
     # thư viện phân trang
   very_good_infinite_list: ^0.9.0
 
+    # thư viện đổi giọng nói thành text
+  speech_to_text: ^7.1.0
+
 
 
 

@@ -12,7 +12,8 @@ class ChuaThanhToanState extends Equatable {
         this.modelChuathanhtoan = ModelChuathanhtoan.empty,
         this.deleteStatusBill = DeleteStatusBill.initial,
         this.statusBillType = StatusBillType.none,
-        this.statusSubmitThanhToan = StatusSubmitThanhToan.initial
+        this.statusSubmitThanhToan = StatusSubmitThanhToan.initial,
+        required this.searchText,
 
       });
 
@@ -28,6 +29,9 @@ class ChuaThanhToanState extends Equatable {
   final StatusBillType statusBillType;
   final StatusSubmitThanhToan statusSubmitThanhToan;
 
+  final String searchText;
+
+
   ChuaThanhToanState copyWith({
     List<ModelChuathanhtoan>? lstBillChuaThanhToan,
     StatusChuaThanhToan? statusBill,
@@ -36,6 +40,9 @@ class ChuaThanhToanState extends Equatable {
     DeleteStatusBill? deleteStatusBill,
     StatusBillType? statusBillType,
     StatusSubmitThanhToan? statusSubmitThanhToan,
+
+    //
+    String? searchText,
 
   }) {
     return ChuaThanhToanState(
@@ -46,9 +53,10 @@ class ChuaThanhToanState extends Equatable {
       deleteStatusBill: deleteStatusBill ?? this.deleteStatusBill,
       statusBillType: statusBillType ?? this.statusBillType,
       statusSubmitThanhToan: statusSubmitThanhToan ?? this.statusSubmitThanhToan,
+      searchText: searchText ?? this.searchText
     );
   }
 
   @override
-  List<Object> get props => [lstBillChuaThanhToan, statusBill, error,modelChuathanhtoan,deleteStatusBill,statusBillType,statusSubmitThanhToan];
+  List<Object> get props => [lstBillChuaThanhToan, statusBill, error,modelChuathanhtoan,deleteStatusBill,statusBillType,statusSubmitThanhToan,searchText];
 }

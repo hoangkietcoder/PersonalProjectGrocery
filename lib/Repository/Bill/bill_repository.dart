@@ -54,7 +54,7 @@ class BillRepository {
   // xài Future dùng để realtime để lấy dữ liệu từ firebase ( cho chức năng tìm kiếm hóa đơn đã thanh toán )
   Future<List<ModelChuathanhtoan>> searchBillDaThanhToanByName(String name) async {
     final query = await _db.collection(_collection)
-        .where("status", isEqualTo: "1") // chỉ lấy hóa đơn chưa thanh toán
+        .where("status", isEqualTo: "1") // chỉ lấy hóa đơn đã thanh toán
         .where("nameBill", isGreaterThanOrEqualTo: name).where("nameBill", isLessThanOrEqualTo: "$name\uf7ff").get();
     return query.docs.map((e) {
       return ModelChuathanhtoan.fromJson(e.data()).copyWith(

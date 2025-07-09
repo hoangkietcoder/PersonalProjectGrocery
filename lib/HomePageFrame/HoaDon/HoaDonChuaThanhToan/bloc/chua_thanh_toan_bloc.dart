@@ -12,7 +12,7 @@ part 'chua_thanh_toan_event.dart';
 part 'chua_thanh_toan_state.dart';
 
 class ChuaThanhToanBloc extends Bloc<ChuaThanhToanEvent, ChuaThanhToanState> {
-  ChuaThanhToanBloc({required BillRepository billrepo}) : _billRepository =  billrepo , super(ChuaThanhToanState()) {
+  ChuaThanhToanBloc({required BillRepository billrepo}) : _billRepository =  billrepo , super(ChuaThanhToanState(searchText: '')) {
     // < tên sự kiện > ( phương thức )
     on<CreateBillChange>(_onSubscriptionRequested);
     on<SearchBillChuaThanhToanEventChange>(_onSearchProductChanged, transformer: debounce(Duration(milliseconds: 500)));
@@ -130,7 +130,8 @@ class ChuaThanhToanBloc extends Bloc<ChuaThanhToanEvent, ChuaThanhToanState> {
     }
   }
 
-  // xử lí sau khi thanh toán mỗi lần thành công sẽ reset lại trạng thái
+  // xử lí spech to text
+
 
 
 
