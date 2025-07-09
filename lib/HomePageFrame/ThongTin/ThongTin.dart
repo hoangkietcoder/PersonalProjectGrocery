@@ -9,8 +9,10 @@ import '../../Logout/cubit/logout_cubit.dart';
 import '../../Main_Bloc/main_bloc.dart';
 import '../../Repository/Authentication/authentication_repository.dart';
 import '../../Repository/FeedBack/feedback_repository.dart';
+import '../../Repository/ThongTin/thongtin_repository.dart';
 import '../../Routes/argument/CapNhatThongTinArgument.dart';
 import '../../Routes/argument/FeedBackArgument.dart';
+import 'bloc_thongtin/thongtin_bloc.dart';
 
 
 class ThongTinPage extends StatelessWidget {
@@ -20,9 +22,16 @@ class ThongTinPage extends StatelessWidget {
   Widget build(BuildContext context) {
 
     // dùng blocProvider để dùng cubit , authen đã đăng kí toàn app phải dùng lệnh lấy ra xài thôi ( lệnh : RepositoryProvider.of<AuthenticationRepository>(context)   )
-    return BlocProvider(
-      create: (context) => LogoutCubit(authenticationRepository:RepositoryProvider.of<AuthenticationRepository>(context)),
-          child: const ThongTinView());
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+            create: (context) => LogoutCubit(authenticationRepository:RepositoryProvider.of<AuthenticationRepository>(context)),
+            child: const ThongTinView()),
+        BlocProvider(
+          create: (_) => ThongtinBloc(thongtinRepo: ThongtinRepository())..add(LoadUserInfoEventChange()),
+        ),
+      ], child: const ThongTinView(),
+    );
   }
 }
 
@@ -82,15 +91,20 @@ class _ThongTinViewState extends State<ThongTinView> {
                 padding: REdgeInsets.all(20),
                 child: Column(
                   children: <Widget>[
-                    Center(
+                    BlocBuilder<ThongtinBloc, ThongtinState>(
+                    builder: (context, state) {
+                      final name = state.modelThongTin.name;
+                      return Center(
                       child: Text(
-                        "Xin chào,",
+                        "Xin chào, $name",
                         style: TextStyle(
                             fontSize: 25.sp,
                             color: Colors.white,
                             fontWeight: FontWeight.bold),
                       ),
-                    ),
+                    );
+  },
+),
                   ],
                 ),
               ),
@@ -311,19 +325,22 @@ class UserProfileTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final data = context.select((AuthenticationBloc bloc) => bloc.state.user);
-    return ListTile(
+    return BlocBuilder<ThongtinBloc, ThongtinState>(
+      builder: (context, state) {
+        final thongTin = state.modelThongTin;
+        return ListTile(
       // leading: CircleAvatar(
       //   backgroundImage: NetworkImage(data.profileImage),
       //   radius: 30.r,
       // ),
       leading: CircleAvatar(
-        backgroundImage: AssetImage("assets/images/21.jpg"),
+        backgroundImage: thongTin.img_url_Info.isNotEmpty
+            ? NetworkImage(thongTin.img_url_Info)
+            : const AssetImage("assets/images/21.jpg") as ImageProvider,
         radius: 30.r,
       ),
       title: Text(
-        // data.name,
-        data.email.toString(),
+        thongTin.email.toString(),
         style: TextStyle(
           color: Colors.white,
           fontSize: 16.sp,
@@ -331,10 +348,11 @@ class UserProfileTile extends StatelessWidget {
         ),
       ),
       subtitle: Text(
-        // data.user,
-        "Dev Mobible",
+        thongTin.phoneNumber.toString(),
         style: TextStyle(fontSize: 13.sp, color: Colors.white),
       ),
     );
+  },
+);
   }
 }

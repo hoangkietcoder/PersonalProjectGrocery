@@ -315,6 +315,8 @@ class _CapNhatThongTinViewState extends State<CapNhatThongTinView> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(content: Text("✅ Cập nhật thành công")),
                                   );
+                                  // ✅ Trả model cập nhật về lại màn hình trước
+                                  Navigator.pop(context, state.model);
                                 } else if (state.statusCapNhatInfo == StatusCapNhatInfo.failure) {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(content: Text("❌ Cập nhật thất bại")),
