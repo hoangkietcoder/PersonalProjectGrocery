@@ -26,5 +26,14 @@ class UpdateUserInfoEvent extends CapNhatThongTinEvent {
   List<Object?> get props => [name,phoneNumber];
 }
 
-///
+// up hình ảnh
+final class UploadImageEvent extends CapNhatThongTinEvent{
+  const UploadImageEvent({ required this.ProductId,required this.imageFile });
+  final String ProductId; // Id sản phẩm cần cập nhật ảnh
+  final File imageFile;
+
+
+  @override
+  List<Object> get props => [ProductId,imageFile];
+}
 

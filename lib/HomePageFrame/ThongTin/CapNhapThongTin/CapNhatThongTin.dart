@@ -1,10 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../Authentication/bloc/authentication_bloc.dart';
+import '../../../Compoents/UploadImage/upload_image.dart';
 import '../../../Main_Bloc/main_bloc.dart';
 import '../../../Models/Register/register_user.dart';
 import '../../../Repository/CapNhatThongTin/CapNhatThongTin_repository.dart';
@@ -46,7 +50,7 @@ class _CapNhatThongTinViewState extends State<CapNhatThongTinView> {
   void initState() {
     super.initState();
 
-    // ✅ Khởi tạo controller mặc định ban đầu
+    //  Khởi tạo controller mặc định ban đầu
     _nameController = TextEditingController();
     _emailController = TextEditingController();
     _phoneController = TextEditingController();
@@ -85,12 +89,15 @@ class _CapNhatThongTinViewState extends State<CapNhatThongTinView> {
                 SizedBox(
                   height: 10.h,
                 ),
-                Stack(children: [
+                BlocBuilder<CapNhatThongTinBloc, CapNhatThongTinState>(
+                  builder: (context, state) {
+                    final infomation = state.model;
+                    print("đưaađa ${infomation.img_url_Info}");
+                  return Stack(children: [
                   Container(
                     child: CircleAvatar(
                       radius: 60.r,
-                      backgroundImage:
-                          const AssetImage("assets/images/feedback.jpg"),
+                      backgroundImage:  infomation.img_url_Info.isNotEmpty ?  NetworkImage(infomation.img_url_Info) : AssetImage("assets/images/feedback.jpg")  as ImageProvider,
                     ),
                   ),
                   Positioned(
@@ -98,8 +105,24 @@ class _CapNhatThongTinViewState extends State<CapNhatThongTinView> {
                     bottom: -13,
                     right: -5.0, // kéo qua phải
                     child: IconButton(
-                      onPressed: () {
-                        // _requestPermissionsAndPickImage(context);
+                      onPressed: () async {
+                        final productId = state.model!.id;
+                        final bool? fromCamera = await showImagePickerOptions(context, productId);
+                        if (fromCamera != null) {
+                          final XFile? pickedFile = await ImagePicker().pickImage(
+                            source: fromCamera ? ImageSource.camera : ImageSource.gallery,
+                          );
+
+                          if (pickedFile != null) {
+                            final File imageFile = File(pickedFile.path);
+
+                            context.read<CapNhatThongTinBloc>().add(UploadImageEvent(
+                                imageFile: imageFile,
+                                ProductId: productId,
+                              ),
+                            );
+                          }
+                        }
                       },
                       icon: const Icon(
                         Icons.camera_alt,
@@ -107,7 +130,9 @@ class _CapNhatThongTinViewState extends State<CapNhatThongTinView> {
                       ),
                     ),
                   )
-                ]),
+                ]);
+  },
+),
                 SizedBox(
                   height: 15.h,
                 ),

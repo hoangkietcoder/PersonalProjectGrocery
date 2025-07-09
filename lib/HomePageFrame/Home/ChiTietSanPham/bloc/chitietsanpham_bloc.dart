@@ -115,9 +115,6 @@ class ChitietsanphamBloc extends Bloc<ChitietsanphamEvent, ChitietsanphamState> 
   }
 
 
-
-
-
 }
 
 

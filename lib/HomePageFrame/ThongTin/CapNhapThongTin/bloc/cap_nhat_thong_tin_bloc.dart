@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -17,6 +19,8 @@ class CapNhatThongTinBloc extends Bloc<CapNhatThongTinEvent, CapNhatThongTinStat
 
     on<LoadUserInfoEvent>(_onLoadThongTin);
     on<UpdateUserInfoEvent>(_onCapNhatThongTin);
+    on<UploadImageEvent>(_onUploadImage);
+
 
   }
   // truyền FeedbackRepository
@@ -54,6 +58,41 @@ class CapNhatThongTinBloc extends Bloc<CapNhatThongTinEvent, CapNhatThongTinStat
       emit(state.copyWith(statusCapNhatInfo: StatusCapNhatInfo.success));
     } catch (e) {
       emit(state.copyWith(statusCapNhatInfo: StatusCapNhatInfo.failure));
+    }
+  }
+
+  /// upload ảnh
+  Future<void> _onUploadImage(UploadImageEvent event, Emitter<CapNhatThongTinState> emit,
+      ) async {
+    try {
+      emit(state.copyWith(statusLoadImage: StatusLoadImage.loading));
+
+      // ✅ Upload ảnh lên Firebase Storage
+      final imageUrl = await _capnhatthongtinRepository.uploadProductImage(
+        event.imageFile,
+        event.ProductId,
+      );
+
+      // ✅ Lưu URL vào Firestore
+      await _capnhatthongtinRepository.saveImageUrlToFirestore(
+        productId: event.ProductId,
+        imageUrl: imageUrl,
+      );
+
+      // ✅ Cập nhật lại state.detailProduct.img_url
+      final updatedProduct = state.model?.copyWith(img_url_Info: imageUrl);
+
+      emit(state.copyWith(
+        model: updatedProduct,
+        statusLoadImage: StatusLoadImage.success,
+        error: "Tải ảnh thành công",
+      ));
+
+    } catch (e) {
+      emit(state.copyWith(
+        statusLoadImage: StatusLoadImage.failure,
+        error: 'Lỗi upload: $e',
+      ));
     }
   }
 }

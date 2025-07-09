@@ -11,7 +11,7 @@ class DialogLogout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final statusTheme = context.select((MainBloc bloc) => bloc.state.statusTheme);
-    final textColor = statusTheme ? Colors.white : Colors.white;
+    final textColor = statusTheme ? Colors.white : Colors.black;
     final backgroundColor = statusTheme ? Colors.black : Colors.white;
 
 
