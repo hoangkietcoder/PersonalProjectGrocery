@@ -4,12 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import 'package:personalprojectgrocery/ObjectBox/ObjectBox.dart';
 import 'package:personalprojectgrocery/ObjectBox/model/ModelProductLocal.dart';
 import 'package:personalprojectgrocery/Repository/DataLocal/data_local_repository.dart';
 import 'package:personalprojectgrocery/Routes/argument/GioHangArgument.dart';
 import '../../Compoents/Dialog/dialog_addProductLocal.dart';
 import '../../Compoents/Dialog/dialog_loading_login.dart';
+import '../../Main_Bloc/main_bloc.dart';
 import '../../Models/Product/getData_ProductFromFirebase.dart';
 import '../../ObjectBox/bloc_ModelProductLocal/model_product_local_bloc.dart';
 import '../../Repository/Firebase_Database/Product/product_repository.dart';
@@ -75,10 +77,19 @@ class _HomepageframeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
+    final statusTheme = context.select((MainBloc bloc) => bloc.state.statusTheme);
+    final backgroundColorAppBar = statusTheme ? Colors.black : Colors.blueAccent;
+    final backgroundColorBody = statusTheme ? Colors.black : Colors.white;
+
+    final cardSearchColor = statusTheme ? Colors.grey[900] : Colors.white;
+    final textColor = statusTheme ? Colors.black : Colors.black;
+    final subTextColor = statusTheme ? Colors.white70 : Colors.black87;
+    final iconColor = statusTheme ? Colors.white : Colors.black;
+    final borderColor = statusTheme ? Colors.grey : Colors.grey.shade300;
     return Scaffold(
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor:backgroundColorBody,
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: backgroundColorAppBar,
         centerTitle: true,
         title: Text(
           "CỬA HÀNG TẠP HÓA",
@@ -131,7 +142,7 @@ class _HomepageframeViewState extends State<HomeView> {
               controller: _searchController,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: cardSearchColor,
                 suffixIcon: IconButton(icon: Icon(Icons.keyboard_voice) , onPressed: () {
                 },),
                 contentPadding: REdgeInsets.symmetric(
@@ -176,6 +187,9 @@ class _HomepageframeViewState extends State<HomeView> {
                         }
                       }
                       final product = state.lsProduct[index];
+                      final price = int.tryParse(product.priceProduct) ?? 0; //  Parse String sang int trước khi tính tổng
+                      final formatter = NumberFormat("#,###", "vi_VN"); // định dạng tổng tiền
+                      final formattedPriceProduct = formatter.format(price);
                       return Column(
                         children: [
                           GestureDetector(
@@ -210,6 +224,7 @@ class _HomepageframeViewState extends State<HomeView> {
                                           style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 15.sp,
+                                            color: textColor
                                           ),
                                         ),
                                         Padding(
@@ -233,7 +248,7 @@ class _HomepageframeViewState extends State<HomeView> {
                                                         ),
                                                       ),
                                                       TextSpan(
-                                                        text: product.priceProduct,
+                                                        text: formattedPriceProduct,
                                                         style: TextStyle(
                                                           fontWeight: FontWeight.w500,
                                                           fontSize: 14.sp,

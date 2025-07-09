@@ -23,10 +23,17 @@ class ModelProductLocalBloc extends Bloc<ModelProductLocalEvent, ModelProductLoc
         _getAllProductsLocal); // refresh lại danh sách
     on<UpdateQuantityProductLocalEvent>(_updateQuantityProductLocal);
 
-    // lắng nghe sự kiện ()
+    // lắng nghe sự kiện () xử lí thêm tổng tiền khi thêm sản phẩm vào danh sách
     _productLocalSubscription =
         dataLocalRepository.getAllProducts().listen((productLocals) {
-          emit(state.copyWith(lstModelProductLocal: productLocals));
+          final int totalPrice = productLocals.fold(0, (sum, item){
+            final quantity = int.tryParse(item.quantityProduct) ?? 0;
+            final price = int.tryParse(item.priceProduct) ?? 0;
+            return sum + (quantity * price);
+          });
+          emit(state.copyWith(
+              totalPriceInCart: totalPrice,
+              lstModelProductLocal: productLocals));
         });
   }
 
@@ -75,11 +82,7 @@ class ModelProductLocalBloc extends Bloc<ModelProductLocalEvent, ModelProductLoc
     }
   }
 
-  @override
-  Future<void> close() {
-    _productLocalSubscription.cancel();
-    return super.close();
-  }
+
 
   //=========================== xử lí xóa tất cả sản phẩm và refesh lại danh sách ( dùng stream tự động cập nhật )
   Future<void> _getAllProductsLocal(RefreshListProDuctLocalCartEvent event,
@@ -183,6 +186,15 @@ class ModelProductLocalBloc extends Bloc<ModelProductLocalEvent, ModelProductLoc
     } catch (e) {
       emit(state.copyWith(error: e.toString()));
     }
+  }
+
+
+
+
+  @override
+  Future<void> close() {
+    _productLocalSubscription.cancel();
+    return super.close();
   }
 
 }

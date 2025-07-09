@@ -66,7 +66,7 @@ class _CaiDatViewState extends State<CaiDatView> {
                         children: [
                           ListTile(
                             title: Text(
-                              'GENERAL',
+                              'CHUNG',
                               style: TextStyle(
                                 color: textColorCategory,
                                 fontSize: 13.sp,
@@ -77,7 +77,7 @@ class _CaiDatViewState extends State<CaiDatView> {
 
                           ListTile(
                             leading: const Icon(Icons.download),
-                            title: const Text('Update Application'),
+                            title: const Text('Nâng Cấp Ứng Dụng'),
                             trailing: const Icon(Icons.navigate_next),
                             onTap: () {
                               // Navigate to Feedback settings page
@@ -93,7 +93,7 @@ class _CaiDatViewState extends State<CaiDatView> {
                           ListTile(
                             contentPadding: REdgeInsets.fromLTRB(16, 10, 0, 0),
                             title: Text(
-                              'THEME',
+                              'CHỦ ĐỀ',
                               style: TextStyle(
                                 color: textColorCategory,
                                 fontSize: 13.sp,
@@ -222,7 +222,7 @@ class _ButtonChangeTheme extends StatelessWidget {
     return ListTile(
         leading: const Icon(Icons.dark_mode),
         title: Text(
-          'Change',
+          'Chủ Đề',
           style: TextStyle(
               color: textColor,
               fontSize: 14.sp

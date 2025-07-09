@@ -82,7 +82,7 @@ dependencies:
     # thư viện bottom nav
   curved_navigation_bar: ^1.0.6
 
-    # thư viện định dạng ngày
+    # thư viện định dạng ngày - tiền (1,000 - 100,000 - ....)
   intl: ^0.20.2
 
     # thư viện custom thông báo
@@ -126,6 +126,8 @@ dependencies:
 
     # thư viện phân trang
   very_good_infinite_list: ^0.9.0
+
+
 
 
 

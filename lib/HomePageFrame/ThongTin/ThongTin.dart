@@ -5,6 +5,7 @@ import '../../Authentication/bloc/authentication_bloc.dart';
 import '../../Compoents/Dialog/dialog_loading_logout.dart';
 import '../../Compoents/Dialog/dialog_logout.dart';
 import '../../Logout/cubit/logout_cubit.dart';
+import '../../Main_Bloc/main_bloc.dart';
 import '../../Repository/Authentication/authentication_repository.dart';
 import '../../Repository/FeedBack/feedback_repository.dart';
 import '../../Routes/argument/FeedBackArgument.dart';
@@ -33,6 +34,10 @@ class ThongTinView extends StatefulWidget {
 class _ThongTinViewState extends State<ThongTinView> {
   @override
   Widget build(BuildContext context) {
+    final statusTheme = context.select((MainBloc bloc) => bloc.state.statusTheme);
+    final textColorCategory = statusTheme ? Colors.white : Colors.black;
+    final backgroundColor = statusTheme ? Colors.black: Colors.white;
+    final textColorLogout = statusTheme ? Colors.white : Colors.white;
     return BlocListener<LogoutCubit, LogoutState>(
       listenWhen: (cur, pre) {
         return cur.statusLogout != pre.statusLogout;
@@ -93,198 +98,200 @@ class _ThongTinViewState extends State<ThongTinView> {
                   child: Container(
                 width: double.infinity,
                 decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: backgroundColor,
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(60.r),
                         topRight: Radius.circular(60.r))),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: 30.h,
-                    ),
-                    ListTile(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/CapNhatThongTin');
-                      },
-                      leading: Container(
-                        width: 30.w,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
                         height: 30.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100.r),
-                          color: Colors.blueAccent,
-                        ),
-                        child: const Icon(
-                          Icons.person,
-                          color: Colors.white,
-                        ),
                       ),
-                      title: Text(
-                        "Cập Nhật Thông Tin",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 15.sp),
-                      ),
-                      trailing: SizedBox(
-                        width: 50.w,
-                        height: 50.h,
-                        child: Icon(
-                          Icons.navigate_next_outlined,
-                          size: 32.sp,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      height: 0.2.h,
-                      indent: 18,
-                      endIndent: 40,
-                    ),
-                    ListTile(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/DoiMatKhau');
-                      },
-                      leading: Container(
-                        width: 30.w,
-                        height: 30.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100.r),
-                          color: Colors.blueAccent,
-                        ),
-                        child: const Icon(
-                          Icons.lock,
-                          color: Colors.white,
-                        ),
-                      ),
-                      title: Text(
-                        "Đổi Mật Khẩu",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 15.sp),
-                      ),
-                      trailing: SizedBox(
-                        width: 50.w,
-                        height: 50.h,
-                        child: Icon(
-                          Icons.navigate_next_outlined,
-                          size: 32.sp,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      height: 0.2.h,
-                      indent: 18,
-                      endIndent: 40,
-                    ),
-                    ListTile(
-                      onTap: () {
-                        // khai báo repo
-                        final feedbackRepository = FeedBackRepository();
-                        Navigator.pushNamed(context, '/FeedBack', arguments: FeedBackArgument(feedbackRepository: feedbackRepository) );
-                      },
-
-                      leading: Container(
-                        width: 30.w,
-                        height: 30.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100.r),
-                          color: Colors.blueAccent,
-                        ),
-                        child: const Icon(
-                          Icons.feedback,
-                          color: Colors.white,
-                        ),
-                      ),
-                      title: Text(
-                        "Feedback",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 15.sp),
-                      ),
-                      trailing: SizedBox(
-                        width: 50.w,
-                        height: 50.h,
-                        child: Icon(
-                          Icons.navigate_next_outlined,
-                          size: 32.sp,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      height: 0.2.h,
-                      indent: 18,
-                      endIndent: 40,
-                    ),
-                    ListTile(
-                      onTap: () {
-                        Navigator.pushNamed(context, '/CaiDat');
-                      },
-                      leading: Container(
-                        width: 30.w,
-                        height: 30.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(100.r),
-                          color: Colors.blueAccent,
-                        ),
-                        child: const Icon(
-                          Icons.settings,
-                          color: Colors.white,
-                        ),
-                      ),
-                      title: Text(
-                        "Cài Đặt",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w500, fontSize: 15.sp),
-                      ),
-                      trailing: SizedBox(
-                        width: 50.w,
-                        height: 50.h,
-                        child: Icon(
-                          Icons.navigate_next_outlined,
-                          size: 32.sp,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    Divider(
-                      height: 0.2.h,
-                      indent: 18,
-                      endIndent: 40,
-                    ),
-                    SizedBox(
-                      height: 20.h,
-                    ),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        final bloc = context.read<LogoutCubit>();
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) => DialogLogout(
-                            onPress: () {
-                              bloc.logOut();
-                            })
-                        );
-                      },
-                      label: Text(
-                        "Đăng Xuất",
-                        style: TextStyle(
+                      ListTile(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/CapNhatThongTin');
+                        },
+                        leading: Container(
+                          width: 30.w,
+                          height: 30.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100.r),
+                            color: Colors.blueAccent,
+                          ),
+                          child: const Icon(
+                            Icons.person,
                             color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.sp),
-                      ),
-                      icon: Icon(
-                        Icons.logout,
-                        color: Colors.white,
-                        size: 20.sp,
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        padding:
-                            REdgeInsets.symmetric(vertical: 7, horizontal: 90),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.r),
+                          ),
                         ),
-                        backgroundColor: Colors.blueAccent,
+                        title: Text(
+                          "Cập Nhật Thông Tin",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 15.sp,color: textColorCategory),
+                        ),
+                        trailing: SizedBox(
+                          width: 50.w,
+                          height: 50.h,
+                          child: Icon(
+                            Icons.navigate_next_outlined,
+                            size: 32.sp,
+                            color: Colors.grey,
+                          ),
+                        ),
                       ),
-                    )
-                  ],
+                      Divider(
+                        height: 0.2.h,
+                        indent: 18,
+                        endIndent: 40,
+                      ),
+                      ListTile(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/DoiMatKhau');
+                        },
+                        leading: Container(
+                          width: 30.w,
+                          height: 30.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100.r),
+                            color: Colors.blueAccent,
+                          ),
+                          child: const Icon(
+                            Icons.lock,
+                            color: Colors.white,
+                          ),
+                        ),
+                        title: Text(
+                          "Đổi Mật Khẩu",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 15.sp,color: textColorCategory),
+                        ),
+                        trailing: SizedBox(
+                          width: 50.w,
+                          height: 50.h,
+                          child: Icon(
+                            Icons.navigate_next_outlined,
+                            size: 32.sp,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      Divider(
+                        height: 0.2.h,
+                        indent: 18,
+                        endIndent: 40,
+                      ),
+                      ListTile(
+                        onTap: () {
+                          // khai báo repo
+                          final feedbackRepository = FeedBackRepository();
+                          Navigator.pushNamed(context, '/FeedBack', arguments: FeedBackArgument(feedbackRepository: feedbackRepository) );
+                        },
+                  
+                        leading: Container(
+                          width: 30.w,
+                          height: 30.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100.r),
+                            color: Colors.blueAccent,
+                          ),
+                          child: const Icon(
+                            Icons.feedback,
+                            color: Colors.white,
+                          ),
+                        ),
+                        title: Text(
+                          "Feedback",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 15.sp,color: textColorCategory),
+                        ),
+                        trailing: SizedBox(
+                          width: 50.w,
+                          height: 50.h,
+                          child: Icon(
+                            Icons.navigate_next_outlined,
+                            size: 32.sp,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      Divider(
+                        height: 0.2.h,
+                        indent: 18,
+                        endIndent: 40,
+                      ),
+                      ListTile(
+                        onTap: () {
+                          Navigator.pushNamed(context, '/CaiDat');
+                        },
+                        leading: Container(
+                          width: 30.w,
+                          height: 30.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100.r),
+                            color: Colors.blueAccent,
+                          ),
+                          child: const Icon(
+                            Icons.settings,
+                            color: Colors.white,
+                          ),
+                        ),
+                        title: Text(
+                          "Cài Đặt",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w500, fontSize: 15.sp,color: textColorCategory),
+                        ),
+                        trailing: SizedBox(
+                          width: 50.w,
+                          height: 50.h,
+                          child: Icon(
+                            Icons.navigate_next_outlined,
+                            size: 32.sp,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      Divider(
+                        height: 0.2.h,
+                        indent: 18,
+                        endIndent: 40,
+                      ),
+                      SizedBox(
+                        height: 20.h,
+                      ),
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          final bloc = context.read<LogoutCubit>();
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) => DialogLogout(
+                              onPress: () {
+                                bloc.logOut();
+                              })
+                          );
+                        },
+                        label: Text(
+                          "Đăng Xuất",
+                          style: TextStyle(
+                              color: textColorLogout,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16.sp),
+                        ),
+                        icon: Icon(
+                          Icons.logout,
+                          color: textColorLogout,
+                          size: 20.sp,
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          padding:
+                              REdgeInsets.symmetric(vertical: 7, horizontal: 90),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20.r),
+                          ),
+                          backgroundColor: Colors.blueAccent,
+                        ),
+                      )
+                    ],
+                  ),
                 ),
               ))
             ],

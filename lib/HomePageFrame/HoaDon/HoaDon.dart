@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import '../../Compoents/Dialog/dialog_loading_login.dart';
 import '../../Constant/enum.dart';
+import '../../Main_Bloc/main_bloc.dart';
 import '../../Repository/Bill/bill_repository.dart';
 import '../../Routes/argument/ThemHoaDonArgument.dart';
 import 'HoaDonChuaThanhToan/HoaDonChuaThanhToan.dart';
@@ -54,6 +55,10 @@ class _LichSuHoaDonViewState extends State<HoaDonView> {
 
   @override
   Widget build(BuildContext context) {
+    final statusTheme = context.select((MainBloc bloc) => bloc.state.statusTheme);
+    final backgroundColorAppBar = statusTheme ? Colors.black : Colors.blueAccent;
+    final backgroundColorBody = statusTheme ? Colors.black : Colors.white;
+    final textColor = statusTheme ? Colors.white : Colors.white;
     return DefaultTabController(
       length: 3,
       child: GestureDetector(
@@ -61,7 +66,7 @@ class _LichSuHoaDonViewState extends State<HoaDonView> {
           FocusScope.of(context).unfocus();
         },
         child: Scaffold(
-          backgroundColor: Colors.grey.shade100,
+          backgroundColor: backgroundColorBody,
           appBar: AppBar(
             systemOverlayStyle: const SystemUiOverlayStyle(
               // Status bar color
@@ -77,28 +82,28 @@ class _LichSuHoaDonViewState extends State<HoaDonView> {
             title: Text(
               "HÓA ĐƠN",
               style: TextStyle(
-                  color: Colors.white,
+                  color: textColor,
                   fontSize: 16.sp,
                   fontWeight: FontWeight.bold),
             ),
-            backgroundColor: Colors.blueAccent,
+            backgroundColor: backgroundColorAppBar,
             bottom: TabBar(
               indicatorColor: Colors.white,
               tabs: [
                 Tab(child: Text("Chưa Thanh Toán",style: TextStyle(
                     fontSize: 10.sp,
-                    color: Colors.white,
+                    color: textColor,
                     fontWeight: FontWeight.bold,
                     overflow: TextOverflow.ellipsis
                 ),),),
                 Tab(child: Text("Đã Thanh Toán",style: TextStyle(
                     fontSize: 10.sp,
-                    color: Colors.white,
+                    color: textColor,
                     fontWeight: FontWeight.bold
                 ),),),
                 Tab(child: Text("Hủy Đơn",style: TextStyle(
                     fontSize: 10.sp,
-                    color: Colors.white,
+                    color: textColor,
                     fontWeight: FontWeight.bold
                 ),),),
               ],

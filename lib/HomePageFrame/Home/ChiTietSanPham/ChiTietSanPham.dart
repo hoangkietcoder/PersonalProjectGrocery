@@ -181,7 +181,7 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
                       text: TextSpan(
                         children: <TextSpan>[
                           TextSpan(
-                              text: 'Đơn vị: ',
+                              text: 'Số lượng: ',
                               style: TextStyle(
                                   fontWeight: FontWeight.normal,
                                   fontSize: 15.sp,

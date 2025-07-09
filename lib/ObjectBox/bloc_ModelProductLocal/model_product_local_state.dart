@@ -22,7 +22,7 @@ enum StatusDeleteDataLocal {inittial , loading, success, failure}
    this.phoneSupplier = "",
    this.noteProduct = "",
    this.error = "",
-
+   this.totalPriceInCart = 0,
 
 
   });
@@ -40,6 +40,7 @@ enum StatusDeleteDataLocal {inittial , loading, success, failure}
   final String phoneSupplier;
   final String noteProduct;
   final String error;
+  final int totalPriceInCart;
 
   ModelProductLocalState copyWith({
    List<ModelProductLocal>? lstModelProductLocal,
@@ -55,6 +56,7 @@ enum StatusDeleteDataLocal {inittial , loading, success, failure}
    String? phoneSupplier,
    String? noteProduct,
    String? error,
+   int? totalPriceInCart,
   }) {
    return ModelProductLocalState(
     lstModelProductLocal: lstModelProductLocal ?? this.lstModelProductLocal,
@@ -70,6 +72,7 @@ enum StatusDeleteDataLocal {inittial , loading, success, failure}
     phoneSupplier: phoneSupplier ?? this.phoneSupplier,
     noteProduct: noteProduct ?? this.noteProduct,
     error: error ?? this.error,
+    totalPriceInCart: totalPriceInCart ?? this.totalPriceInCart
 
 
 
@@ -93,5 +96,6 @@ enum StatusDeleteDataLocal {inittial , loading, success, failure}
        phoneSupplier,
        noteProduct,
        error,
+       totalPriceInCart
       ];
  }

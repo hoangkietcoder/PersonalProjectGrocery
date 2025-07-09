@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../Compoents/Dialog/dialog_auto_deleteBill.dart';
 import '../../../Compoents/Dialog/dialog_delete_bill.dart';
+import '../../../Main_Bloc/main_bloc.dart';
 import '../HoaDonDaThanhToan/bloc/hoa_don_da_thanh_toan_bloc.dart';
 import 'bloc/chua_thanh_toan_bloc.dart';
 
@@ -27,6 +28,8 @@ class HoaDonChuaThanhToanView extends StatefulWidget {
 class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
   @override
   Widget build(BuildContext context) {
+    final statusTheme = context.select((MainBloc bloc) => bloc.state.statusTheme);
+    final cardSearchColor = statusTheme ? Colors.grey[900] : Colors.white;
     return Column(
       children: [
         SizedBox(height: 8.h),
@@ -46,7 +49,7 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
                       ),
                     ),
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: cardSearchColor,
                     contentPadding: REdgeInsets.symmetric(
                       horizontal: 15,
                       vertical: 3,

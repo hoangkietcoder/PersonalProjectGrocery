@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../Main_Bloc/main_bloc.dart';
 import 'bloc/huy_don_bloc.dart';
 
 
@@ -27,6 +28,8 @@ class _HuyDonViewState extends State<HuyDonView> {
 
   @override
   Widget build(BuildContext context) {
+    final statusTheme = context.select((MainBloc bloc) => bloc.state.statusTheme);
+    final cardSearchColor = statusTheme ? Colors.grey[900] : Colors.white;
     return Column(
       children: [
         SizedBox(height: 8.h),
@@ -46,7 +49,7 @@ class _HuyDonViewState extends State<HuyDonView> {
                       ),
                     ),
                     filled: true,
-                    fillColor: Colors.white,
+                    fillColor: cardSearchColor,
                     contentPadding: REdgeInsets.symmetric(
                       horizontal: 15,
                       vertical: 3,

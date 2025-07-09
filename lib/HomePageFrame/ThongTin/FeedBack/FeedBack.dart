@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../Authentication/bloc/authentication_bloc.dart';
 import '../../../Compoents/Dialog/dialog_loading_addproduct.dart';
+import '../../../Main_Bloc/main_bloc.dart';
 import '../../../Repository/FeedBack/feedback_repository.dart';
 import '../../../Repository/Login/Model/User.dart';
 import 'bloc/feedback_bloc.dart';
@@ -69,6 +70,9 @@ class _SendFeedbackState extends State<Send_Feedback> {
 
   @override
   Widget build(BuildContext context) {
+    final statusTheme = context.select((MainBloc bloc) => bloc.state.statusTheme);
+    final textColor = statusTheme ? Colors.white : Colors.black;
+    final backgroundColor = statusTheme ? Colors.black : Colors.white;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gửi Feedback'),
@@ -101,142 +105,150 @@ class _SendFeedbackState extends State<Send_Feedback> {
         },
         child: GestureDetector(
           onTap: FocusScope.of(context).unfocus,
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: REdgeInsets.fromLTRB(0, 10, 0, 0),
-              child: Form(
-                key: _formSignInKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 200.h,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: imageUrl.isNotEmpty
-                              ? NetworkImage(imageUrl)
-                              : const AssetImage('assets/images/feedback.jpg') as ImageProvider<Object>, // Sử dụng AssetImage và ép kiểu ImageProvider<Object>
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 16.h),
-                    Padding(
-                      padding: REdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
-                      child: TextFormField(
-                        readOnly: true, // không cho chỉnh sửa
-                        onChanged: (value) => context.read<FeedbackBloc>().add(FeedBack_Email(value)),
-                        controller: _emailController,
-                        decoration: InputDecoration(
-                          // focusedBorder ( khi nhấn vô sẽ thay đổi khung qua màu đen )
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              color: Colors.black,
+          child: LayoutBuilder(
+            builder: (context ,constraints){
+              return SingleChildScrollView(
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: Padding(
+                    padding: REdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: Form(
+                      key: _formSignInKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: 200.h,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: imageUrl.isNotEmpty
+                                    ? NetworkImage(imageUrl)
+                                    : const AssetImage('assets/images/feedback.jpg') as ImageProvider<Object>, // Sử dụng AssetImage và ép kiểu ImageProvider<Object>
+                              ),
                             ),
                           ),
-                          labelText: "Email",
-                          labelStyle: TextStyle(color: Colors.black),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12.r)),
-                        ),
+                          SizedBox(height: 16.h),
+                          Padding(
+                            padding: REdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
+                            child: TextFormField(
+                              readOnly: true, // không cho chỉnh sửa
+                              onChanged: (value) => context.read<FeedbackBloc>().add(FeedBack_Email(value)),
+                              controller: _emailController,
+                              decoration: InputDecoration(
+                                // focusedBorder ( khi nhấn vô sẽ thay đổi khung qua màu đen )
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: const BorderSide(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                labelText: "Email",
+                                labelStyle: TextStyle(color: textColor),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12.r)),
+                              ),
 
-                      ),
-                    ),
-                    SizedBox(height: 16.h),
-                    Padding(
-                      padding: REdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
-                      child: TextFormField(
-                        onChanged: (value) => context.read<FeedbackBloc>().add(FeedBack_ChuDe(value)),
-                        decoration: InputDecoration(
-                          // focusedBorder ( khi nhấn vô sẽ thay đổi khung qua màu đen )
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              color: Colors.black,
                             ),
                           ),
-                          labelText: "Chủ Đề",
-                          labelStyle: TextStyle(color: Colors.black),
-                          hintText: ('Nhập chủ đề'),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12.r)),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return " Vui lòng nhập Chủ Đề";
-                          }
-                          return null;
-                        },
-                      ),
-                    ),
-                    SizedBox(height: 16.h),
-                    Padding(
-                      padding: REdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
-                      child: TextFormField(
-                        onChanged: (value) => context.read<FeedbackBloc>().add(FeedBack_NoiDung(value)),
-                        maxLines: 1,
-                        decoration: InputDecoration(
-                          // focusedBorder ( khi nhấn vô sẽ thay đổi khung qua màu đen )
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            borderSide: const BorderSide(
-                              color: Colors.black,
+                          SizedBox(height: 16.h),
+                          Padding(
+                            padding: REdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
+                            child: TextFormField(
+                              onChanged: (value) => context.read<FeedbackBloc>().add(FeedBack_ChuDe(value)),
+                              decoration: InputDecoration(
+                                // focusedBorder ( khi nhấn vô sẽ thay đổi khung qua màu đen )
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: const BorderSide(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                labelText: "Chủ Đề",
+                                labelStyle: TextStyle(color: textColor),
+                                hintText: ('Nhập chủ đề'),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12.r)),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return " Vui lòng nhập Chủ Đề";
+                                }
+                                return null;
+                              },
                             ),
                           ),
-                          labelText: ('Nội dung'),
-                          labelStyle: TextStyle(color: Colors.black),
-                          hintText: ('Nhập nội dung'),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12.r)),
-                        ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return " Vui lòng nhập Nội Dung";
-                          }
-                          return null;
-                        },
+                          SizedBox(height: 16.h),
+                          Padding(
+                            padding: REdgeInsets.fromLTRB(10.0, 0, 10.0, 0),
+                            child: TextFormField(
+                              onChanged: (value) => context.read<FeedbackBloc>().add(FeedBack_NoiDung(value)),
+                              maxLines: 1,
+                              decoration: InputDecoration(
+                                // focusedBorder ( khi nhấn vô sẽ thay đổi khung qua màu đen )
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10.0),
+                                  borderSide: const BorderSide(
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                labelText: ('Nội dung'),
+                                labelStyle: TextStyle(color: textColor),
+                                hintText: ('Nhập nội dung'),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12.r)),
+                              ),
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return " Vui lòng nhập Nội Dung";
+                                }
+                                return null;
+                              },
+                            ),
+                          ),
+                          SizedBox(height: 16.h),
+                          Container(
+                            width: double.infinity,
+                            margin:
+                            REdgeInsets.symmetric(horizontal: 40, vertical: 23),
+                            child: ElevatedButton.icon(
+                              label: Text(
+                                "Gửi",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    fontSize: 18.sp),
+                              ),
+                              icon: Icon(
+                                Icons.mail_outline,
+                                color: Colors.white,
+                                size: 22.sp,
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: 8, horizontal: 5),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.r),
+                                  ),
+                                  backgroundColor: Colors.blueAccent,
+                                  foregroundColor: Colors.grey),
+                              onPressed: () {
+                                // validate(): Xác thực tất cả các trường biểu mẫu và trả về true nếu tất cả đều hợp lệ.
+                                if (_formSignInKey.currentState!.validate()) {
+                                  context.read<FeedbackBloc>().add(const FeedBackRequested());
+                                }
+                              },
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                    SizedBox(height: 16.h),
-                    Container(
-                      width: double.infinity,
-                      margin:
-                          REdgeInsets.symmetric(horizontal: 40, vertical: 23),
-                      child: ElevatedButton.icon(
-                        label: Text(
-                          "Gửi",
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                              fontSize: 18.sp),
-                        ),
-                        icon: Icon(
-                          Icons.mail_outline,
-                          color: Colors.white,
-                          size: 22.sp,
-                        ),
-                        style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 8, horizontal: 5),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10.r),
-                            ),
-                            backgroundColor: Colors.blueAccent,
-                            foregroundColor: Colors.grey),
-                        onPressed: () {
-                          // validate(): Xác thực tất cả các trường biểu mẫu và trả về true nếu tất cả đều hợp lệ.
-                          if (_formSignInKey.currentState!.validate()) {
-                            context.read<FeedbackBloc>().add(const FeedBackRequested());
-                          }
-                        },
-                      ),
-                    )
-                  ],
+                  ),
                 ),
-              ),
-            ),
+              );
+            },
           ),
         ),
       ),

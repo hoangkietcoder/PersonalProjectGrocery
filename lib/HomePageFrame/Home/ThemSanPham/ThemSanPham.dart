@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../Compoents/CurrencyInputFormatterPrice/CurrencyInputFormatterPrice.dart';
 import '../../../Compoents/Dialog/dialog_loading_addproduct.dart';
 import '../../../Repository/Firebase_Database/Product/product_repository.dart';
 import 'bloc/themsanpham_bloc.dart';
@@ -239,9 +240,14 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
                         SizedBox(height: 10.h),
                         TextFormField(
                           keyboardType: TextInputType.number, // chỉ đc nhập số
-                          onChanged: (value) => context.read<ThemsanphamBloc>().add(CreatePriceProduct(value)), // lưu thay đổi vào state
-                          controller:
-                              _createPriceController, // đăng kí dùng controller
+                          // inputFormatters dùng để kiểm soát và định dạng dữ liệu người dùng nhập vào TextFormField
+                          inputFormatters: [CurrencyInputFormatterPrice()],
+                          onChanged: (value) {
+                            // Loại bỏ dấu "." để có giá trị thật sự
+                            final rawValue = value.replaceAll('.', '');
+                            context.read<ThemsanphamBloc>().add(CreatePriceProduct(rawValue));// lưu thay đổi vào state
+                          },
+                          controller: _createPriceController, // đăng kí dùng controller
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return " Vui lòng nhập Giá Sản Phẩm";

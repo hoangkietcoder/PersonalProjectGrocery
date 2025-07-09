@@ -63,6 +63,7 @@ class DataLocalRepository {
     }
   }
 
+
   // xử lí khi bị trùng dữ liệu có sẵn thì chỉ việc tăng số lượng lên 1
   Future<void> addOrIncreaseProduct(ModelProductLocal product) async {
     final box = _objectBoxService.productBox;
