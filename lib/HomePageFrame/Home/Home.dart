@@ -11,6 +11,7 @@ import 'package:personalprojectgrocery/Repository/DataLocal/data_local_repositor
 import 'package:personalprojectgrocery/Routes/argument/GioHangArgument.dart';
 import '../../Compoents/Dialog/dialog_addProductLocal.dart';
 import '../../Compoents/Dialog/dialog_loading_login.dart';
+import '../../Compoents/speech_to_text/SpeechToTextService.dart';
 import '../../Main_Bloc/main_bloc.dart';
 import '../../Models/Product/getData_ProductFromFirebase.dart';
 import '../../ObjectBox/bloc_ModelProductLocal/model_product_local_bloc.dart';
@@ -43,10 +44,48 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomepageframeViewState extends State<HomeView> {
-  final TextEditingController _searchController = TextEditingController();
+
+
+  final TextEditingController _controller = TextEditingController();
+  final SpeechToTextService _speechService = SpeechToTextService();
+  bool _isListening = false;
+
+  // xử lí khi voice
+  Future<void> _handleVoiceInput() async {
+    final available = await _speechService.initSpeech();
+    if (!available) return;
+
+    setState(() => _isListening = true );
+
+    await _speechService.startListening(onResult: (text) {
+      setState(() {
+        _isListening = false;
+        _controller.text = text;
+        _controller.selection = TextSelection.fromPosition(TextPosition(offset: text.length));
+      });
+
+      // Gửi kết quả tới BLoC
+      context.read<HomeBloc>().add(SearchProductHomeEventChange(text));
+      setState(() => _isListening = false);
+
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+
+
+
 
   // khai báo làm phân trang
   final ScrollController _scrollControllerPage = ScrollController();
+
+
+
 
   @override
   void initState() {
@@ -68,12 +107,7 @@ class _HomepageframeViewState extends State<HomeView> {
     });
   }
   
-  
-  @override
-  void dispose() {
-    _searchController.dispose();
-    super.dispose();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -139,18 +173,20 @@ class _HomepageframeViewState extends State<HomeView> {
             padding: REdgeInsets.only(right: 7.0, left: 7.0, top: 6.0),
             child: TextField(
               onChanged: (value) => context.read<HomeBloc>().add(SearchProductHomeEventChange(value)), // lưu thay đổi vào state, để tìm kiếm sản phẩm
-              controller: _searchController,
+              controller: _controller,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: cardSearchColor,
-                suffixIcon: IconButton(icon: Icon(Icons.keyboard_voice) , onPressed: () {
-                },),
+                suffixIcon: IconButton(icon: Icon(Icons.keyboard_voice) , onPressed: () {_handleVoiceInput();},),
                 contentPadding: REdgeInsets.symmetric(
                   horizontal: 15,
                   vertical: 3,
                 ),
                 prefixIcon: Icon(Icons.search),
                 hintText: 'Tìm kiếm theo tên sản phẩm ...',
+                hintStyle: TextStyle(
+                  fontSize: 15.sp,
+                ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.r),
                 ),
