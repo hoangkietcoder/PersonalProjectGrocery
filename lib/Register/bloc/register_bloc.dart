@@ -9,15 +9,17 @@ part 'register_event.dart';
 part 'register_state.dart';
 
 class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
-  RegisterBloc({required AuthenticationRepository authen}): _authenticationRepository = authen,
-        super(const RegisterState()) {
+  RegisterBloc({required String dateOfBirthday,required AuthenticationRepository authen}): _authenticationRepository = authen,
+        super( RegisterState(dateOfBirthday: dateOfBirthday)) {
     // đăng kí sự kiện
     on<HidePassword>(_onPassword);
     on<RegisterNameAccount>(_onRegisterNameAccount);
     on<RegisterPhoneNumberAccount>(_onRegisterPhoneNumberAccount);
+    on<RegisterDateOfBirthdayAccount>(_onCreateDateUser);
     on<RegisterEmailAccount>(_onRegisterEmailAccount);
     on<RegisterPasswordAccount>(_onRegisterPasswordAccount);
     on<RegisterAccountRequested>(_onRegisterAccount);
+
   }
 
   // truyền repo từ bên ngoài vào
@@ -46,6 +48,13 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     );
   }
 
+  void _onCreateDateUser(RegisterDateOfBirthdayAccount event,
+      Emitter<RegisterState> emit) {
+    emit(
+        state.copyWith(dateOfBirthday: event.dateOfBirthday,)
+    );
+  }
+
   void _onRegisterEmailAccount(RegisterEmailAccount event, Emitter<RegisterState> emit) {
     emit(state.copyWith(Email: event.email,)
     );
@@ -68,6 +77,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         );
         await _authenticationRepository.signUp(
           registerUser: RegisterUser(
+              dateOfBirthday: state.dateOfBirthday,
               name: state.name,
               phoneNumber: state.phoneNumber,
               email: state.email,

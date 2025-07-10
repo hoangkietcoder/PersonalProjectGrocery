@@ -6,6 +6,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../../Models/Product/create_product.dart';
@@ -25,9 +26,14 @@ class ProductRepository {
 
   // xài stream dùng để realtime để lấy dữ liệu từ firebase ( cho chức năng tạo sản phẩm )
   Stream<List<getDataProduct>> get createProduct {
-    return _db.collection("Product").snapshots().map((product) {
-      return product.docs.map((e) {
-        return getDataProduct.fromJson(e.data(), e.id);
+    final userId = FirebaseAuth.instance.currentUser?.uid;
+    return _db
+        .collection("Product")
+        .where("userId", isEqualTo: userId)
+        .snapshots()
+        .map((snapshot) {
+        return snapshot.docs.map((doc) {
+        return getDataProduct.fromJson(doc.data(), doc.id);
       }).toList();
     });
   }

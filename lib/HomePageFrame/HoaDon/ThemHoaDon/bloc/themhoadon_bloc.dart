@@ -16,7 +16,6 @@ class ThemhoadonBloc extends Bloc<ThemhoadonEvent, ThemhoadonState> {
     // đăng kí sự kiện
   on<CreateNameBill>(_onCreateNameBill);
   on<CreateNameSellerBill>(_onCreateNameSellerBill);
-
   on<CreateNameBuyerBill>(_onCreateNameBuyerBill);
   on<CreateDateBill>(_onCreateDateBill);
   on<CreateTotalPriceBill>(_onCreateTotalPriceBill);

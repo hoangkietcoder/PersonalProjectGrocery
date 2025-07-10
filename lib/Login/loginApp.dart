@@ -2,10 +2,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import '../Compoents/Dialog/dialog_loading_login.dart';
 import '../Register/register.dart';
 import '../Repository/Authentication/authentication_repository.dart';
 import '../Repository/Notification/notification_repository.dart';
+import '../Routes/argument/DangKiArgument.dart';
 import 'bloc/login_bloc.dart';
 
 class Login extends StatelessWidget {
@@ -245,9 +247,9 @@ class _LoginViewState extends State<_LoginView> {
                                 TextSpan(
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) => const RegisterPage()));
+                                      final date = DateFormat('dd-MM-yyyy').format(DateTime.now());
+                                      final argument = DangKiArgument( date: date,);
+                                      Navigator.of(context).push(MaterialPageRoute(builder: (context) =>  RegisterPage(date: argument.date,)));
                                     },
                                   text: "Đăng kí",
                                   style: TextStyle(

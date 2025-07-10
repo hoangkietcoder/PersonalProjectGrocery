@@ -18,6 +18,7 @@ import '../Register/register.dart';
 import '../Splash/splash_screen.dart';
 import 'argument/CapNhatThongTinArgument.dart';
 import 'argument/ChiTietSanPhamArgument.dart';
+import 'argument/DangKiArgument.dart';
 import 'argument/FeedBackArgument.dart';
 import 'argument/GioHangArgument.dart';
 import 'argument/ThemHoaDonArgument.dart';
@@ -54,10 +55,10 @@ class RouteGenerator {
             settings: const RouteSettings(name: '/ForgotPassword'),
             child: const ForgotpasswordPage());
       case '/Register':
-      // LoginArgument argument = args as LoginArgument;
+        DangKiArgument argument = args as DangKiArgument;
         return CustomPageRoute(
             settings: const RouteSettings(name: '/Register'),
-            child: const RegisterPage());
+            child:  RegisterPage(date: argument.date  ,));
       case '/DoiMatKhau':
       // LoginArgument argument = args as LoginArgument;
         return CustomPageRoute(

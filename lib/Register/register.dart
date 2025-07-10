@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 import '../Compoents/Dialog/dialog_loading_login.dart';
 import '../Repository/Authentication/authentication_repository.dart';
 import 'bloc/register_bloc.dart';
 
 class RegisterPage extends StatelessWidget {
-  const RegisterPage({super.key});
+  final String date;
+
+  const RegisterPage({super.key, required this.date});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => RegisterBloc(
-          authen: RepositoryProvider.of<AuthenticationRepository>(context)),
-      child: const RegisterView(),
+          authen: RepositoryProvider.of<AuthenticationRepository>(context), dateOfBirthday: date),
+      child:  RegisterView(date: date,),
     );
   }
 }
 
 class RegisterView extends StatefulWidget {
-  const RegisterView({super.key});
-
+  final String date;
+  const RegisterView({super.key, required this.date});
   @override
   State<RegisterView> createState() => _RegisterViewState();
 }
@@ -28,10 +31,14 @@ class RegisterView extends StatefulWidget {
 class _RegisterViewState extends State<RegisterView> {
   final _formSignInKey = GlobalKey<FormState>();
 
-  final TextEditingController _emailResgiterController = TextEditingController();
-  final TextEditingController _passwordRegisterController = TextEditingController();
   final TextEditingController _nameRegisterController = TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
+  final TextEditingController _DateController = TextEditingController();
+  final TextEditingController _emailResgiterController = TextEditingController();
+  final TextEditingController _passwordRegisterController = TextEditingController();
+
+
+  final DateFormat _dateFormat = DateFormat('dd-MM-yyyy');
 
   @override
   void dispose() {
@@ -40,6 +47,28 @@ class _RegisterViewState extends State<RegisterView> {
     _nameRegisterController.dispose();
     _phoneNumberController.dispose();
     super.dispose();
+  }
+
+  // vừa vô trang sẽ set mặc định cho date là ngày hôm nay
+  @override
+  void initState() {
+    super.initState();
+    _DateController.text = widget.date;
+  }
+
+  void _showStartDatePicker(BuildContext context) {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2015),
+      lastDate: DateTime(DateTime.now().year + 5),
+    ).then((value) {
+      if(value != null){
+        String dateStr = _dateFormat.format(value);
+        _DateController.text = dateStr ;
+        context.read<RegisterBloc>().add(RegisterDateOfBirthdayAccount(dateStr));
+      }
+    });
   }
 
   @override
@@ -184,6 +213,33 @@ class _RegisterViewState extends State<RegisterView> {
                                   color: Colors.black12,
                                 ),
                                 borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 10.h),
+                          TextFormField(
+                            controller: _DateController,
+                            decoration: InputDecoration(
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: const BorderSide(
+                                  color: Colors.black,
+                                ),
+                              ),
+                              label: const Text(
+                                "Ngày Tháng Năm Sinh",
+                                style: TextStyle(color: Colors.black),
+                              ),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                              suffixIcon: IconButton(
+                                onPressed: (){
+                                  _showStartDatePicker(context);
+                                },
+                                icon: const Icon(Icons.calendar_today,
+                                    color: Colors.blueAccent),
                               ),
                             ),
                           ),

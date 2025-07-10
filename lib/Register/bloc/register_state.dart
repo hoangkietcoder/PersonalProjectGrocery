@@ -11,6 +11,7 @@ final class RegisterState extends Equatable {
     this.isHiddenPassword = true,
     this.statusSubmit = RegisterStatus.inittial,
     this.error="",
+    required this.dateOfBirthday,
   });
 
 
@@ -21,6 +22,8 @@ final class RegisterState extends Equatable {
   final bool isHiddenPassword;
   final RegisterStatus statusSubmit;
   final String error;
+  final String dateOfBirthday;
+
 
   RegisterState copyWith({
     String? Name,
@@ -30,6 +33,7 @@ final class RegisterState extends Equatable {
     bool? isHiddenPassword,
     RegisterStatus? statusSubmit,
     String? error,
+    String? dateOfBirthday
   }) {
     return RegisterState(
       name: Name ?? this.name,
@@ -39,9 +43,10 @@ final class RegisterState extends Equatable {
       isHiddenPassword: isHiddenPassword ?? this.isHiddenPassword,
       statusSubmit: statusSubmit ?? this.statusSubmit,
       error: error ?? this.error,
+      dateOfBirthday: dateOfBirthday ?? this.dateOfBirthday,
     );
   }
 
   @override
-  List<Object?> get props => [isHiddenPassword, passwordResgister, email, name, statusSubmit,phoneNumber];
+  List<Object?> get props => [isHiddenPassword, passwordResgister, email, name, statusSubmit,phoneNumber,dateOfBirthday];
 }

@@ -19,6 +19,10 @@ class RegisterAccountRequested extends RegisterEvent {
 
 
 //=================================================
+
+
+
+
 class RegisterNameAccount extends RegisterEvent{
   RegisterNameAccount(this.name);
 
@@ -33,6 +37,15 @@ class RegisterPhoneNumberAccount extends RegisterEvent{
   final String phoneNumber;
   @override
   List<Object> get props => [phoneNumber];
+}
+
+
+class RegisterDateOfBirthdayAccount extends RegisterEvent{
+  const RegisterDateOfBirthdayAccount(this.dateOfBirthday);
+
+  final String dateOfBirthday;
+  @override
+  List<Object> get props => [dateOfBirthday];
 }
 
 class RegisterEmailAccount extends RegisterEvent{

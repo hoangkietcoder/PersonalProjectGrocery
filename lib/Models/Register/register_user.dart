@@ -7,11 +7,13 @@ import 'package:equatable/equatable.dart';
 class RegisterUser extends Equatable{
 
   const RegisterUser({
+
     required this.name ,
     required this.phoneNumber ,
     required this.email ,
     required this.password ,
     this.url_info = "",
+    required this.dateOfBirthday,
   });
 
 
@@ -20,10 +22,12 @@ class RegisterUser extends Equatable{
   final String email;
   final String password;
   final String url_info;
+  final String dateOfBirthday;
+
 
 
   /// Empty user which represents an unauthenticated user.
-  static const empty = RegisterUser( name: '', phoneNumber: '', email: '', password: '', );
+  static const empty = RegisterUser( name: '', phoneNumber: '', email: '', password: '', url_info: '', dateOfBirthday: '');
 
   /// Convenience getter to determine whether the current user is empty.
   bool get isEmpty => this == RegisterUser.empty;
@@ -38,13 +42,16 @@ class RegisterUser extends Equatable{
     String? name,
     String? phoneNumber,
     String? email,
-    String? password
+    String? password,
+    String? dateOfBirthday,
+
   }) {
     return RegisterUser(
       name: name ?? this.name,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       email: email ?? this.email,
-      password: password ?? this.password
+      password: password ?? this.password,
+      dateOfBirthday: dateOfBirthday ?? this.dateOfBirthday,
     );
   }
 
@@ -55,6 +62,7 @@ class RegisterUser extends Equatable{
       email: json["email"] ?? "",
       password: json["password"] ?? "",
       url_info: json["url_info"] ?? "",
+      dateOfBirthday: json["dateOfBirthday"] ?? "",
   );
 
 
@@ -64,6 +72,7 @@ class RegisterUser extends Equatable{
     "phoneNumber": phoneNumber,
     "email": email,
     "url_info":url_info,
+    "dateOfBirthday": dateOfBirthday,
   };
 
 
@@ -74,6 +83,6 @@ class RegisterUser extends Equatable{
   };
 
   @override
-  List<Object?> get props =>[ email, name, phoneNumber, password, url_info];
+  List<Object?> get props =>[ email, name, phoneNumber, password, url_info,dateOfBirthday];
 
 }
