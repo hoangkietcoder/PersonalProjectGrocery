@@ -17,31 +17,31 @@ class HideConfirmPasswordChange extends DoiMatKhauEvent {
 }
 
 class ChangeOldPassword extends DoiMatKhauEvent {
- const ChangeOldPassword(this.password);
+ const ChangeOldPassword(this.oldPassword);
 
- final String password;
+ final String oldPassword;
 
  @override
- List<Object> get props => [password];
+ List<Object> get props => [oldPassword];
 }
 
 
 class ChangePassword extends DoiMatKhauEvent {
- const ChangePassword(this.password);
+ const ChangePassword(this.newPassword);
 
- final String password;
+ final String newPassword;
 
  @override
- List<Object> get props => [password];
+ List<Object> get props => [newPassword];
 }
 
 class ChangeConfirmPassword extends DoiMatKhauEvent {
- const ChangeConfirmPassword(this.password);
+ const ChangeConfirmPassword(this.confirmPassword);
 
- final String password;
+ final String confirmPassword;
 
  @override
- List<Object> get props => [password];
+ List<Object> get props => [confirmPassword];
 }
 
 

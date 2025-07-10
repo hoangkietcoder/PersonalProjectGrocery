@@ -72,38 +72,39 @@ class _SendFeedbackState extends State<Send_Feedback> {
   Widget build(BuildContext context) {
     final statusTheme = context.select((MainBloc bloc) => bloc.state.statusTheme);
     final textColor = statusTheme ? Colors.white : Colors.black;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Gửi Feedback'),
-      ),
-      body: BlocListener<FeedbackBloc, FeedbackState>(
-        listenWhen: (pre, cur) {
-          return pre.statusFeedBack != cur.statusFeedBack;
-        },
-        listener: (context, state) {
-          if (state.statusFeedBack == StatusFeedBack.loading) {
-            showDialog<void>(
-              context: context,
-              barrierDismissible: false,
-              builder: (BuildContext context) {
-                return const DialogLoadingAddProduct();// khi đang xử lí sẽ hiện nút loading
-              },
-            );
-          } else if (state.statusFeedBack == StatusFeedBack.success) {
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Đã gửi phản hồi thành công!')));
-            Navigator.popUntil(context, ModalRoute.withName('/HomeScreenPage'));
-          } else if (state.statusFeedBack == StatusFeedBack.failure) {
-            Navigator.pop(context);
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(SnackBar(
-                  duration: const Duration(seconds: 2),
-                  content: Text(state.message)));
-          }
-        },
-        child: GestureDetector(
-          onTap: FocusScope.of(context).unfocus,
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent, // // quan trọng để bắt sự kiện ở cả vùng không có widget
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Gửi Feedback'),
+        ),
+        body: BlocListener<FeedbackBloc, FeedbackState>(
+          listenWhen: (pre, cur) {
+            return pre.statusFeedBack != cur.statusFeedBack;
+          },
+          listener: (context, state) {
+            if (state.statusFeedBack == StatusFeedBack.loading) {
+              showDialog<void>(
+                context: context,
+                barrierDismissible: false,
+                builder: (BuildContext context) {
+                  return const DialogLoadingAddProduct();// khi đang xử lí sẽ hiện nút loading
+                },
+              );
+            } else if (state.statusFeedBack == StatusFeedBack.success) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Đã gửi phản hồi thành công!')));
+              Navigator.popUntil(context, ModalRoute.withName('/HomeScreenPage'));
+            } else if (state.statusFeedBack == StatusFeedBack.failure) {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(SnackBar(
+                    duration: const Duration(seconds: 2),
+                    content: Text(state.message)));
+            }
+          },
           child: LayoutBuilder(
             builder: (context ,constraints){
               return SingleChildScrollView(

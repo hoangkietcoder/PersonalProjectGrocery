@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:personalprojectgrocery/Repository/DoiMatKhau/doi_mat_khau_repository.dart';
 
 import 'bloc/doi_mat_khau_bloc.dart';
 
@@ -11,7 +12,7 @@ class DoiMatKhauPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => DoiMatKhauBloc(),
+      create: (context) => DoiMatKhauBloc(doimatkhauRepo: DoiMatKhauRepository()),
       child: const DoiMatKhauView(),
     );
   }
@@ -30,6 +31,8 @@ class _DoiMatKhauViewState extends State<DoiMatKhauView> {
   final TextEditingController _confirmpasswordNewController = TextEditingController();
   final _formSignInKey = GlobalKey<FormState>();
 
+
+
   @override
   void initState() {
     super.initState();
@@ -45,27 +48,28 @@ class _DoiMatKhauViewState extends State<DoiMatKhauView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            // Status bar color
-            statusBarColor: Colors.blueAccent,
-            // Status bar brightness (optional)
-            statusBarIconBrightness: Brightness.light, // For Android (dark icons)
-            statusBarBrightness: Brightness.light, // For iOS (dark icons)
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent, // quan trọng để bắt sự kiện ở cả vùng không có widget
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+          appBar: AppBar(
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              // Status bar color
+              statusBarColor: Colors.blueAccent,
+              // Status bar brightness (optional)
+              statusBarIconBrightness: Brightness.light, // For Android (dark icons)
+              statusBarBrightness: Brightness.light, // For iOS (dark icons)
+            ),
+            iconTheme:  IconThemeData(color: Colors.white),
+            // chỉnh màu cho dấu back
+            title: const Text(
+              "Đổi mật khẩu",
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.blueAccent,
+            centerTitle: true,
           ),
-          iconTheme:  IconThemeData(color: Colors.white),
-          // chỉnh màu cho dấu back
-          title: const Text(
-            "Đổi mật khẩu",
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Colors.blueAccent,
-          centerTitle: true,
-        ),
-        body: GestureDetector(
-          onTap: FocusScope.of(context).unfocus,
-          child: SingleChildScrollView(
+          body: SingleChildScrollView(
             child: Column(
               children: [
                 SizedBox(
@@ -81,16 +85,39 @@ class _DoiMatKhauViewState extends State<DoiMatKhauView> {
                       topLeft: Radius.circular(40.0),
                     ),
                   ),
-                  child: Form(
+                  child: BlocListener<DoiMatKhauBloc, DoiMatKhauState>(
+                    listenWhen: (pre , cur ) => pre.statusSubmit != cur.statusSubmit,
+                    listener: (context, state) {
+                      if(state.statusSubmit == StatusChangePassword.success){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Đổi mật khẩu thành công"),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                        Navigator.pop(context); // quay lại màn trước
+                      }
+                      if(state.statusSubmit == StatusChangePassword.failure){
+                        if (state.error.isNotEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(state.error),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      }
+                    },
+                    child: Form(
                     key: _formSignInKey,
                     child: Column(
                       children: [
                         SizedBox(height: 10.h),
                         TextFormField(
+                          autovalidateMode: AutovalidateMode.onUserInteraction, // bắt đầu nhập, lỗi sẽ tự động mất,
                           obscureText: true,
                           onChanged: (value) => context.read<DoiMatKhauBloc>().add(ChangeOldPassword(value)), // lưu thay đổi vào state
-                          controller:
-                              _passwordOldController, // đăng kí dùng controller
+                          controller: _passwordOldController, // đăng kí dùng controller
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return " Vui lòng nhập Mật khẩu cũ";
@@ -128,33 +155,29 @@ class _DoiMatKhauViewState extends State<DoiMatKhauView> {
                         ),
                         SizedBox(height: 10.h),
                         BlocBuilder<DoiMatKhauBloc, DoiMatKhauState>(
-                          buildWhen: (current, prev) {
-                            return current.isHiddenPassword != prev.isHiddenPassword;
+                          buildWhen: (pre, cur) {return pre.isHiddenPassword != cur.isHiddenPassword || pre.passwordStrengthError != cur.passwordStrengthError ;
                           },
                           builder: (context, state) {
                             return TextFormField(
+                              autovalidateMode: AutovalidateMode.onUserInteraction, // bắt đầu nhập, lỗi sẽ tự động mất,
                               obscureText: state.isHiddenPassword,
                               onChanged: (value) => context.read<DoiMatKhauBloc>().add(ChangePassword(value)), // lưu thay đổi vào state
-                              controller:
-                                  _passwordNewController, // đăng kí dùng controller
+                              controller: _passwordNewController, // đăng kí dùng controller
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
                                   return " Vui lòng nhập Mật khẩu mới";
                                 }
-                                return null;
+          
                               },
                               decoration: InputDecoration(
                                 suffixIcon: IconButton(
-                                  onPressed: () {
-                                    context
-                                        .read<DoiMatKhauBloc>()
-                                        .add(const HidePasswordChange());
-                                  },
+                                  onPressed: () {context.read<DoiMatKhauBloc>().add(const HidePasswordChange());},
                                   icon: state.isHiddenPassword
                                       ? const Icon(Icons.visibility_off)
                                       : const Icon(Icons.visibility),
                                   color: Colors.grey,
                                 ),
+                                errorText: state.passwordStrengthError.isNotEmpty ? state.passwordStrengthError : null,
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: const BorderSide(
@@ -187,32 +210,33 @@ class _DoiMatKhauViewState extends State<DoiMatKhauView> {
                         ),
                         SizedBox(height: 10.h),
                         BlocBuilder<DoiMatKhauBloc, DoiMatKhauState>(
-                          buildWhen: (current, prev) {
-                            return current.isConfirmHiddenPassword != prev.isConfirmHiddenPassword;
+                          buildWhen: (pre, cur) {
+                            return pre.isConfirmHiddenPassword != cur.isConfirmHiddenPassword ||
+                                pre.confirmPasswordError != cur.confirmPasswordError;;
                           },
                           builder: (context, state) {
                             return TextFormField(
+                              autovalidateMode: AutovalidateMode.onUserInteraction, // bắt đầu nhập, lỗi sẽ tự động mất,
                               obscureText: state.isConfirmHiddenPassword,
                               onChanged: (value) => context.read<DoiMatKhauBloc>().add(ChangeConfirmPassword(value)), // lưu thay đổi vào state
                               controller: _confirmpasswordNewController, // đăng kí dùng controller
                               validator: (value) {
                                 if (value == null || value.isEmpty) {
-                                  return " Vui lòng nhập Mật khẩu mới";
+                                  return " Vui lòng xác nhận mật khẩu mới";
                                 }
                                 return null;
                               },
                               decoration: InputDecoration(
                                 suffixIcon: IconButton(
                                   onPressed: () {
-                                    context
-                                        .read<DoiMatKhauBloc>()
-                                        .add(const HideConfirmPasswordChange());
+                                    context.read<DoiMatKhauBloc>().add(const HideConfirmPasswordChange());
                                   },
                                   icon: state.isConfirmHiddenPassword
                                       ? const Icon(Icons.visibility_off)
                                       : const Icon(Icons.visibility),
                                   color: Colors.grey,
                                 ),
+                                errorText: state.confirmPasswordError.isNotEmpty ? state.confirmPasswordError : null,
                                 focusedBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(10.0),
                                   borderSide: const BorderSide(
@@ -227,6 +251,7 @@ class _DoiMatKhauViewState extends State<DoiMatKhauView> {
                                 hintStyle: const TextStyle(
                                   color: Colors.black26,
                                 ),
+          
                                 border: OutlineInputBorder(
                                   borderSide: const BorderSide(
                                     color: Colors.black12,
@@ -248,8 +273,7 @@ class _DoiMatKhauViewState extends State<DoiMatKhauView> {
                           width: double.infinity,
                           child: ElevatedButton.icon(
                             icon: ImageIcon(
-                              const AssetImage(
-                                  "assets/images/iconchangepassword.png"),
+                               AssetImage("assets/images/iconchangepassword.png"),
                               color: Colors.white,
                               size: 18.sp,
                             ),
@@ -266,7 +290,7 @@ class _DoiMatKhauViewState extends State<DoiMatKhauView> {
                               // validate(): Xác thực tất cả các trường biểu mẫu và trả về true nếu tất cả đều hợp lệ.
                               if (_formSignInKey.currentState!.validate()) {
                                 // Gọi hàm xác thực
-                                // context.read<LoginBloc>().add(const SubmitLogin());
+                                context.read<DoiMatKhauBloc>().add(const ChangePasswordRequested());
                               }
                             },
                             label: Text(
@@ -282,10 +306,11 @@ class _DoiMatKhauViewState extends State<DoiMatKhauView> {
                       ],
                     ),
                   ),
+),
                 ),
               ],
             ),
-          ),
-        ));
+          )),
+    );
   }
 }

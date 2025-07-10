@@ -41,7 +41,7 @@ enum BillStatus { initial,loading, failure ,successful}
    String? date,
    String? totalPriceBill,
    String? noteBill,
-    BillStatus? billStatus,
+   BillStatus? billStatus,
    String? error,
    String? message,
 

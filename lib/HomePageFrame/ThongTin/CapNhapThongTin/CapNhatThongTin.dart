@@ -61,29 +61,30 @@ class _CapNhatThongTinViewState extends State<CapNhatThongTinView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.grey.shade100,
-        appBar: AppBar(
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            // Status bar color
-            statusBarColor: Colors.blueAccent,
-            // Status bar brightness (optional)
-            statusBarIconBrightness:
-                Brightness.light, // For Android (dark icons)
-            statusBarBrightness: Brightness.light, // For iOS (dark icons)
+    return GestureDetector(
+      behavior: HitTestBehavior.translucent, // quan trọng để bắt sự kiện ở cả vùng không có widget
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+          backgroundColor: Colors.grey.shade100,
+          appBar: AppBar(
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              // Status bar color
+              statusBarColor: Colors.blueAccent,
+              // Status bar brightness (optional)
+              statusBarIconBrightness:
+                  Brightness.light, // For Android (dark icons)
+              statusBarBrightness: Brightness.light, // For iOS (dark icons)
+            ),
+            iconTheme: const IconThemeData(color: Colors.white),
+            // chỉnh màu cho dấu back
+            title: const Text(
+              "Cập Nhật Thông Tin",
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.blueAccent,
+            centerTitle: true,
           ),
-          iconTheme: const IconThemeData(color: Colors.white),
-          // chỉnh màu cho dấu back
-          title: const Text(
-            "Cập Nhật Thông Tin",
-            style: TextStyle(color: Colors.white),
-          ),
-          backgroundColor: Colors.blueAccent,
-          centerTitle: true,
-        ),
-        body: GestureDetector(
-          onTap: FocusScope.of(context).unfocus,
-          child: SingleChildScrollView(
+          body: SingleChildScrollView(
             child: Column(
               children: [
                 SizedBox(
@@ -112,10 +113,10 @@ class _CapNhatThongTinViewState extends State<CapNhatThongTinView> {
                           final XFile? pickedFile = await ImagePicker().pickImage(
                             source: fromCamera ? ImageSource.camera : ImageSource.gallery,
                           );
-
+          
                           if (pickedFile != null) {
                             final File imageFile = File(pickedFile.path);
-
+          
                             context.read<CapNhatThongTinBloc>().add(UploadImageEvent(
                                 imageFile: imageFile,
                                 ProductId: productId,
@@ -124,15 +125,15 @@ class _CapNhatThongTinViewState extends State<CapNhatThongTinView> {
                           }
                         }
                       },
-                      icon: const Icon(
+                      icon:  Icon(
                         Icons.camera_alt,
-                        color: Colors.black,
+                        color: Colors.grey[700],
                       ),
                     ),
                   )
                 ]);
-  },
-),
+            },
+          ),
                 SizedBox(
                   height: 15.h,
                 ),
@@ -161,7 +162,7 @@ class _CapNhatThongTinViewState extends State<CapNhatThongTinView> {
                           const SnackBar(content: Text(' Load dữ liệu thất bại')),
                         );
                       }
-
+          
                       // Gán dữ liệu vào controller mỗi khi state thay đổi
                       _nameController.text = state.model.name;
                       _emailController.text = state.model.email;
@@ -354,8 +355,8 @@ class _CapNhatThongTinViewState extends State<CapNhatThongTinView> {
                                 ),
                               ),
                             );
-  },
-),
+            },
+          ),
                             SizedBox(height: 13.h),
                           ],
                         ),
@@ -365,7 +366,7 @@ class _CapNhatThongTinViewState extends State<CapNhatThongTinView> {
                 )
               ],
             ),
-          ),
-        ));
+          )),
+    );
   }
 }
