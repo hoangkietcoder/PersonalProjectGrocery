@@ -16,7 +16,8 @@ class CreateProduct extends Equatable{
     required this.supplierName,
     required this.phoneSupplier,
     required this.noteProduct,
-    this.createdAt
+    this.createdAt,
+    required this.userId,
   });
 
   final String id;
@@ -28,10 +29,11 @@ class CreateProduct extends Equatable{
   final String phoneSupplier;
   final String noteProduct;
   final Timestamp? createdAt ;
+  final String userId;
 
 
   /// Tạo đối tượng rỗng
-  static const empty = CreateProduct(id: '',nameProduct: '', quantityProduct: '', priceProduct: '', supplierName: '', phoneSupplier: '', noteProduct: '' ,img_url: "");
+  static const empty = CreateProduct(id: '',nameProduct: '', quantityProduct: '', priceProduct: '', supplierName: '', phoneSupplier: '', noteProduct: '' ,img_url: "", userId: '');
 
   /// Tạo trống đối tượng
   bool get isEmpty => this == CreateProduct.empty;
@@ -51,7 +53,8 @@ class CreateProduct extends Equatable{
     String? supplierName,
     String? phoneSupplier,
     String? noteProduct,
-    Timestamp? createdAt
+    Timestamp? createdAt,
+    String? userId,
   }) {
     return CreateProduct(
         id: id ?? this.id,
@@ -63,6 +66,7 @@ class CreateProduct extends Equatable{
         phoneSupplier:  phoneSupplier ?? this.phoneSupplier,
         noteProduct: noteProduct ?? this.noteProduct,
         createdAt: createdAt ?? this.createdAt,
+        userId: userId ?? this.userId,
     );
   }
 
@@ -77,6 +81,7 @@ class CreateProduct extends Equatable{
     phoneSupplier: json["phoneSupplier"] ?? -1,
     noteProduct: json["noteProduct"] ?? "",
     createdAt:  json["createdAt"], // <-- không cần ép kiểu vì đã là Timestamp
+    userId:  json["userId"],
   );
 
 
@@ -92,12 +97,13 @@ class CreateProduct extends Equatable{
     "phoneSupplier": phoneSupplier,
     "noteProduct": noteProduct,
     "createdAt": createdAt, // hoặc FieldValue.serverTimestamp() nếu là lúc tạo
+    "userId" : userId,
   };
 
 
 
 
   @override
-  List<Object?> get props =>[id,img_url, nameProduct,quantityProduct,priceProduct,supplierName,phoneSupplier,noteProduct,createdAt];
+  List<Object?> get props =>[id,img_url, nameProduct,quantityProduct,priceProduct,supplierName,phoneSupplier,noteProduct,createdAt,userId];
 
 }

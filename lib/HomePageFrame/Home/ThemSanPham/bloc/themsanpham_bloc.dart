@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../../../../Models/Product/create_product.dart';
 import '../../../../Repository/Firebase_Database/Product/product_repository.dart';
 
@@ -74,6 +75,7 @@ class ThemsanphamBloc extends Bloc<ThemsanphamEvent, ThemsanphamState> {
   // xử lí tạo 1 sản phẩm
   Future<void> _onCreateProduct(CreateProductRequested event, Emitter<ThemsanphamState> emit) async {
     try {
+      final userId = FirebaseAuth.instance.currentUser?.uid;
       emit(
           state.copyWith(statusSubmit: CreateStatus.loading)
       );
@@ -84,6 +86,7 @@ class ThemsanphamBloc extends Bloc<ThemsanphamEvent, ThemsanphamState> {
         supplierName: state.tennhacungcap,
         phoneSupplier: state.sdtnhacungcap,
         noteProduct: state.chuthich,
+        userId: userId ?? "",
       ));
       if(isClosed) return;
       emit(
