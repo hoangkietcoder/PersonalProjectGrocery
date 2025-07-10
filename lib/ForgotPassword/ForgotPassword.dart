@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../Compoents/Dialog/dialog_FindEmail.dart';
 import '../Compoents/Dialog/dialog_loading_login.dart';
 import '../Repository/Authentication/authentication_repository.dart';
 import 'bloc/forgotpassword_bloc.dart';
@@ -75,23 +74,11 @@ class _ForgotpasswordState extends State<ForgotpasswordView> {
                   },
                 );
               } else if (state.statusSubmit == StatusForgotPassword.success) {
-                Navigator.pop(context); // đóng dialog cũ mở dialog mới
-                // AwesomeDialog(
-                //   context: context,
-                //   dialogType: DialogType.success,
-                //   headerAnimationLoop: false,
-                //   animType: AnimType.bottomSlide,
-                //   title: 'Gửi Thành Công',
-                //   desc: 'Đã gửi link để reset password ',
-                //   buttonsTextStyle: const TextStyle(color: Colors.black),
-                //   showCloseIcon: true,
-                //
-                //   // 2 chức năng cancel và ok
-                //   btnCancelOnPress: () {},
-                //   btnOkOnPress: () {
-                //     Navigator.of(context).popUntil(ModalRoute.withName("/Login"));
-                //   },
-                // ).show();
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Đã gửi link reset password!')));
+                // vì do realtime rồi nên chỉ cần popuntil về thôi
+                Navigator.popUntil(context, ModalRoute.withName('/Login'));
 
               } else if (state.statusSubmit == StatusForgotPassword.failure) {
                 Navigator.pop(context);
@@ -115,7 +102,7 @@ class _ForgotpasswordState extends State<ForgotpasswordView> {
                     size: 100.sp,
                   ),
                   Container(
-                    padding: const EdgeInsets.fromLTRB(25.0, 10.0, 25.0, 20.0),
+                    padding:  REdgeInsets.fromLTRB(25.0, 10.0, 25.0, 20.0),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -130,10 +117,7 @@ class _ForgotpasswordState extends State<ForgotpasswordView> {
                           SizedBox(height: 25.h),
                           TextFormField(
                             keyboardType: TextInputType.emailAddress,
-                            onChanged: (value) => context
-                                .read<ForgotpasswordBloc>()
-                                .add(EmailForgotChange(
-                                    value)), // lưu thay đổi vào state
+                            onChanged: (value) => context.read<ForgotpasswordBloc>().add(EmailForgotChange(value)), // lưu thay đổi vào state
                             controller: _emailForgotPasswordController, // đăng kí dùng controller
                             validator: (value) {
                               if (value == null || value.isEmpty) {
@@ -170,7 +154,7 @@ class _ForgotpasswordState extends State<ForgotpasswordView> {
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.grey, // Cancel button màu xám
-                                    padding: EdgeInsets.symmetric(vertical: 15.h),
+                                    padding: EdgeInsets.symmetric(vertical: 15.r),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30.r),
                                     ),
@@ -182,7 +166,7 @@ class _ForgotpasswordState extends State<ForgotpasswordView> {
                                   child: Text(
                                     "Cancel",
                                     style: TextStyle(
-                                      fontSize: 15.sp,
+                                      fontSize: 10.sp,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -194,13 +178,18 @@ class _ForgotpasswordState extends State<ForgotpasswordView> {
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blueAccent,
-                                    padding: EdgeInsets.symmetric(vertical: 15.h),
+                                    padding: EdgeInsets.symmetric(vertical: 15.r),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30.r),
                                     ),
                                   ),
                                   onPressed: () {
-                                    // Xử lý khi nhấn "Tìm Email"
+                                    //currentState: Truy cập trạng thái của biểu mẫu.
+                                    // validate(): Xác thực tất cả các trường biểu mẫu và trả về true nếu tất cả đều hợp lệ.
+                                    if (_formSignInKey.currentState!.validate()) {
+                                      // Gọi hàm xác thực
+                                      context.read<ForgotpasswordBloc>().add(const ForgotPasswordRequested());
+                                    }
                                   },
                                   child: Text(
                                     "Tìm Email",

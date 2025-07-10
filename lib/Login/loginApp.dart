@@ -165,25 +165,27 @@ class _LoginViewState extends State<_LoginView> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  Checkbox(
-                                    hoverColor: Colors.redAccent,
-                                    value: rememberPassword,
-                                    onChanged: (bool? value) {
-                                      setState(() {
-                                        rememberPassword = value!;
-                                      });
-                                    },
-                                    activeColor: Colors.blue,
-                                  ),
-                                  const Text(
-                                    "Ghi nhớ mật khẩu",
-                                    style: TextStyle(
-                                      color: Colors.black54,
+                              Expanded(
+                                child: Row(
+                                  children: [
+                                    Checkbox(
+                                      hoverColor: Colors.redAccent,
+                                      value: rememberPassword,
+                                      onChanged: (bool? value) {
+                                        setState(() {
+                                          rememberPassword = value!;
+                                        });
+                                      },
+                                      activeColor: Colors.blue,
                                     ),
-                                  ),
-                                ],
+                                    Text(
+                                      "Ghi nhớ mật khẩu",
+                                      style: TextStyle(
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                               GestureDetector(
                                 onTap: () {
