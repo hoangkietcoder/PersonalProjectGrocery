@@ -195,6 +195,7 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
                         ),
                         SizedBox(height: 10.h),
                         TextFormField(
+                          inputFormatters: [CurrencyInputFormatterPrice(locale: "en_US")],
                           keyboardType: TextInputType.number,
                           onChanged: (value) => context
                               .read<ThemsanphamBloc>()
@@ -241,7 +242,7 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
                         TextFormField(
                           keyboardType: TextInputType.number, // chỉ đc nhập số
                           // inputFormatters dùng để kiểm soát và định dạng dữ liệu người dùng nhập vào TextFormField
-                          inputFormatters: [CurrencyInputFormatterPrice()],
+                          inputFormatters: [CurrencyInputFormatterPrice(locale: "vi_VN")],
                           onChanged: (value) {
                             // Loại bỏ dấu "." để có giá trị thật sự
                             final rawValue = value.replaceAll('.', '');

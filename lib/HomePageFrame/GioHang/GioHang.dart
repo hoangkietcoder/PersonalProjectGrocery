@@ -179,9 +179,9 @@ class _GioHangViewState extends State<GioHangView> {
                                 color: Colors.blue[50],
                                 elevation: 2,
                                 child: ListTile(
-                                  leading: state.img_url.isNotEmpty
+                                  leading: item.img_url.isNotEmpty
                                       ? Image.network(
-                                          state.img_url,
+                                         item.img_url,
                                           height: 50.h,
                                           width: 50.w,
                                           fit: BoxFit.cover,
@@ -240,7 +240,8 @@ class _GioHangViewState extends State<GioHangView> {
                             ),
                           );
                         },
-                      )),
+                      )
+                      ),
                       Container(
                         padding: const EdgeInsets.symmetric(
                             vertical: 10, horizontal: 20),

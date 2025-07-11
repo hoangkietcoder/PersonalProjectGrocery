@@ -9,6 +9,7 @@ import 'package:personalprojectgrocery/ObjectBox/ObjectBox.dart';
 import 'package:personalprojectgrocery/ObjectBox/model/ModelProductLocal.dart';
 import 'package:personalprojectgrocery/Repository/DataLocal/data_local_repository.dart';
 import 'package:personalprojectgrocery/Routes/argument/GioHangArgument.dart';
+import '../../Compoents/CurrencyInputFormatterPrice/CurrencyInputFormatterPrice.dart';
 import '../../Compoents/Dialog/dialog_addProductLocal.dart';
 import '../../Compoents/Dialog/dialog_loading_login.dart';
 import '../../Compoents/speech_to_text/SpeechToTextService.dart';
@@ -230,9 +231,9 @@ class _HomepageframeViewState extends State<HomeView> {
                         }
                       }
                       final product = state.lsProduct[index];
-                      final price = int.tryParse(product.priceProduct) ?? 0; //  Parse String sang int trước khi tính tổng
-                      final formatter = NumberFormat("#,###", "vi_VN"); // định dạng tổng tiền
-                      final formattedPriceProduct = formatter.format(price);
+                      // tại đây khỏi cần format product.priceProduct ( String ) và product.quantityProduct (String -> thành int
+                      final formattedPriceProduct = formatCurrencyVN(product.priceProduct);
+                      final formattedQuantityProduct = formatCurrencyUS(product.quantityProduct);
                       return Column(
                         children: [
                           GestureDetector(
@@ -322,7 +323,7 @@ class _HomepageframeViewState extends State<HomeView> {
                                                         ),
                                                       ),
                                                       TextSpan(
-                                                        text: product.quantityProduct,
+                                                        text: formattedQuantityProduct,
                                                         style: TextStyle(
                                                           fontWeight: FontWeight.w500,
                                                           fontSize: 14.sp,
