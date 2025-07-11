@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../Compoents/CurrencyInputFormatterPrice/CurrencyInputFormatterPrice.dart';
 import '../../../Compoents/Dialog/dialog_delete_product.dart';
 import '../../../Compoents/UploadImage/upload_image.dart';
 import '../../../Repository/Firebase_Database/Product/product_repository.dart';
@@ -79,6 +80,9 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
             return Center(child: Text(state.error));
           }
           final product = state.detailProduct;
+          // tại đây khỏi cần format product.priceProduct ( String ) và product.quantityProduct (String -> thành int
+          final formattedPriceProduct = formatCurrencyVN(product.priceProduct);
+          final formattedQuantityProduct = formatCurrencyUS(product.quantityProduct);
           return SingleChildScrollView(
             padding: REdgeInsets.only(top: 20, right: 18, left: 20),
             child: Column(children: [
@@ -187,7 +191,7 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
                                   fontSize: 15.sp,
                                   color: Colors.black)),
                           TextSpan(
-                              text: product.quantityProduct,
+                              text: formattedQuantityProduct,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14.sp,
@@ -221,7 +225,7 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
                                   fontSize: 15.sp,
                                   color: Colors.black)),
                           TextSpan(
-                              text: product.priceProduct,
+                              text: formattedPriceProduct,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14.sp,
