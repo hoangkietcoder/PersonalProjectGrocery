@@ -7,6 +7,7 @@ import 'package:personalprojectgrocery/Models/Product/getData_ProductFromFirebas
 import 'package:personalprojectgrocery/ObjectBox/bloc_ModelProductLocal/model_product_local_bloc.dart';
 import 'package:personalprojectgrocery/Repository/DataLocal/data_local_repository.dart';
 
+import '../../Compoents/CurrencyInputFormatterPrice/CurrencyInputFormatterPrice.dart';
 import '../../Compoents/Dialog/dialog_deleteAllProductLocal.dart';
 import '../../Compoents/Dialog/dialog_delete_all_product_cart.dart';
 import '../../Main_Bloc/main_bloc.dart';
@@ -154,6 +155,8 @@ class _GioHangViewState extends State<GioHangView> {
                         itemCount: state.lstModelProductLocal.length,
                         itemBuilder: (context, index) {
                           final item = state.lstModelProductLocal[index];
+                          final formattedPriceProduct = formatCurrencyVN(item.priceProduct);
+                          final formattedQuantityProduct = formatCurrencyUS(item.quantityProduct);
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 5.0),
                             child: Slidable(
@@ -193,12 +196,17 @@ class _GioHangViewState extends State<GioHangView> {
                                           fit: BoxFit.cover,
                                         ),
                                   title: Text(item.nameProduct,
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis, // dài quá sẽ hiện ...
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: textNameProductColor)),
-                                  subtitle: Text('${item.priceProduct} đ',
+                                  subtitle: Text('${formattedPriceProduct} đ',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis, // dài quá sẽ hiện ...
                                       style: TextStyle(
                                         color: Colors.blueAccent,
+                                        fontSize: 12.sp
                                       )),
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,
@@ -216,9 +224,11 @@ class _GioHangViewState extends State<GioHangView> {
                                               );
                                         },
                                       ),
-                                      Text(item.quantityProduct,
+                                      Text(formattedQuantityProduct,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis, // dài quá sẽ hiện ...
                                           style: TextStyle(
-                                              fontSize: 16,
+                                              fontSize: 12.sp,
                                               color: textQuantityProductColor)),
                                       IconButton(
                                         icon: const Icon(

@@ -272,132 +272,141 @@ class _HomepageframeViewState extends State<HomeView> {
                                               fontSize: 15.sp,
                                               color: textColor
                                             ),
+                                            maxLines: 1, //
+                                            overflow: TextOverflow.ellipsis,
                                           ),
                                           Padding(
                                             padding: REdgeInsets.only(right: 6.0),
                                             child: Divider(),
                                           ),
                                           Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      children: <TextSpan>[
-                                                        TextSpan(
-                                                          text: 'Giá: ',
-                                                          style: TextStyle(
-                                                            fontWeight: FontWeight.w500,
-                                                            fontSize: 14.sp,
-                                                            color: Colors.black,
+                                              Flexible(
+                                                flex: 6,
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    RichText(
+                                                      text: TextSpan(
+                                                        children: <TextSpan>[
+                                                          TextSpan(
+                                                            text: 'Giá: ',
+                                                            style: TextStyle(
+                                                              fontWeight: FontWeight.w500,
+                                                              fontSize: 14.sp,
+                                                              color: Colors.black,
+                                                            ),
                                                           ),
-                                                        ),
-                                                        TextSpan(
-                                                          text: formattedPriceProduct,
-                                                          style: TextStyle(
-                                                            fontWeight: FontWeight.w500,
-                                                            fontSize: 14.sp,
-                                                            color: Colors.red,
+                                                          TextSpan(
+                                                            text: formattedPriceProduct,
+                                                            style: TextStyle(
+                                                              fontWeight: FontWeight.w500,
+                                                              fontSize: 14.sp,
+                                                              color: Colors.red,
+                                                            ),
                                                           ),
-                                                        ),
-                                                        TextSpan(
-                                                          text: ' VNĐ',
-                                                          style: TextStyle(
-                                                            fontWeight: FontWeight.w500,
-                                                            fontSize: 14.sp,
-                                                            color: Colors.red,
+                                                          TextSpan(
+                                                            text: ' VNĐ',
+                                                            style: TextStyle(
+                                                              fontWeight: FontWeight.w500,
+                                                              fontSize: 14.sp,
+                                                              color: Colors.red,
+                                                            ),
                                                           ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  SizedBox(height: 3.h),
-                                                  RichText(
-                                                    text: TextSpan(
-                                                      children: <TextSpan>[
-                                                        TextSpan(
-                                                          text: 'Số lượng: ',
-                                                          style: TextStyle(
-                                                            fontWeight: FontWeight.w500,
-                                                            fontSize: 14.sp,
-                                                            color: Colors.black,
-                                                          ),
-                                                        ),
-                                                        TextSpan(
-                                                          text: formattedQuantityProduct,
-                                                          style: TextStyle(
-                                                            fontWeight: FontWeight.w500,
-                                                            fontSize: 14.sp,
-                                                            color: Colors.red,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              Spacer(),
-                                              Padding(
-                                                padding: REdgeInsets.only(right: 6.0),
-                                                child: BlocListener<ModelProductLocalBloc, ModelProductLocalState>(
-                                                  listenWhen: (pre, cur) => pre.statusSaveDataLocal != cur.statusSaveDataLocal,
-                                                  listener: (context, state) {
-                                                      if (state.statusSaveDataLocal == StatusSaveDataLocal.failure) {
-                                                        Navigator.pop(context);
-                                                        ScaffoldMessenger.of(context)
-                                                          ..hideCurrentSnackBar()
-                                                          ..showSnackBar(SnackBar(
-                                                              duration: const Duration(seconds: 2),
-                                                              content: Text(
-                                                                state.error,
-                                                              )));
-                                                      } else {
-                                                        if(state.statusSaveDataLocal == StatusSaveDataLocal.success){
-                                                          showDialog(
-                                                            context: context,
-                                                            builder: (_) => const DialogAddproductlocal(),
-                                                          );
-                                                          Future.delayed(const Duration(seconds: 1), () {
-                                                            if (Navigator.of(context).canPop()) {
-                                                              Navigator.of(context).pop(); // Tự động đóng sau 3s
-                                                            }
-                                                          });
-                                                        }
-                                                      }
-                                                    },
-                                                    child: ElevatedButton.icon(
-                                                  onPressed: () async {
-                                                    final bloc = BlocProvider.of<ModelProductLocalBloc>(context);
-                                                    final data = ModelProductLocal(fireBaseId: product.id, img_url: product.img_url, nameProduct: product.nameProduct, quantityProduct: "1", priceProduct: product.priceProduct, supplierName: product.supplierName, phoneSupplier: product.phoneSupplier, noteProduct: product.noteProduct);
-                                                    print("dwadwadawd ${data.noteProduct}");
-                                                    bloc.add(SaveProductLocalEvent(data));
-                                                  },
-                                                  label: Padding(
-                                                    padding: REdgeInsets.only(right: 3), // Adjust the left padding as needed
-                                                    child: Text(
-                                                      "Lấy",
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight: FontWeight.w500,
-                                                        fontSize: 14.sp,
+                                                        ],
                                                       ),
                                                     ),
-                                                  ),
-                                                  icon: Icon(
-                                                    Icons.shopping_cart_rounded,
-                                                    color: Colors.white,
-                                                    size: 17.sp,
-                                                  ),
-                                                  style: ElevatedButton.styleFrom(
-                                                    minimumSize: Size(100, 35), // Chiều rộng: 150, Chiều cao: 50
-                                                    padding: REdgeInsets.symmetric(), // Maintain existing button padding
-                                                    shape: RoundedRectangleBorder(
-                                                      borderRadius: BorderRadius.circular(10.r),
+                                                    SizedBox(height: 3.h),
+                                                    RichText(
+                                                      text: TextSpan(
+                                                        children: <TextSpan>[
+                                                          TextSpan(
+                                                            text: 'Số lượng: ',
+                                                            style: TextStyle(
+                                                              fontWeight: FontWeight.w500,
+                                                              fontSize: 14.sp,
+                                                              color: Colors.black,
+                                                            ),
+                                                          ),
+                                                          TextSpan(
+                                                            text: formattedQuantityProduct,
+                                                            style: TextStyle(
+                                                              fontWeight: FontWeight.w500,
+                                                              fontSize: 14.sp,
+                                                              color: Colors.red,
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
-                                                    backgroundColor: Colors.blueAccent,
-                                                  ),
+                                                  ],
                                                 ),
+                                              ),
+                                              Spacer(),
+                                              Flexible(
+                                                flex: 4,
+                                                child: Padding(
+                                                  padding: REdgeInsets.only(right: 6.0),
+                                                  child: BlocListener<ModelProductLocalBloc, ModelProductLocalState>(
+                                                    listenWhen: (pre, cur) => pre.statusSaveDataLocal != cur.statusSaveDataLocal,
+                                                    listener: (context, state) {
+                                                        if (state.statusSaveDataLocal == StatusSaveDataLocal.failure) {
+                                                          Navigator.pop(context);
+                                                          ScaffoldMessenger.of(context)
+                                                            ..hideCurrentSnackBar()
+                                                            ..showSnackBar(SnackBar(
+                                                                duration: const Duration(seconds: 2),
+                                                                content: Text(
+                                                                  state.error,
+                                                                )));
+                                                        } else {
+                                                          if(state.statusSaveDataLocal == StatusSaveDataLocal.success){
+                                                            showDialog(
+                                                              context: context,
+                                                              builder: (_) => const DialogAddproductlocal(),
+                                                            );
+                                                            Future.delayed(const Duration(seconds: 1), () {
+                                                              if (Navigator.of(context).canPop()) {
+                                                                Navigator.of(context).pop(); // Tự động đóng sau 3s
+                                                              }
+                                                            });
+                                                          }
+                                                        }
+                                                      },
+                                                      child: ElevatedButton.icon(
+                                                    onPressed: () async {
+                                                      final bloc = BlocProvider.of<ModelProductLocalBloc>(context);
+                                                      final data = ModelProductLocal(fireBaseId: product.id, img_url: product.img_url, nameProduct: product.nameProduct, quantityProduct: "1", priceProduct: product.priceProduct, supplierName: product.supplierName, phoneSupplier: product.phoneSupplier, noteProduct: product.noteProduct);
+                                                      print("dwadwadawd ${data.noteProduct}");
+                                                      bloc.add(SaveProductLocalEvent(data));
+                                                    },
+                                                    label: Padding(
+                                                      padding: REdgeInsets.only(right: 3), // Adjust the left padding as needed
+                                                      child: Text(
+                                                        "Lấy",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight: FontWeight.w500,
+                                                          fontSize: 14.sp,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    icon: Icon(
+                                                      Icons.shopping_cart_rounded,
+                                                      color: Colors.white,
+                                                      size: 17.sp,
+                                                    ),
+                                                    style: ElevatedButton.styleFrom(
+                                                      minimumSize: Size(85, 35), // Chiều rộng: 150, Chiều cao: 50
+                                                      padding: REdgeInsets.symmetric(), // Maintain existing button padding
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius: BorderRadius.circular(10.r),
+                                                      ),
+                                                      backgroundColor: Colors.blueAccent,
+                                                    ),
+                                                  ),
+                                                  ),
                                                 ),
                                               ),
                                             ],
