@@ -22,6 +22,7 @@ class ChitietsanphamState extends Equatable {
     this.message="",
     this.lstData = const [],
     this.imageUrl="",
+    this.typeProduct,
 
 
   });
@@ -40,6 +41,7 @@ class ChitietsanphamState extends Equatable {
   final String message;
   final List<getDataProduct> lstData;
   final String? imageUrl;
+  final int? typeProduct;
 
   ChitietsanphamState copyWith({
     DetailProduct? detailProduct,
@@ -52,6 +54,7 @@ class ChitietsanphamState extends Equatable {
     String? message,
     List<getDataProduct>? lstData,
     String? imageUrl,
+    int? typeProduct,
 
   }) {
     return ChitietsanphamState(
@@ -65,11 +68,12 @@ class ChitietsanphamState extends Equatable {
         message: message ?? this.message,
         lstData:  lstData ?? this.lstData,
         imageUrl: imageUrl ?? this.imageUrl,
+        typeProduct: typeProduct ?? this.typeProduct,
     );
   }
 
 
   // check sự thay đổi
   @override
-  List<Object?> get props => [detailProduct, detailStatus, detailStatusInitial,deleteProduct,imageStatus,imagesByProductId, error, message,lstData,imageUrl];
+  List<Object?> get props => [detailProduct, detailStatus, detailStatusInitial,deleteProduct,imageStatus,imagesByProductId, error, message,lstData,imageUrl,typeProduct];
 }

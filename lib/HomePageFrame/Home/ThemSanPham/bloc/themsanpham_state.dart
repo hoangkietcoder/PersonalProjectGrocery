@@ -13,7 +13,8 @@ class ThemsanphamState extends Equatable {
     this.chuthich = "",
     this.statusSubmit = CreateStatus.inittial,
     this.error ="",
-    this.message = ""
+    this.message = "",
+    this.typeProduct = 0,
   });
   final String img_url;
   final String ten;
@@ -25,6 +26,7 @@ class ThemsanphamState extends Equatable {
   final CreateStatus statusSubmit;
   final String error;
   final String message;
+  final int? typeProduct; // biến để loại sản phẩm là gì
 
   ThemsanphamState copyWith({
     String? img_url,
@@ -36,7 +38,8 @@ class ThemsanphamState extends Equatable {
     String? chuthich,
     CreateStatus? statusSubmit,
     String? error,
-    String? message
+    String? message,
+    int? typeProduct,
   }) {
     return ThemsanphamState(
       img_url: img_url ?? this.img_url,
@@ -46,12 +49,13 @@ class ThemsanphamState extends Equatable {
       tennhacungcap: tennhacungcap ?? this.tennhacungcap,
       sdtnhacungcap: sdtnhacungcap ?? this.sdtnhacungcap,
       chuthich: chuthich ?? this.chuthich,
-     statusSubmit: statusSubmit ?? this.statusSubmit,
-     error: error ?? this.error,
-      message: message ?? this.message
+      statusSubmit: statusSubmit ?? this.statusSubmit,
+      error: error ?? this.error,
+      message: message ?? this.message,
+      typeProduct: typeProduct ?? this.typeProduct,
     );
   }
 
   @override
-  List<Object?> get props => [img_url,ten , soluong, giasanpham, tennhacungcap, sdtnhacungcap, chuthich, statusSubmit, error,message];
+  List<Object?> get props => [img_url,ten , soluong, giasanpham, tennhacungcap, sdtnhacungcap, chuthich, statusSubmit, error,message,typeProduct];
 }

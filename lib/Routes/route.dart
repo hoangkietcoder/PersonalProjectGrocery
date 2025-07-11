@@ -5,7 +5,6 @@ import '../ForgotPassword/ForgotPassword.dart';
 import '../HomePageFrame/GioHang/GioHang.dart';
 import '../HomePageFrame/HoaDon/ChiTietHoaDon/ChiTietHoaDon.dart';
 import '../HomePageFrame/HoaDon/HoaDon.dart';
-import '../HomePageFrame/HoaDon/ThemHoaDon/ThemHoaDon.dart';
 import '../HomePageFrame/Home/ChiTietSanPham/ChiTietSanPham.dart';
 import '../HomePageFrame/Home/ThemSanPham/ThemSanPham.dart';
 import '../HomePageFrame/HomePage/HomePage.dart';
@@ -24,6 +23,7 @@ import 'argument/GioHangArgument.dart';
 import 'argument/ThemHoaDonArgument.dart';
 import 'argument/ThemSanPhamArgument.dart';
 import 'custom_page_route.dart';
+
 
 class RouteGenerator {
   Route<dynamic> generateRoute(RouteSettings settings) {
@@ -83,11 +83,6 @@ class RouteGenerator {
       return CustomPageRoute(
           settings: const RouteSettings(name: '/HoaDon'),
           child:  HoaDonPage());
-      case '/ThemHoaDon':
-        ThemHoaDonArgument argument = args as ThemHoaDonArgument; // khi cần truyền mới cần tạo argument
-        return CustomPageRoute(
-            settings: const RouteSettings(name: '/ThemHoaDon'),
-            child:  ThemHoaDonPage(date: argument.date, billRepository: argument.billRepository,));
       case '/ChiTietHoaDon':
         return CustomPageRoute(
             settings: const RouteSettings(name: '/ChiTietHoaDon'),

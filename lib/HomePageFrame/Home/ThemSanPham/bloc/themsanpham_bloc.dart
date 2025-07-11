@@ -14,6 +14,7 @@ class ThemsanphamBloc extends Bloc<ThemsanphamEvent, ThemsanphamState> {
   ThemsanphamBloc({required ProductRepository productRepository}) : _productRepository =  productRepository,super(const ThemsanphamState()) {
 
     // đăng kí sự kiện
+    on<CreateTypeProduct>(_onCreateTypeProduct);
     on<CreateNameProduct>(_onCreateNameProduct);
     on<CreateQuantityProduct>(_onCreateQuantityProduct);
     on<CreatePriceProduct>(_onCreatePriceProduct);
@@ -29,6 +30,11 @@ class ThemsanphamBloc extends Bloc<ThemsanphamEvent, ThemsanphamState> {
 
 //=====================================================================
   // truyền vào state
+
+
+  void _onCreateTypeProduct(CreateTypeProduct event,Emitter<ThemsanphamState> emit ){
+    emit(state.copyWith(typeProduct: event.typeProduct));
+  }
 
   void _onCreateNameProduct(CreateNameProduct event,
       Emitter<ThemsanphamState> emit) {
@@ -87,6 +93,7 @@ class ThemsanphamBloc extends Bloc<ThemsanphamEvent, ThemsanphamState> {
         phoneSupplier: state.sdtnhacungcap,
         noteProduct: state.chuthich,
         userId: userId ?? "",
+        typeProduct: state.typeProduct ?? 0,
       ));
       if(isClosed) return;
       emit(

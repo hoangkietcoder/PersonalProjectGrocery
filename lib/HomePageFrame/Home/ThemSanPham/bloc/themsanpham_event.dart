@@ -14,6 +14,16 @@ class CreateProductRequested extends ThemsanphamEvent {
 
 
 //===========================================================
+
+
+
+class CreateTypeProduct extends ThemsanphamEvent {
+  const CreateTypeProduct(this.typeProduct);
+  final int typeProduct;
+  @override
+  List<Object> get props => [typeProduct];
+}
+
 class CreateNameProduct extends ThemsanphamEvent{
   const CreateNameProduct(this.ten);
 

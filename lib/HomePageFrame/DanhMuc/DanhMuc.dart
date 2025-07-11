@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../Compoents/DanhMuc/Item.dart';
 import '../../Repository/DanhMuc/danhmuc_repository.dart';
-import '../HoaDon/ThemHoaDon/bloc/themhoadon_bloc.dart';
 import 'bloc/danhmuc_bloc.dart';
 
 class DanhMucPage extends StatelessWidget {

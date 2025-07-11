@@ -16,7 +16,8 @@ class ThemSanPhamPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ThemsanphamBloc(productRepository: productRepository),
+      create: (context) =>
+          ThemsanphamBloc(productRepository: productRepository),
       child: const ThemSanPhamView(),
     );
   }
@@ -40,6 +41,20 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
   final TextEditingController _createPhoneSupplierController =
       TextEditingController();
   final TextEditingController _createNoteController = TextEditingController();
+
+  int? selectedProductType; // biến lưu loại sản phẩm đã chọn
+
+  final List<Map<String, dynamic>> productTypes = [
+    {'label': 'Sữa', 'value': 1},
+    {'label': 'Hạt', 'value': 2},
+    {'label': 'Bánh Kẹo', 'value': 3},
+    {'label': 'Nước Giặt Xả', 'value': 4},
+    {'label': 'Kem', 'value': 5},
+    {'label': 'Nước Ngọt', 'value': 6},
+    {'label': 'Đồ Gia Vị', 'value': 7},
+    {'label': 'Sữa Tắm', 'value': 8},
+    {'label': 'Đồ Khô', 'value': 9},
+  ];
 
   @override
   void initState() {
@@ -65,8 +80,7 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
           // Status bar color
           statusBarColor: Colors.blueAccent,
           // Status bar brightness (optional)
-          statusBarIconBrightness:
-          Brightness.light, // For Android (dark icons)
+          statusBarIconBrightness: Brightness.light, // For Android (dark icons)
           statusBarBrightness: Brightness.light, // For iOS (dark icons)
         ),
         foregroundColor: Colors.white,
@@ -92,14 +106,13 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
                 return const DialogLoadingAddProduct(); // khi đang xử lí sẽ hiện nút loading
               },
             );
-          }else if(state.statusSubmit == CreateStatus.success){
+          } else if (state.statusSubmit == CreateStatus.success) {
             // navigator đúng khi xóa hết mấy trang trước đi dùng pushNamedAndRemoveUntil
-           // Navigator.pushNamedAndRemoveUntil(context, "/HomeScreenPage", (route) => false); // false là xóa , true là k xóa
+            // Navigator.pushNamedAndRemoveUntil(context, "/HomeScreenPage", (route) => false); // false là xóa , true là k xóa
             ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Thêm sản phẩm thành công!')));
             // vì do realtime rồi nên chỉ cần popuntil về thôi
             Navigator.popUntil(context, ModalRoute.withName('/HomeScreenPage'));
-
           } else {
             if (state.statusSubmit == CreateStatus.failure) {
               Navigator.pop(context);
@@ -135,8 +148,8 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
                   Container(
                     child: CircleAvatar(
                       radius: 60.r,
-                      backgroundImage: const AssetImage("assets/images/avamacdinhsanpham.jpg"),
-
+                      backgroundImage: const AssetImage(
+                          "assets/images/avamacdinhsanpham.jpg"),
                     ),
                   ),
                 ]),
@@ -155,9 +168,48 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
                     child: Column(
                       children: [
                         SizedBox(height: 10.h),
+                        BlocBuilder<ThemsanphamBloc, ThemsanphamState>(
+                          buildWhen: (previous, current) =>
+                              previous.typeProduct != current.typeProduct,
+                          builder: (context, state) {
+                            return DropdownButtonFormField<int>(
+                              decoration: InputDecoration(
+                                labelText: 'Loại sản phẩm',
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                              value: state.typeProduct == 0
+                                  ? null
+                                  : state.typeProduct, // null khi = 0 (None)
+                              items: productTypes.map((type) {
+                                return DropdownMenuItem<int>(
+                                  value: type['value'],
+                                  child: Text(type['label']),
+                                );
+                              }).toList(),
+                              validator: (value) {
+                                if (value == null) {
+                                  return 'Vui lòng chọn loại sản phẩm';
+                                }
+                                return null;
+                              },
+                              onChanged: (value) {
+                                if (value != null) {
+                                  context.read<ThemsanphamBloc>().add(CreateTypeProduct(value));
+                                }
+                              },
+                            );
+                          },
+                        ),
+                        SizedBox(height: 10.h),
                         TextFormField(
-                          onChanged: (value) => context.read<ThemsanphamBloc>().add(CreateNameProduct(value)), // lưu thay đổi vào state
-                          controller: _createNameController, // đăng kí dùng controller
+                          onChanged: (value) => context
+                              .read<ThemsanphamBloc>()
+                              .add(CreateNameProduct(
+                                  value)), // lưu thay đổi vào state
+                          controller:
+                              _createNameController, // đăng kí dùng controller
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return " Vui lòng nhập Tên Sản Phẩm";
@@ -195,7 +247,9 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
                         ),
                         SizedBox(height: 10.h),
                         TextFormField(
-                          inputFormatters: [CurrencyInputFormatterPrice(locale: "en_US")],
+                          inputFormatters: [
+                            CurrencyInputFormatterPrice(locale: "en_US")
+                          ],
                           keyboardType: TextInputType.number,
                           onChanged: (value) => context
                               .read<ThemsanphamBloc>()
@@ -242,13 +296,18 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
                         TextFormField(
                           keyboardType: TextInputType.number, // chỉ đc nhập số
                           // inputFormatters dùng để kiểm soát và định dạng dữ liệu người dùng nhập vào TextFormField
-                          inputFormatters: [CurrencyInputFormatterPrice(locale: "vi_VN")],
+                          inputFormatters: [
+                            CurrencyInputFormatterPrice(locale: "vi_VN")
+                          ],
                           onChanged: (value) {
                             // Loại bỏ dấu "." để có giá trị thật sự
                             final rawValue = value.replaceAll('.', '');
-                            context.read<ThemsanphamBloc>().add(CreatePriceProduct(rawValue));// lưu thay đổi vào state
+                            context.read<ThemsanphamBloc>().add(
+                                CreatePriceProduct(
+                                    rawValue)); // lưu thay đổi vào state
                           },
-                          controller: _createPriceController, // đăng kí dùng controller
+                          controller:
+                              _createPriceController, // đăng kí dùng controller
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return " Vui lòng nhập Giá Sản Phẩm";
@@ -286,7 +345,9 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
                         ),
                         SizedBox(height: 10.h),
                         TextFormField(
-                          onChanged: (value) => context.read<ThemsanphamBloc>().add(CreateSupplierNameProduct(
+                          onChanged: (value) => context
+                              .read<ThemsanphamBloc>()
+                              .add(CreateSupplierNameProduct(
                                   value)), // lưu thay đổi vào state
                           controller:
                               _createSupplierNameController, // đăng kí dùng controller
@@ -329,7 +390,9 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
                         TextFormField(
                           keyboardType: TextInputType.number, // chỉ đc nhập số
                           maxLines: 1, // tối đa 1 dòng
-                          onChanged: (value) => context.read<ThemsanphamBloc>().add(CreatePhoneSupplierProduct(
+                          onChanged: (value) => context
+                              .read<ThemsanphamBloc>()
+                              .add(CreatePhoneSupplierProduct(
                                   value)), // lưu thay đổi vào state
                           controller:
                               _createPhoneSupplierController, // đăng kí dùng controller
@@ -428,7 +491,9 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
                               // validate(): Xác thực tất cả các trường biểu mẫu và trả về true nếu tất cả đều hợp lệ.
                               if (_formSignInKey.currentState!.validate()) {
                                 // Gọi hàm xác thực
-                                context.read<ThemsanphamBloc>().add(const CreateProductRequested());
+                                context
+                                    .read<ThemsanphamBloc>()
+                                    .add(const CreateProductRequested());
                               }
                             },
                             label: Text(

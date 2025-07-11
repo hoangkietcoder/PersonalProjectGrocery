@@ -47,6 +47,24 @@ class ChitietsanphamView extends StatefulWidget {
 }
 
 class _ChitietsanphamViewState extends State<ChitietsanphamView> {
+
+
+  Map<int, String> productTypeLabels = {
+    1: 'Sữa',
+    2: 'Hạt',
+    3: 'Bánh Kẹo',
+    4: 'Nước Giặt Xả',
+    5: 'Kem',
+    6: 'Nước Ngọt',
+    7: 'Đồ Gia Vị',
+    8: 'Sữa Tắm',
+    9: 'Đồ Khô',
+  };
+
+  String getProductTypeLabel(int type) {
+    return productTypeLabels[type] ?? 'Không xác định';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,8 +160,7 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
                   Expanded(
                       flex: 1,
                       child: ImageIcon(
-                        const AssetImage("assets/images/box-open.png"),
-                        size: 15.sp,
+                        const AssetImage("assets/images/box-open.png"), size: 15.sp,
                       )),
                   Expanded(
                     flex: 9,
@@ -158,6 +175,37 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
                                   color: Colors.black)),
                           TextSpan(
                               text: product.nameProduct,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14.sp,
+                                  color: Colors.black)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 15.h,),
+              Row(
+                children: [
+                  Expanded(
+                      flex: 1,
+                      child: ImageIcon(
+                        const AssetImage("assets/images/box-open.png"), size: 15.sp,
+                      )),
+                  Expanded(
+                    flex: 9,
+                    child: RichText(
+                      text: TextSpan(
+                        children: <TextSpan>[
+                          TextSpan(
+                              text: 'Loại: ',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  fontSize: 15.sp,
+                                  color: Colors.black)),
+                          TextSpan(
+                              text: getProductTypeLabel(product.typeProduct ?? 0),
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14.sp,

@@ -153,17 +153,6 @@ class _LichSuHoaDonViewState extends State<HoaDonView> {
               ],
             ),
           ),
-          floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.blue[300],
-            onPressed: () {
-              final date = DateFormat('dd-MM-yyyy').format(DateTime.now());
-              final argument = ThemHoaDonArgument(BillRepository(), date: date,);
-              Navigator.pushNamed(context, '/ThemHoaDon', arguments: argument);
-            },
-            shape: const CircleBorder(),
-            tooltip: 'Thêm hóa đơn mới',
-            child: const Icon(Icons.add, color: Colors.white),
-          ),
         ),
       ),
     );

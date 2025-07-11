@@ -13,6 +13,7 @@ class DetailProduct extends Equatable{
     required this.supplierName,
     required this.phoneSupplier,
     required this.noteProduct,
+    required this.typeProduct,
 
 });
       final String id;
@@ -23,9 +24,10 @@ class DetailProduct extends Equatable{
       final String supplierName;
       final String phoneSupplier;
       final String noteProduct;
+      final int? typeProduct;
 
   /// Tạo đối tượng rỗng.
-  static const empty = DetailProduct(id: '',img_url:'',nameProduct: '', quantityProduct: '', priceProduct: '', supplierName: '', phoneSupplier: '', noteProduct: '', );
+  static const empty = DetailProduct(id: '',img_url:'',nameProduct: '', quantityProduct: '', priceProduct: '', supplierName: '', phoneSupplier: '', noteProduct: '', typeProduct: 0, );
 
   ///
   bool get isEmpty => this == DetailProduct.empty;
@@ -45,6 +47,7 @@ class DetailProduct extends Equatable{
     String? supplierName,
     String? phoneSupplier,
     String? noteProduct,
+    int? typeProduct,
   }) {
     return DetailProduct(
         id:  id ?? this.id,
@@ -54,7 +57,8 @@ class DetailProduct extends Equatable{
         priceProduct: priceProduct ?? this.priceProduct,
         supplierName: supplierName ?? this.supplierName,
         phoneSupplier:  phoneSupplier ?? this.phoneSupplier,
-        noteProduct: noteProduct ?? this.noteProduct
+        noteProduct: noteProduct ?? this.noteProduct,
+        typeProduct: typeProduct ?? this.typeProduct,
     );
   }
 
@@ -71,6 +75,7 @@ class DetailProduct extends Equatable{
       supplierName: json['supplierName'] ?? "",
       phoneSupplier: json['phoneSupplier'] ?? "",
       noteProduct: json['noteProduct'] ?? "",
+      typeProduct: json["typeProduct"] ?? "",
 
     );
   }
@@ -85,9 +90,10 @@ class DetailProduct extends Equatable{
     "supplierName": supplierName,
     "phoneSupplier": phoneSupplier,
     "noteProduct": noteProduct,
+    "typeProduct" : typeProduct,
   };
 
  // check sự thay đổi
   @override
-  List<Object?> get props =>[id,img_url, nameProduct,quantityProduct,priceProduct,supplierName,phoneSupplier,noteProduct];
+  List<Object?> get props =>[id,img_url, nameProduct,quantityProduct,priceProduct,supplierName,phoneSupplier,noteProduct,typeProduct];
 }

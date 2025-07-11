@@ -18,6 +18,7 @@ class CreateProduct extends Equatable{
     required this.noteProduct,
     this.createdAt,
     required this.userId,
+    required this.typeProduct,
   });
 
   final String id;
@@ -30,10 +31,11 @@ class CreateProduct extends Equatable{
   final String noteProduct;
   final Timestamp? createdAt ;
   final String userId;
+  final int typeProduct; // lưu loại sản phẩm
 
 
   /// Tạo đối tượng rỗng
-  static const empty = CreateProduct(id: '',nameProduct: '', quantityProduct: '', priceProduct: '', supplierName: '', phoneSupplier: '', noteProduct: '' ,img_url: "", userId: '');
+  static const empty = CreateProduct(id: '',nameProduct: '', quantityProduct: '', priceProduct: '', supplierName: '', phoneSupplier: '', noteProduct: '' ,img_url: "", userId: '', typeProduct: 0, );
 
   /// Tạo trống đối tượng
   bool get isEmpty => this == CreateProduct.empty;
@@ -55,6 +57,7 @@ class CreateProduct extends Equatable{
     String? noteProduct,
     Timestamp? createdAt,
     String? userId,
+    int? typeProduct
   }) {
     return CreateProduct(
         id: id ?? this.id,
@@ -67,6 +70,7 @@ class CreateProduct extends Equatable{
         noteProduct: noteProduct ?? this.noteProduct,
         createdAt: createdAt ?? this.createdAt,
         userId: userId ?? this.userId,
+        typeProduct: typeProduct ?? this.typeProduct
     );
   }
 
@@ -82,6 +86,7 @@ class CreateProduct extends Equatable{
     noteProduct: json["noteProduct"] ?? "",
     createdAt:  json["createdAt"], // <-- không cần ép kiểu vì đã là Timestamp
     userId:  json["userId"],
+    typeProduct: json["typeProduct"],
   );
 
 
@@ -98,12 +103,13 @@ class CreateProduct extends Equatable{
     "noteProduct": noteProduct,
     "createdAt": createdAt, // hoặc FieldValue.serverTimestamp() nếu là lúc tạo
     "userId" : userId,
+    "typeProduct": typeProduct,
   };
 
 
 
 
   @override
-  List<Object?> get props =>[id,img_url, nameProduct,quantityProduct,priceProduct,supplierName,phoneSupplier,noteProduct,createdAt,userId];
+  List<Object?> get props =>[id,img_url, nameProduct,quantityProduct,priceProduct,supplierName,phoneSupplier,noteProduct,createdAt,userId,typeProduct];
 
 }
