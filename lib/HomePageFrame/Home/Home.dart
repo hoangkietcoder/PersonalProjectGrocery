@@ -117,9 +117,8 @@ class _HomepageframeViewState extends State<HomeView> {
 
     final cardSearchColor = statusTheme ? Colors.grey[900] : Colors.white;
     final textColor = statusTheme ? Colors.black : Colors.black;
-    final subTextColor = statusTheme ? Colors.white70 : Colors.black87;
-    final iconColor = statusTheme ? Colors.white : Colors.black;
-    final borderColor = statusTheme ? Colors.grey : Colors.grey.shade300;
+
+
     return Scaffold(
       backgroundColor:backgroundColorBody,
       appBar: AppBar(
@@ -135,7 +134,10 @@ class _HomepageframeViewState extends State<HomeView> {
         iconTheme: const IconThemeData(color: Colors.white),
         actions: [
           // Nút giỏ hàng với số lượng sản phẩm
-          Stack(
+          BlocBuilder<ModelProductLocalBloc, ModelProductLocalState>(
+            builder: (context, state) {
+              final product = state.lstModelProductLocal.length;
+              return Stack(
             children: [
               IconButton(
                 icon: Icon(Icons.shopping_cart_sharp, color: Colors.white, size: 25.sp),
@@ -144,27 +146,32 @@ class _HomepageframeViewState extends State<HomeView> {
                   Navigator.pushNamed(context, '/GioHang', arguments: arg);
                 },
               ),
-              Positioned(
-                right: 8,
-                top: 5,
-                child: Container(
-                  padding: EdgeInsets.all(3),
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    shape: BoxShape.circle,
-                  ),
-                  child: Text(
-                    '9+', //Số lượng sản phẩm
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10.sp,
-                      fontWeight: FontWeight.bold,
+              // nếu trong objectbox có số lượng mới hiện cái container này , còn nhỏ hơn ẩn đi
+              if(product>0)
+                Positioned(
+                  right: 8,
+                  top: 5,
+                  child: Container(
+                    padding: EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Text( product > 9 ? '9+' : product.toString(), //Số lượng sản phẩm
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-              ),
+                )
+
+
             ],
-          ),
+          );
+  },
+),
         ],
       ),
       body: Column(

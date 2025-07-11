@@ -30,8 +30,17 @@ class ModelProductLocalBloc extends Bloc<ModelProductLocalEvent, ModelProductLoc
             final quantity = int.tryParse(item.quantityProduct) ?? 0;
             final price = int.tryParse(item.priceProduct) ?? 0;
             return sum + (quantity * price);
+
           });
+
+          // đếm số lượng hiển thị trên cart trước khi push qua trang giỏ hàng
+          final totalQuantity = productLocals.fold(0, (sum, item) {
+            final quantity = int.tryParse(item.quantityProduct) ?? 0;
+            return sum + quantity;
+          });
+
           emit(state.copyWith(
+              quantityProductViewCart:totalQuantity ,
               totalPriceInCart: totalPrice,
               lstModelProductLocal: productLocals));
         });
@@ -196,6 +205,8 @@ class ModelProductLocalBloc extends Bloc<ModelProductLocalEvent, ModelProductLoc
     _productLocalSubscription.cancel();
     return super.close();
   }
+
+  // tính số lượng hiển thị lên viewcart trước khi push qua trang giỏ hàng
 
 }
 

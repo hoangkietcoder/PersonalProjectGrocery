@@ -154,9 +154,8 @@ class _ForgotpasswordState extends State<ForgotpasswordView> {
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.grey, // Cancel button màu xám
-                                    padding: EdgeInsets.symmetric(vertical: 15.r),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(30.r),
+                                    padding: EdgeInsets.symmetric(vertical: 15.r,horizontal: 20.w,),
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r),
                                     ),
                                   ),
                                   onPressed: () {
@@ -166,7 +165,7 @@ class _ForgotpasswordState extends State<ForgotpasswordView> {
                                   child: Text(
                                     "Cancel",
                                     style: TextStyle(
-                                      fontSize: 10.sp,
+                                      fontSize: 11.sp,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -178,7 +177,7 @@ class _ForgotpasswordState extends State<ForgotpasswordView> {
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.blueAccent,
-                                    padding: EdgeInsets.symmetric(vertical: 15.r),
+                                    padding: EdgeInsets.symmetric(vertical: 15.r,horizontal: 20.w),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30.r),
                                     ),
@@ -194,7 +193,7 @@ class _ForgotpasswordState extends State<ForgotpasswordView> {
                                   child: Text(
                                     "Tìm Email",
                                     style: TextStyle(
-                                      fontSize: 15.sp,
+                                      fontSize: 11.sp,
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
                                     ),

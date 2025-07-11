@@ -163,30 +163,8 @@ class _LoginViewState extends State<_LoginView> {
                           _Password(controller: _passwordController),
                           SizedBox(height: 10.h),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              Expanded(
-                                child: Row(
-                                  children: [
-                                    Checkbox(
-                                      hoverColor: Colors.redAccent,
-                                      value: rememberPassword,
-                                      onChanged: (bool? value) {
-                                        setState(() {
-                                          rememberPassword = value!;
-                                        });
-                                      },
-                                      activeColor: Colors.blue,
-                                    ),
-                                    Text(
-                                      "Ghi nhớ mật khẩu",
-                                      style: TextStyle(
-                                        color: Colors.black54,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
                               GestureDetector(
                                 onTap: () {
                                   Navigator.pushNamed(
@@ -197,8 +175,9 @@ class _LoginViewState extends State<_LoginView> {
                                   child: Text(
                                     "Quên mật khẩu?",
                                     style: TextStyle(
+                                      decoration: TextDecoration.underline, // Gạch dưới
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.blueAccent,
+                                      color: Colors.grey,
                                       fontSize: 13.sp,
                                     ),
                                   ),

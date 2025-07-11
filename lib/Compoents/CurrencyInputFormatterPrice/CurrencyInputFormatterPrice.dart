@@ -21,7 +21,7 @@ class CurrencyInputFormatterPrice extends TextInputFormatter {
     return TextEditingValue(
       text: newFormatted,
       // đang nhập (ví dụ: từ "1000" thành "1.000"), bạn cần cập nhật lại vị trí con trỏ (cursor) —
-      // nếu không, con trỏ sẽ nhảy về đầu dòng, gây trải nghiệm rất tệ.
+      // nếu không, con trỏ sẽ nhảy về đầu dòng
       selection: TextSelection.collapsed(offset: newFormatted.length), //
     );
   }
