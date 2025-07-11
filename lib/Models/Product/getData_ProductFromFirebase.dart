@@ -45,7 +45,7 @@ class getDataProduct extends Equatable{
       supplierName: json["supplierName"] ?? "",
       phoneSupplier: json["phoneSupplier"] ?? -1,
       noteProduct: json["noteProduct"] ?? "",
-      id: id
+      id: id // gán id: id, tức là dùng doc.id từ Firestore
   );
 
   // copywith để thay chỗ cần thay

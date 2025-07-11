@@ -19,7 +19,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     // đăng kí sự kiện
     on<_ProductHomeEventChange>(_onProductChanged);
     on<SearchProductHomeEventChange>(_onSearchProductChanged, transformer: debounce(Duration(milliseconds: 500)));
-    on<FetchPage>(_onPageFetched);
+    // on<FetchPage>(_onPageFetched);
 
 
 
@@ -86,32 +86,32 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
 
   // xử lí phân trang
-  Future<void> _onPageFetched(FetchPage event, Emitter<HomeState> emit) async {
-    // xử lí nếu hết danh sách sẽ return lại
-    if (state.hasReachedEnd) return;
-
-    try {
-      emit(state.copyWith(statusLoadPage: StatusLoadPage.loading));
-      await Future.delayed(const Duration(milliseconds: 800)); //  Thêm delay để load trang chậm hơn
-
-      const pageSize = 3;
-      // gọi hàm lấy sản phẩm
-      final newProducts = await _productRepository.fetchProducts(limit: pageSize);
-
-      // nếu danh sách rỗng => hasReachedEnd: true chặn không cho load thêm nữa
-      if (newProducts.isEmpty) {
-        emit(state.copyWith(hasReachedEnd: true));
-      } else {
-        // nếu còn dữ liệu thì Gộp danh sách sản phẩm cũ state.lsProduct với danh sách mới newProducts
-        emit(state.copyWith(
-          statusLoadPage: StatusLoadPage.success,
-          lsProduct: List.of(state.lsProduct)..addAll(newProducts),
-          hasReachedEnd: newProducts.length < pageSize  // Đánh dấu kết thúc nếu ít hơn pageSize
-        ));
-      }
-    } catch (_) {
-      emit(state.copyWith(statusLoadPage: StatusLoadPage.failure));
-    }
-  }
+  // Future<void> _onPageFetched(FetchPage event, Emitter<HomeState> emit) async {
+  //   // xử lí nếu hết danh sách sẽ return lại
+  //   if (state.hasReachedEnd) return;
+  //
+  //   try {
+  //     emit(state.copyWith(statusLoadPage: StatusLoadPage.loading));
+  //     await Future.delayed(const Duration(milliseconds: 800)); //  Thêm delay để load trang chậm hơn
+  //
+  //     const pageSize = 3;
+  //     // gọi hàm lấy sản phẩm
+  //     final newProducts = await _productRepository.fetchProducts(limit: pageSize);
+  //
+  //     // nếu danh sách rỗng => hasReachedEnd: true chặn không cho load thêm nữa
+  //     if (newProducts.isEmpty) {
+  //       emit(state.copyWith(hasReachedEnd: true));
+  //     } else {
+  //       // nếu còn dữ liệu thì Gộp danh sách sản phẩm cũ state.lsProduct với danh sách mới newProducts
+  //       emit(state.copyWith(
+  //         statusLoadPage: StatusLoadPage.success,
+  //         lsProduct: List.of(state.lsProduct)..addAll(newProducts),
+  //         hasReachedEnd: newProducts.length < pageSize  // Đánh dấu kết thúc nếu ít hơn pageSize
+  //       ));
+  //     }
+  //   } catch (_) {
+  //     emit(state.copyWith(statusLoadPage: StatusLoadPage.failure));
+  //   }
+  // }
 
 }

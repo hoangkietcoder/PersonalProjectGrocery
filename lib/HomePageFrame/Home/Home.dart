@@ -93,18 +93,18 @@ class _HomepageframeViewState extends State<HomeView> {
     // Reset pagination để đảm bảo không lặp lại
     context.read<ProductRepository>().resetPagination(); //
 
-    // Load trang đầu tiên
-    context.read<HomeBloc>().add(FetchPage());
+    // // Load trang đầu tiên
+    // context.read<HomeBloc>().add(FetchPage());
 
 
-    // gọi lần 2 khi scroll đến cuối trang
-    _scrollControllerPage.addListener(() {
-      final state = context.read<HomeBloc>().state;
-      if (_scrollControllerPage.position.pixels >= _scrollControllerPage.position.maxScrollExtent &&
-          !context.read<HomeBloc>().state.hasReachedEnd &&  state.statusLoadPage != StatusLoadPage.loading) {
-        context.read<HomeBloc>().add(FetchPage());
-      }
-    });
+    // // gọi lần 2 khi scroll đến cuối trang
+    // _scrollControllerPage.addListener(() {
+    //   final state = context.read<HomeBloc>().state;
+    //   if (_scrollControllerPage.position.pixels >= _scrollControllerPage.position.maxScrollExtent &&
+    //       !context.read<HomeBloc>().state.hasReachedEnd &&  state.statusLoadPage != StatusLoadPage.loading) {
+    //     context.read<HomeBloc>().add(FetchPage());
+    //   }
+    // });
   }
   
 

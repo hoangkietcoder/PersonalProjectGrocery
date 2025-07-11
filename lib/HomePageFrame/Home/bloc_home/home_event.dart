@@ -33,12 +33,12 @@ final class DeleteProduct extends HomeEvent{
 
 }
 
-// cho chức năng phân trang
-final class FetchPage extends HomeEvent {
-  FetchPage();
-  @override
-  List<Object?> get props => [];
-}
+// // cho chức năng phân trang
+// final class FetchPage extends HomeEvent {
+//   FetchPage();
+//   @override
+//   List<Object?> get props => [];
+// }
 
 
 // // cho thêm sản phẩm từ trang chủ qua trang giỏ hàng
