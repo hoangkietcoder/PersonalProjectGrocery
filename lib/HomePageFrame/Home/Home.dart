@@ -211,6 +211,12 @@ class _HomepageframeViewState extends State<HomeView> {
                   if (state.statusHome == StatusHome.initial) {
                     return Center(child: const CircularProgressIndicator());
                   }
+                  if(state.statusHome == StatusHome.failure){
+                    return Center(child: SingleChildScrollView(child: Text(state.error),));
+                  }
+                  if(state.lsProduct.isEmpty){
+                    return const Center(child: Text('Không có sản phẩm nào cả.'));
+                  }
                   return Scrollbar(
                     controller: _scrollControllerPage,
                     thumbVisibility: false, // khi người dùng kéo xuống mới hiện thanh cuộn

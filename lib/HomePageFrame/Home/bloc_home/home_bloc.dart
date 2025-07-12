@@ -26,11 +26,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     // lắng nghe sự kiện ( khi có sự kiện thì auto cập nhật - cho chức năng thêm sản phẩm)
     _productSubscription = _productRepository.createProduct.listen((data) {
       print("📥 Stream nhận ${data.length} sản phẩm"); // Dòng này chạy mấy lần khi reload?
-
-      // debug
-      for (var product in data) {
-        print("  Product: id=${product.id}, name=${product.nameProduct}");
-      }
       add(_ProductHomeEventChange(data));
     }
     );

@@ -169,10 +169,10 @@ class _ThemSanPhamViewState extends State<ThemSanPhamView> {
                       children: [
                         SizedBox(height: 10.h),
                         BlocBuilder<ThemsanphamBloc, ThemsanphamState>(
-                          buildWhen: (previous, current) =>
-                              previous.typeProduct != current.typeProduct,
+                          buildWhen: (previous, current) => previous.typeProduct != current.typeProduct,
                           builder: (context, state) {
                             return DropdownButtonFormField<int>(
+                              dropdownColor: Colors.white,
                               decoration: InputDecoration(
                                 labelText: 'Loại sản phẩm',
                                 border: OutlineInputBorder(

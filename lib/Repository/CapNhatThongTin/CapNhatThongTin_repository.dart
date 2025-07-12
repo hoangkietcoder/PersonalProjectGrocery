@@ -21,8 +21,7 @@ class CapnhatthongtinRepository {
     final uid = currentUid;
     final doc = await _db.collection("User").doc(uid).get();
     print("Dữ liệu từ Firestore: ${doc.data()}");
-    return ModelCapnhatthongtin.fromJson(doc.data() as Map<String, dynamic>)
-        .copyWith(
+    return ModelCapnhatthongtin.fromJson(doc.data() as Map<String, dynamic>).copyWith(
       // lấy id
         id: doc.id
     );

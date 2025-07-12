@@ -29,8 +29,7 @@ class ChitietsanphamPage extends StatelessWidget {
           BlocProvider<ChitietsanphamBloc>(
             // ..add(DetailProductEventChange(productId)), initial vừa vô trang sẽ lấy dữ liệu về
             create: (BuildContext context) =>
-                ChitietsanphamBloc(producRepo: productRepository)
-                  ..add(DetailProductEventChange(productId)),
+                ChitietsanphamBloc(producRepo: productRepository)..add(DetailProductEventChange(productId)),
           ),
         ],
         child: ChitietsanphamView(),

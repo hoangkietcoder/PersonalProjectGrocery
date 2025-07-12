@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../Compoents/DanhMuc/Item.dart';
 import '../../Repository/DanhMuc/danhmuc_repository.dart';
+import '../../Repository/DanhMuc/sua/SuaRepository.dart';
 import 'bloc/danhmuc_bloc.dart';
 
 class DanhMucPage extends StatelessWidget {
@@ -32,10 +33,14 @@ class DanhMucView extends StatefulWidget {
 }
 
 class _DanhMucViewState extends State<DanhMucView> {
+  late final SuaRepository suaRepository;
 
 
-
-
+  @override
+  void initState() {
+    super.initState();
+    suaRepository = SuaRepository();
+  }
 
 
   @override
@@ -87,7 +92,7 @@ class _DanhMucViewState extends State<DanhMucView> {
                    ),
                    itemBuilder: (BuildContext context, int index) {
                      final  category = state.lstDanhMuc[index];
-                     return CategoryCard(name: category.category, image:category.img_url);
+                     return CategoryCard(name: category.category, image:category.img_url, suaRepo: suaRepository,);
                    },
                  );
                 },
