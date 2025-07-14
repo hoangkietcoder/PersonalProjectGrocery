@@ -58,7 +58,12 @@ class ModelProductLocalBloc extends Bloc<ModelProductLocalEvent, ModelProductLoc
     try {
       emit(state.copyWith(statusSaveDataLocal: StatusSaveDataLocal.loading)
       );
-      await dataLocalRepository.saveProduct(event.product);
+
+      // Kiểm tra sản phẩm đã tồn tại chưa (dựa vào fireBaseId)
+      final existingProduct = dataLocalRepository.addOrIncreaseProduct(event.product);
+
+
+
       if (isClosed) return;
       emit(state.copyWith(statusSaveDataLocal: StatusSaveDataLocal.success,
       ));
