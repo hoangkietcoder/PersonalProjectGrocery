@@ -28,11 +28,12 @@ final class DetailSuaEventChange extends SuaEvent{
 
 // sự kiện tìm kiếm sản phẩm
 class SearchProductDanhMuc extends SuaEvent {
-  const SearchProductDanhMuc(this.keyword,this.type);
+  const SearchProductDanhMuc(this.keyword,this.type, this.userId);
   final  int type;
   final String keyword;
+  final String userId;
   @override
-  List<Object?> get props => [keyword,type];
+  List<Object?> get props => [keyword,type,userId];
 
 }
 

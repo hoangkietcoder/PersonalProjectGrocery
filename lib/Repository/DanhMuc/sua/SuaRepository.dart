@@ -33,12 +33,18 @@ class SuaRepository {
   }
 
 
-  Future<List<ModelDanhMucFireBase>> searchProductByName(String name, int type) async {
-    final query = await _db.collection('Product')
-          // .where("userId", isEqualTo: id)
-          .where("typeProduct",isEqualTo: type)
-          .where("nameProduct", isGreaterThanOrEqualTo: name)
-          .where("nameProduct", isLessThanOrEqualTo: "$name\uf7ff").get();
+
+
+  Future<List<ModelDanhMucFireBase>> searchProductByName(String name, int type, String userId) async {
+    final query = await FirebaseFirestore.instance
+        .collection('Product')
+        .where("typeProduct", isEqualTo: type)
+        .where("userId", isEqualTo: userId)
+        .where("nameProduct", isGreaterThanOrEqualTo: name)
+        .where("nameProduct", isLessThanOrEqualTo: "$name\uf8ff")
+        .get();
+
+    print("Tổng kết quả tìm được: ${query.docs.length}");
     return query.docs.map((e) {
       return ModelDanhMucFireBase.fromJson(e.data(), e.id);
     }).toList();

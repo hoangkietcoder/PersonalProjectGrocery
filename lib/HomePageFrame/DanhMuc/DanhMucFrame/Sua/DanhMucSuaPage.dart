@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:personalprojectgrocery/HomePageFrame/DanhMuc/DanhMucFrame/Sua/bloc/sua_bloc.dart';
 
+import '../../../../Compoents/CurrencyInputFormatterPrice/CurrencyInputFormatterPrice.dart';
 import '../../../../Repository/DanhMuc/sua/SuaRepository.dart';
 import '../../../../Repository/Firebase_Database/Product/product_repository.dart';
 import '../../../Home/ChiTietSanPham/ChiTietSanPham.dart';
@@ -36,7 +37,7 @@ class DanhMucSuaView extends StatefulWidget {
 
 class _DanhMucSuaViewState extends State<DanhMucSuaView> {
   final TextEditingController _searchController = TextEditingController();
-
+  final userId = FirebaseAuth.instance.currentUser?.uid ?? "";
 
 
   @override
@@ -76,7 +77,7 @@ class _DanhMucSuaViewState extends State<DanhMucSuaView> {
             padding: REdgeInsets.only(right: 7.0, left: 7.0, top: 6.0),
             child: TextField(
               controller: _searchController,
-              onChanged: (value) => context.read<SuaBloc>().add(SearchProductDanhMuc(value,1)), // lưu thay đổi vào state, để tìm kiếm sản phẩm
+              onChanged: (value) => context.read<SuaBloc>().add(SearchProductDanhMuc(value.trim(),1,userId)), // lưu thay đổi vào state, để tìm kiếm sản phẩm
               decoration: InputDecoration(
                 filled: true,
                 suffixIcon: IconButton(icon: Icon(Icons.keyboard_voice) , onPressed: () {},),
@@ -99,17 +100,34 @@ class _DanhMucSuaViewState extends State<DanhMucSuaView> {
             child: BlocBuilder<SuaBloc, SuaState>(
               buildWhen: (pre ,cur ) => pre.lstDanhMucSua != cur.lstDanhMucSua,
               builder: (context, state) {
-                if(state.statusLoadSua == StatusLoadSua.loading){
-                  return const Center(child: CircularProgressIndicator());
-                }else if(state.statusLoadSua == StatusLoadSua.failure){
-                  return Center(child: Text('Lỗi: ${state.error ?? 'Không xác định'}'));
-                }else if (state.lstDanhMucSua.isEmpty){
-                  return const Center(child: Text('Không có sản phẩm sữa.'));
+                final isSearching = _searchController.text.trim().isNotEmpty;
+
+                if (isSearching) {
+                  // ĐANG TÌM KIẾM
+                  if (state.statusSearch == StatusSearch.loading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state.statusSearch == StatusSearch.failure) {
+                    return Center(child: Text('Lỗi tìm kiếm: ${state.error ?? 'Không xác định'}'));
+                  } else if (state.lstDanhMucSua.isEmpty) {
+                    return const Center(child: Text('Không tìm thấy sản phẩm sữa.'));
+                  }
+                } else {
+                  // LOAD BAN ĐẦU
+                  if (state.statusLoadSua == StatusLoadSua.loading) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state.statusLoadSua == StatusLoadSua.failure) {
+                    return Center(child: Text('Lỗi tải dữ liệu: ${state.error ?? 'Không xác định'}'));
+                  } else if (state.lstDanhMucSua.isEmpty) {
+                    return const Center(child: Text('Không có sản phẩm sữa.'));
+                  }
                 }
                 return ListView.builder(
               itemCount: state.lstDanhMucSua.length,
               itemBuilder: (context, index) {
                 final sua = state.lstDanhMucSua[index];
+                // tại đây khỏi cần format product.priceProduct ( String ) và product.quantityProduct (String -> thành int
+                final formattedPriceProduct = formatCurrencyVN(sua.priceProduct);
+                final formattedQuantityProduct = formatCurrencyUS(sua.quantityProduct);
                 return Stack(
                   children: [
                     Card(
@@ -172,7 +190,7 @@ class _DanhMucSuaViewState extends State<DanhMucSuaView> {
                                         Icon(Icons.payments, size: 16.sp, color: Colors.green),
                                         SizedBox(width: 6.w),
                                         Text(
-                                          "Giá:${sua.priceProduct}",
+                                          "Giá: ${formattedPriceProduct}",
                                           style: TextStyle(
                                             fontSize: 15.sp,
                                             fontWeight: FontWeight.bold,
@@ -187,7 +205,7 @@ class _DanhMucSuaViewState extends State<DanhMucSuaView> {
                                         Icon(Icons.inventory_2, size: 16.sp, color: Colors.grey.shade600),
                                         SizedBox(width: 6.w),
                                         Text(
-                                          'Số lượng: ${sua.priceProduct}',
+                                          'Số lượng: ${formattedQuantityProduct}',
                                           style: TextStyle(fontSize: 14.sp, color: Colors.grey.shade700),
                                         ),
                                       ],
@@ -201,7 +219,6 @@ class _DanhMucSuaViewState extends State<DanhMucSuaView> {
                                           child: Text(
                                             "NCC:${sua.supplierName}",
                                             style: TextStyle(fontSize: 14.sp, fontStyle: FontStyle.italic),
-                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
                                       ],
@@ -213,12 +230,14 @@ class _DanhMucSuaViewState extends State<DanhMucSuaView> {
                                         children: [
                                           Icon(Icons.phone, size: 16.sp, color: Colors.blue.shade700),
                                           SizedBox(width: 6.w),
-                                          Text(
-                                            'SĐT: ${sua.phoneSupplier}',
-                                            style: TextStyle(
-                                              fontSize: 14.sp,
-                                              color: Colors.blue.shade700,
-                                              decoration: TextDecoration.underline,
+                                          Expanded(
+                                            child: Text(
+                                              'SĐT: ${sua.phoneSupplier}',
+                                              style: TextStyle(
+                                                fontSize: 14.sp,
+                                                color: Colors.blue.shade700,
+                                                decoration: TextDecoration.underline,
+                                              ),
                                             ),
                                           ),
                                         ],

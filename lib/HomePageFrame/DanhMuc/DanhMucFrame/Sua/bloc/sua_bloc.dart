@@ -18,8 +18,7 @@ class SuaBloc extends Bloc<SuaEvent, SuaState> {
 
     // đăng kí sự kiện
     on<FetchSuaEvent>(_onFetchSua);
-    on<SearchProductDanhMuc>(_onSearchProduct, transformer: debounce(Duration(milliseconds: 1000)));
-    // Lắng nghe khi có thay đổi từ khóa
+    on<SearchProductDanhMuc>(_onSearchProduct,);
 
   }
 
@@ -52,22 +51,29 @@ class SuaBloc extends Bloc<SuaEvent, SuaState> {
   }
 
   // xử lí thanh tìm kiếm
-  Future<void> _onSearchProduct(SearchProductDanhMuc event, Emitter<SuaState> emit,) async{
-    try{
-      emit(state.copyWith(statusSearch: StatusSearch.initial));
-      final data = await _suaRepository.searchProductByName(event.keyword,event.type);
-      return emit(state.copyWith(
-          lstDanhMucSua: data,
-          statusSearch: StatusSearch.successful
+  Future<void> _onSearchProduct(SearchProductDanhMuc event, Emitter<SuaState> emit) async {
+    try {
+      emit(state.copyWith(statusSearch: StatusSearch.loading));
+
+      final data = await _suaRepository.searchProductByName(
+        event.keyword,
+        event.type,
+        event.userId,
+      );
+
+      emit(state.copyWith(
+        lstDanhMucSua: data,
+        statusSearch: StatusSearch.successful,
       ));
-    }catch(error){
-      if(isClosed) return;
-      return emit(state.copyWith(
-          lstDanhMucSua: [],
-          statusSearch: StatusSearch.failure
+    } catch (error) {
+      emit(state.copyWith(
+        lstDanhMucSua: [],
+        statusSearch: StatusSearch.failure,
+        error: error.toString(),
       ));
     }
+  }
 
-  }
-  }
+
+}
 
