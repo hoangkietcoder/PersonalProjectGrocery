@@ -10,31 +10,31 @@ import '../../../../Repository/Firebase_Database/Product/product_repository.dart
 import '../../../Home/ChiTietSanPham/ChiTietSanPham.dart';
 
 
-class DanhMucHatPage extends StatelessWidget {
+class DanhMucSuaTamPage extends StatelessWidget {
 
   final SuaRepository suaRepository;
 
-  const DanhMucHatPage({super.key, required this.suaRepository});
+  const DanhMucSuaTamPage({super.key, required this.suaRepository});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       // ..add(DetailProductEventChange(productId)), initial vừa vô trang sẽ lấy dữ liệu về
       create: (context) => SuaBloc(suaRepo: suaRepository),
-      child: const DanhMucHatView(),
+      child: const DanhMucSuaTamView(),
     );
   }
 }
 
 
-class DanhMucHatView extends StatefulWidget {
-  const DanhMucHatView({super.key});
+class DanhMucSuaTamView extends StatefulWidget {
+  const DanhMucSuaTamView({super.key});
 
   @override
-  State<DanhMucHatView> createState() => _DanhMucHatViewState();
+  State<DanhMucSuaTamView> createState() => _DanhMucSuaTamViewState();
 }
 
-class _DanhMucHatViewState extends State<DanhMucHatView> {
+class _DanhMucSuaTamViewState extends State<DanhMucSuaTamView> {
   final TextEditingController _searchController = TextEditingController();
   final userId = FirebaseAuth.instance.currentUser?.uid ?? "";
 
@@ -49,7 +49,7 @@ class _DanhMucHatViewState extends State<DanhMucHatView> {
       // Gọi sự kiện để lấy dữ liệu danh sách sữa
       context.read<SuaBloc>().add(FetchSuaEvent(
         userId: userId, // hoặc FirebaseAuth.instance.currentUser!.uid
-        typeProduct: 2,
+        typeProduct: 8,
       ));
     }
   }
@@ -65,7 +65,7 @@ class _DanhMucHatViewState extends State<DanhMucHatView> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         title: Text(
-          'Danh Mục Hạt',
+          'Danh Mục Nước Ngọt',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18.sp),
         ),
         backgroundColor: Colors.blueAccent,
@@ -76,7 +76,7 @@ class _DanhMucHatViewState extends State<DanhMucHatView> {
             padding: REdgeInsets.only(right: 7.0, left: 7.0, top: 6.0),
             child: TextField(
               controller: _searchController,
-              onChanged: (value) => context.read<SuaBloc>().add(SearchProductDanhMuc(value.trim(),2,userId)), // lưu thay đổi vào state, để tìm kiếm sản phẩm
+              onChanged: (value) => context.read<SuaBloc>().add(SearchProductDanhMuc(value.trim(),8,userId)), // lưu thay đổi vào state, để tìm kiếm sản phẩm
               decoration: InputDecoration(
                 filled: true,
                 suffixIcon: IconButton(icon: Icon(Icons.keyboard_voice) , onPressed: () {},),
@@ -85,7 +85,7 @@ class _DanhMucHatViewState extends State<DanhMucHatView> {
                   vertical: 3,
                 ),
                 prefixIcon: Icon(Icons.search),
-                hintText: 'Tìm kiếm theo sản phẩm theo hạt...',
+                hintText: 'Tìm kiếm theo tên sữa tắm...',
                 hintStyle: TextStyle(
                   fontSize: 13.sp,
                 ),
@@ -108,7 +108,7 @@ class _DanhMucHatViewState extends State<DanhMucHatView> {
                   } else if (state.statusSearch == StatusSearch.failure) {
                     return Center(child: Text('Lỗi tìm kiếm: ${state.error ?? 'Không xác định'}'));
                   } else if (state.lstDanhMucSua.isEmpty) {
-                    return const Center(child: Text('Không tìm thấy sản phẩm hạt.'));
+                    return const Center(child: Text('Không tìm thấy sữa tắm nào.'));
                   }
                 } else {
                   // LOAD BAN ĐẦU
@@ -117,7 +117,7 @@ class _DanhMucHatViewState extends State<DanhMucHatView> {
                   } else if (state.statusLoadSua == StatusLoadSua.failure) {
                     return Center(child: Text('Lỗi tải dữ liệu: ${state.error ?? 'Không xác định'}'));
                   } else if (state.lstDanhMucSua.isEmpty) {
-                    return const Center(child: Text('Không có sản phẩm hạt.'));
+                    return const Center(child: Text('Không có sữa tắm .'));
                   }
                 }
                 return ListView.builder(
@@ -157,7 +157,7 @@ class _DanhMucHatViewState extends State<DanhMucHatView> {
                                           color: Colors.grey.shade300,
                                         ),
                                       ) : Image.asset(
-                                        "assets/images/hat.png",
+                                        "assets/images/suatam.png",
                                         width: 100.w,
                                         height: 100.w,
                                         fit: BoxFit.cover,

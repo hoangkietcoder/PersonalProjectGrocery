@@ -109,6 +109,13 @@ class _ChitietsanphamViewState extends State<ChitietsanphamView> {
                       height: 200.h,
                       width: 150.w,
                       fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        return Icon(
+                          Icons.broken_image,
+                          size: 65.w,
+                          color: Colors.grey.shade400,
+                        );
+                      },
                     ) : Image.asset("assets/images/avamacdinhsanpham.jpg", // ảnh mặc định local
                           height: 200.h,
                           width: 150.w,

@@ -188,6 +188,13 @@ class _GioHangViewState extends State<GioHangView> {
                                           height: 50.h,
                                           width: 50.w,
                                           fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Icon(
+                                        Icons.broken_image,
+                                        size: 65.w,
+                                        color: Colors.grey.shade400,
+                                      );
+                                    },
                                         )
                                       : Image.asset(
                                           "assets/images/avamacdinhsanpham.jpg", // ảnh mặc định local

@@ -239,9 +239,9 @@ class _HomepageframeViewState extends State<HomeView> {
                           }
                         }
                         final product = state.lsProduct[index];
-                        // tại đây khỏi cần format product.priceProduct ( String ) và product.quantityProduct (String -> thành int
-                        final formattedPriceProduct = formatCurrencyVN(product.priceProduct);
-                        final formattedQuantityProduct = formatCurrencyUS(product.quantityProduct);
+                          // tại đây khỏi cần format product.priceProduct ( String ) và product.quantityProduct (String -> thành int
+                          final formattedPriceProduct = formatCurrencyVN(product.priceProduct);
+                          final formattedQuantityProduct = formatCurrencyUS(product.quantityProduct);
                         return Column(
                           children: [
                             GestureDetector(
@@ -259,11 +259,19 @@ class _HomepageframeViewState extends State<HomeView> {
                                         product.img_url,
                                         height: 65.h,
                                         width: 65.w,
+                                        errorBuilder: (context, error, stackTrace) {
+                                          return Icon(
+                                            Icons.broken_image,
+                                            size: 65.w,
+                                            color: Colors.grey.shade400,
+                                          );
+                                        },
                                       ) : Image.asset("assets/images/avamacdinhsanpham.jpg", // ảnh mặc định local
                                         height: 65.h,
                                         width: 65.w,
                                       ),
                                     ),
+                                    SizedBox(width: 5.w,),
                                     // thông tin
                                     Expanded(
                                       flex: 3,

@@ -3,7 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../Compoents/DanhMuc/Item.dart';
+import '../../Compoents/DanhMuc/CategoryCard.dart';
+import '../../Models/DanhMuc/danhmuc_data.dart';
 import '../../Repository/DanhMuc/danhmuc_repository.dart';
 import '../../Repository/DanhMuc/sua/SuaRepository.dart';
 import 'bloc/danhmuc_bloc.dart';
@@ -34,7 +35,6 @@ class DanhMucView extends StatefulWidget {
 
 class _DanhMucViewState extends State<DanhMucView> {
   late final SuaRepository suaRepository;
-
 
   @override
   void initState() {
@@ -74,6 +74,8 @@ class _DanhMucViewState extends State<DanhMucView> {
                   return cur.danhmucStatus != pre.danhmucStatus;
                 },
                 builder: (context, state) {
+
+                  //
                  if(state.danhmucStatus == DanhMucStatus.initial){
                    return Center(child: const CircularProgressIndicator());
                  }
@@ -92,7 +94,7 @@ class _DanhMucViewState extends State<DanhMucView> {
                    ),
                    itemBuilder: (BuildContext context, int index) {
                      final  category = state.lstDanhMuc[index];
-                     return CategoryCard(name: category.category, image:category.img_url, suaRepo: suaRepository,);
+                     return CategoryCard(name: category.category, image:category.img_url, suaRepo: suaRepository,idType:category.idType ,);
                    },
                  );
                 },

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import '../../CategoryService/CategoryService.dart';
 import '../../Config/exception.dart';
 import '../Firebase_Database/FirebaseDatabase_repository.dart';
 import '../../Models/Register/register_user.dart';
@@ -40,25 +41,50 @@ class AuthenticationRepository {
   }
 
   // phương thức đăng kí
-  Future<void> signUp({ required RegisterUser registerUser}) async {
-    try {
-      log("registerUser $registerUser");
-     await _firebaseAuth.createUserWithEmailAndPassword(
-        email: registerUser.email,
-        password: registerUser.password,
-       // dùng .whenComplete vì đăng kí nhanh quá bị báo lỗi k có quyền
-      ).whenComplete(() async {
+  // Future<void> signUp({ required RegisterUser registerUser}) async {
+  //   try {
+  //     log("registerUser $registerUser");
+  //    await _firebaseAuth.createUserWithEmailAndPassword(
+  //       email: registerUser.email,
+  //       password: registerUser.password,
+  //      // dùng .whenComplete vì đăng kí nhanh quá bị báo lỗi k có quyền
+  //     ).whenComplete(() async {
+  //
+  //      await _registerRepository.signUpWithFireBase(registerUser: registerUser);
+  //    });
+  //
+  //   } on firebase_auth.FirebaseAuthException catch (e) {
+  //     throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
+  //   } catch (_) {
+  //     throw const SignUpWithEmailAndPasswordFailure();
+  //   }
+  // }
+
+   Future<void> signUp({required RegisterUser registerUser}) async {
+     try {
+       // Đăng ký tài khoản trên Firebase Auth
+       final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+         email: registerUser.email,
+         password: registerUser.password,
+       );
+
+       final userId = userCredential.user?.uid;
+       if (userId == null) throw Exception("User ID is null");
+
+       // Ghi thông tin người dùng vào Firestore
        await _registerRepository.signUpWithFireBase(registerUser: registerUser);
-     });
 
+       // ✅ Tạo danh mục mặc định — Đợi xong mới cho vào app
+       await CategoryService.createDefaultCategoriesForUser(userId);
 
+       // ✅ Tất cả hoàn tất → bạn có thể chuyển màn hình tại đây nếu cần
 
-    } on firebase_auth.FirebaseAuthException catch (e) {
-      throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
-    } catch (_) {
-      throw const SignUpWithEmailAndPasswordFailure();
-    }
-  }
+     } on firebase_auth.FirebaseAuthException catch (e) {
+       throw SignUpWithEmailAndPasswordFailure.fromCode(e.code);
+     } catch (_) {
+       throw const SignUpWithEmailAndPasswordFailure();
+     }
+   }
 
 
   // đăng nhập bằng email password
