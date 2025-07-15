@@ -19,8 +19,7 @@ class ModelProductLocalBloc extends Bloc<ModelProductLocalEvent, ModelProductLoc
     on<SaveProductLocalEvent>(_onSaveProductLocal);
     on<DeleteLocalProductEvent>(_deleteSaveProductLocal);
     on<DeleteAllLocalProductCartEvent>(_deleteAllProductsLocal);
-    on<RefreshListProDuctLocalCartEvent>(
-        _getAllProductsLocal); // refresh lại danh sách
+    on<RefreshListProDuctLocalCartEvent>(_getAllProductsLocal); // refresh lại danh sách
     on<UpdateQuantityProductLocalEvent>(_updateQuantityProductLocal);
 
     // lắng nghe sự kiện () xử lí thêm tổng tiền khi thêm sản phẩm vào danh sách
@@ -62,8 +61,6 @@ class ModelProductLocalBloc extends Bloc<ModelProductLocalEvent, ModelProductLoc
       // Kiểm tra sản phẩm đã tồn tại chưa (dựa vào fireBaseId)
       final existingProduct = dataLocalRepository.addOrIncreaseProduct(event.product);
 
-
-
       if (isClosed) return;
       emit(state.copyWith(statusSaveDataLocal: StatusSaveDataLocal.success,
       ));
@@ -87,8 +84,11 @@ class ModelProductLocalBloc extends Bloc<ModelProductLocalEvent, ModelProductLoc
       await dataLocalRepository.deleteAllProductsLocal();
       //  KHÔNG cần getAllProducts() nữa
       //  Stream sẽ tự update lại danh sách → emit tự động
-      emit(
-          state.copyWith(statusDeleteDataLocal: StatusDeleteDataLocal.success));
+
+      // phân biệt 2 hành động
+      // ✅ Đặt trạng thái tương ứng ( nếu như là bấm nút xóa tất cả thì mới hiển thị dialog đã xóa , còn nếu bấm thanh toán thì sẽ tự động xóa hết trong dsach và không hiển thị đã xóa )
+      emit(state.copyWith(statusDeleteDataLocal: event.fromPayment ? StatusDeleteDataLocal.successFromPayment : StatusDeleteDataLocal.success,
+      ));
     } catch (error) {
       emit(state.copyWith(
           error: error.toString(),

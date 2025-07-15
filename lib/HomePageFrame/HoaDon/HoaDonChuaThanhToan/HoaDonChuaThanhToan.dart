@@ -148,6 +148,9 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
             if(state.statusBill == StatusChuaThanhToan.failure){
               return Center(child: Text("Lỗi: ${state.error}"));
             }
+            if(state.lstBillChuaThanhToan.isEmpty){
+              return const Center(child: Text('Không có hóa đơn chưa thanh toán nào nào cả.'));
+            }
             return BlocBuilder<ChuaThanhToanBloc, ChuaThanhToanState>(
               buildWhen: (pre, cur) => pre.lstBillChuaThanhToan != cur.lstBillChuaThanhToan,
               builder: (context, state) {
@@ -373,7 +376,7 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
                                                   ),
                                                 ),
                                                 TextSpan(
-                                                  text: "5",
+                                                  text: billchuathanhtoan.quantityProductLocal.toString(),
                                                   style: TextStyle(
                                                     fontSize: 13.sp,
                                                     fontWeight:

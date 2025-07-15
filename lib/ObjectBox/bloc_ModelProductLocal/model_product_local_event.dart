@@ -34,7 +34,9 @@ final class DeleteLocalProductEvent extends ModelProductLocalEvent {
 
 // Event xử lí xóa tất cả sản phẩm
 final class DeleteAllLocalProductCartEvent extends ModelProductLocalEvent {
-  const DeleteAllLocalProductCartEvent();
+  const DeleteAllLocalProductCartEvent({this.fromPayment = false});
+
+  final bool fromPayment; // phân biệt với nút xóa tất cả và lúc bấm cập nhật tự động xóa danh sách trong giỏ hàng
 
   @override
   List<Object?> get props => [];

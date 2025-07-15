@@ -14,6 +14,8 @@ class ModelChuathanhtoan extends Equatable{
     required this.date,
     required this.totalPriceBill,
     required this.noteBill,
+    required this.listProducts,
+    required this.quantityProductLocal,
   });
 
   final String idBillRandom; // mã hóa đơn tự sinh
@@ -25,11 +27,16 @@ class ModelChuathanhtoan extends Equatable{
   final String date;
   final String totalPriceBill;
   final String noteBill;
+  final int quantityProductLocal;
+
+
+  ///  /// Danh sách sản phẩm (dưới dạng Map vì Firebase không hỗ trợ object custom trực tiếp)
+  final List<Map<String, dynamic>> listProducts;
 
 
 
   /// Tạo đối tượng rỗng
-  static const empty = ModelChuathanhtoan(idBillRandom: '',nameBill: '', nameSeller: '', nameBuyer: '', date: '', totalPriceBill: '', noteBill: '', status: '', idBill: '');
+  static const empty = ModelChuathanhtoan(idBillRandom: '',nameBill: '', nameSeller: '', nameBuyer: '', date: '', totalPriceBill: '', noteBill: '', status: '', idBill: '', listProducts: [], quantityProductLocal: 0);
 
   /// Tạo trống đối tượng
   bool get isEmpty => this == ModelChuathanhtoan.empty;
@@ -47,11 +54,14 @@ class ModelChuathanhtoan extends Equatable{
         nameBuyer: json["nameBuyer"] ?? "",
         date: json["date"] ?? "",
         totalPriceBill: json["totalPriceBill"] ?? -1,
-        noteBill: json["noteBill"] ?? ""
+        noteBill: json["noteBill"] ?? "",
+        listProducts: List<Map<String, dynamic>>.from(json["listProducts"] ?? []), //
+        quantityProductLocal: json["quantityProductLocal"] is int ? json["quantityProductLocal"] : int.tryParse(json["quantityProductLocal"]?.toString() ?? "0") ?? 0,
     );
 
   // convert object thành map để đưa lên firebase ( màu xanh lá là trg trên firebase )
   Map<String, dynamic> toJsonCreateProduct() => {
+
     "idBillRandom": idBillRandom,
     "status": status,
     "nameBill": nameBill,
@@ -60,6 +70,9 @@ class ModelChuathanhtoan extends Equatable{
     "date": date,
     "totalPriceBill": totalPriceBill,
     "noteBill": noteBill,
+    "listProducts": listProducts,
+    "quantityProductLocal" : quantityProductLocal
+
   };
 
   // copywith để thay chỗ cần thay
@@ -73,6 +86,8 @@ class ModelChuathanhtoan extends Equatable{
     String? date,
     String? totalPriceBill,
     String? noteBill,
+    List<Map<String, dynamic>>? listProducts,
+    int? quantityProductLocal,
   }) {
     return ModelChuathanhtoan(
         idBillRandom: idBillRandom ?? this.idBillRandom,
@@ -83,7 +98,9 @@ class ModelChuathanhtoan extends Equatable{
         nameBuyer: nameBuyer ?? this.nameBuyer,
         date: date ?? this.date,
         totalPriceBill:  totalPriceBill ?? this.totalPriceBill,
-        noteBill: noteBill ?? this.noteBill
+        noteBill: noteBill ?? this.noteBill,
+        listProducts: listProducts ?? this.listProducts,
+        quantityProductLocal : quantityProductLocal ?? this.quantityProductLocal
     );
   }
 
@@ -92,6 +109,6 @@ class ModelChuathanhtoan extends Equatable{
 
 
   @override
-  List<Object?> get props =>[idBillRandom,status, nameBill,nameSeller,nameBuyer,date,totalPriceBill,noteBill];
+  List<Object?> get props =>[idBillRandom,status, nameBill,nameSeller,nameBuyer,date,totalPriceBill,noteBill,listProducts,quantityProductLocal];
 
 }

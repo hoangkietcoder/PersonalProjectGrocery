@@ -3,7 +3,7 @@
 
  enum StatusSaveDataLocal {inittial , loading, success, failure}
  enum StatusGetDataLocal {inittial , loading, success, failure}
- enum StatusDeleteDataLocal {inittial , loading, success, failure}
+ enum StatusDeleteDataLocal {inittial , loading, success, failure, successFromPayment,}
 
 
   class ModelProductLocalState extends Equatable {

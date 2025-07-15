@@ -122,7 +122,7 @@ class _HuyDonViewState extends State<HuyDonView> {
 
           //  Nếu không có dữ liệu
           if (state.lsBillDaHuy.isEmpty) {
-            return const Center(child: Text("Không có hóa đơn nào."));
+            return const Center(child: Text("Không có hóa đơn bị hủy nào."));
           }
 
           return Expanded(
@@ -424,8 +424,8 @@ class _HuyDonViewState extends State<HuyDonView> {
             },
           ),
         );
-  },
-),
+          },
+        ),
       ],
     );
   }

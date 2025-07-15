@@ -137,8 +137,9 @@ class _HoaDonDaThanhToanViewState extends State<HoaDonChuaDaThanhToanView> {
               if (state.lsBillDaThanhToan.isEmpty && state.lsBillDaThanhToan == StatusBillSearch.successful) {
                 return const Center(child: Text("Không tìm thấy hóa đơn nào."));
               }
-
-
+              if(state.lsBillDaThanhToan.isEmpty){
+                return const Center(child: Text('Không có hóa đơn đã thanh toán nào nào cả.'));
+              }
 
               return BlocBuilder<HoaDonDaThanhToanBloc, HoaDonDaThanhToanState>(
                 buildWhen: (pre, cur) => pre.lsBillDaThanhToan != cur.lsBillDaThanhToan,
@@ -444,8 +445,8 @@ class _HoaDonDaThanhToanViewState extends State<HoaDonChuaDaThanhToanView> {
                   },
                 ),
               );
-    },
-  );
+              },
+            );
             },
           ),
   ),

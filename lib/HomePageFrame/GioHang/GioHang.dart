@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,8 +11,10 @@ import 'package:personalprojectgrocery/Repository/DataLocal/data_local_repositor
 import '../../Compoents/CurrencyInputFormatterPrice/CurrencyInputFormatterPrice.dart';
 import '../../Compoents/Dialog/dialog_deleteAllProductLocal.dart';
 import '../../Compoents/Dialog/dialog_delete_all_product_cart.dart';
+import '../../Compoents/Dialog_Submited_GioHang/Dialog_NhapThongTinBill.dart';
 import '../../Main_Bloc/main_bloc.dart';
 import '../../ObjectBox/ObjectBox.dart';
+import '../HoaDon/HoaDonChuaThanhToan/Model/model_chuathanhtoan.dart';
 
 class GioHangPage extends StatelessWidget {
   const GioHangPage({
@@ -300,7 +303,82 @@ class _GioHangViewState extends State<GioHangView> {
                       ),
                       const SizedBox(height: 10),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) => DialogNhapThongTinBill(
+                              onConfirm: ({
+                                required String nameBill,
+                                required String nameSeller,
+                                required String nameBuyer,
+                                required String date,
+                                required String note,
+                                required String createdTime,
+                              }) async {
+
+                                final productBloc = context.read<ModelProductLocalBloc>();
+                                final cartState = productBloc.state;
+
+                                // 1. Lấy danh sách sản phẩm từ local
+                                final products = cartState.lstModelProductLocal;
+
+                                // 2. Tạo listProducts (convert sang Map)
+                                final listProducts = products.map((e) => e.toJson()).toList();
+
+                                // 3. Tính tổng tiền từ local
+                                final totalPrice = cartState.totalPriceInCart.toString();
+
+                                // 4. Đếm số lượng  từ local
+                                final length = cartState.lstModelProductLocal.length;
+
+                                // 4. Tạo hóa đơn
+                                final hoaDon = ModelChuathanhtoan(
+                                  quantityProductLocal: length,
+                                  idBillRandom: "HD${DateTime.now().millisecondsSinceEpoch}",
+                                  idBill: "", // sẽ có sau khi push lên Firestore
+                                  status: "0", // chưa thanh toán
+                                  nameBill: nameBill,
+                                  nameSeller: nameSeller,
+                                  nameBuyer: nameBuyer,
+                                  date: date,
+                                  totalPriceBill: totalPrice,
+                                  noteBill: note,
+                                  listProducts: listProducts,
+                                );
+
+                                try {
+                                  // 5. Đẩy lên Firebase
+                                  final docRef = await FirebaseFirestore.instance.collection("Bill").add(hoaDon.toJsonCreateProduct());
+
+                                  // 6. Cập nhật lại idBill nếu muốn
+                                  await docRef.update({'idBill': docRef.id});
+
+                                  // 7. Xóa giỏ hàng local
+                                  productBloc.add(DeleteAllLocalProductCartEvent(fromPayment: true));
+
+                                  // 8. Điều hướng sang trang chi tiết hóa đơn
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text("✅ Đã thêm hóa đơn thành công!"),
+                                        backgroundColor: Colors.green,
+                                      ),
+                                    );
+                                    Navigator.pushNamed(context, "/HoaDon", arguments: hoaDon.copyWith(idBill: docRef.id));
+                                  }
+
+                                } catch (e) {
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                      content: Text("❌ Lỗi khi tạo hóa đơn: $e"),
+                                    ));
+                                  }
+                                }
+                              },
+                            ),
+                          );
+
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blueAccent,
                           shape: RoundedRectangleBorder(
@@ -308,9 +386,8 @@ class _GioHangViewState extends State<GioHangView> {
                           padding: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 40),
                         ),
-                        child: const Text('Thanh Toán',
-                            style:
-                                TextStyle(fontSize: 18, color: Colors.white)),
+                        child: const Text('Tiếp Tục',
+                            style: TextStyle(fontSize: 18, color: Colors.white)),
                       ),
                       const SizedBox(height: 20),
                     ],
