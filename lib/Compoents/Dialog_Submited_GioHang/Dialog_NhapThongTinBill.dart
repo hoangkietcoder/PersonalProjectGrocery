@@ -9,7 +9,6 @@ class DialogNhapThongTinBill extends StatefulWidget {
   required String nameBuyer,
   required String date,
   required String note,
-  required String createdTime,
   }) onConfirm;
 
   const DialogNhapThongTinBill({super.key, required this.onConfirm});
@@ -140,7 +139,6 @@ class _DialogNhapThongTinBillState extends State<DialogNhapThongTinBill> {
                 nameBuyer: _buyerController.text.trim(),
                 date: _dateController.text.trim(),
                 note: _noteController.text.trim(),
-                createdTime: createdTime,
               );
 
               Navigator.of(context).pop(); // đóng dialog

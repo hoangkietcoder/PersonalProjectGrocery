@@ -16,6 +16,7 @@ class ModelChuathanhtoan extends Equatable{
     required this.noteBill,
     required this.listProducts,
     required this.quantityProductLocal,
+    required this.timeCreateBill,
   });
 
   final String idBillRandom; // mã hóa đơn tự sinh
@@ -28,6 +29,7 @@ class ModelChuathanhtoan extends Equatable{
   final String totalPriceBill;
   final String noteBill;
   final int quantityProductLocal;
+  final String timeCreateBill;
 
 
   ///  /// Danh sách sản phẩm (dưới dạng Map vì Firebase không hỗ trợ object custom trực tiếp)
@@ -36,7 +38,7 @@ class ModelChuathanhtoan extends Equatable{
 
 
   /// Tạo đối tượng rỗng
-  static const empty = ModelChuathanhtoan(idBillRandom: '',nameBill: '', nameSeller: '', nameBuyer: '', date: '', totalPriceBill: '', noteBill: '', status: '', idBill: '', listProducts: [], quantityProductLocal: 0);
+  static const empty = ModelChuathanhtoan(idBillRandom: '',nameBill: '', nameSeller: '', nameBuyer: '', date: '', totalPriceBill: '', noteBill: '', status: '', idBill: '', listProducts: [], quantityProductLocal: 0, timeCreateBill: '');
 
   /// Tạo trống đối tượng
   bool get isEmpty => this == ModelChuathanhtoan.empty;
@@ -57,6 +59,7 @@ class ModelChuathanhtoan extends Equatable{
         noteBill: json["noteBill"] ?? "",
         listProducts: List<Map<String, dynamic>>.from(json["listProducts"] ?? []), //
         quantityProductLocal: json["quantityProductLocal"] is int ? json["quantityProductLocal"] : int.tryParse(json["quantityProductLocal"]?.toString() ?? "0") ?? 0,
+        timeCreateBill: json["timeCreateBill"] ?? "",
     );
 
   // convert object thành map để đưa lên firebase ( màu xanh lá là trg trên firebase )
@@ -71,7 +74,8 @@ class ModelChuathanhtoan extends Equatable{
     "totalPriceBill": totalPriceBill,
     "noteBill": noteBill,
     "listProducts": listProducts,
-    "quantityProductLocal" : quantityProductLocal
+    "quantityProductLocal" : quantityProductLocal,
+    "timeCreateBill" : timeCreateBill,
 
   };
 
@@ -88,6 +92,7 @@ class ModelChuathanhtoan extends Equatable{
     String? noteBill,
     List<Map<String, dynamic>>? listProducts,
     int? quantityProductLocal,
+    String? timeCreateBill,
   }) {
     return ModelChuathanhtoan(
         idBillRandom: idBillRandom ?? this.idBillRandom,
@@ -100,7 +105,8 @@ class ModelChuathanhtoan extends Equatable{
         totalPriceBill:  totalPriceBill ?? this.totalPriceBill,
         noteBill: noteBill ?? this.noteBill,
         listProducts: listProducts ?? this.listProducts,
-        quantityProductLocal : quantityProductLocal ?? this.quantityProductLocal
+        quantityProductLocal : quantityProductLocal ?? this.quantityProductLocal,
+        timeCreateBill: timeCreateBill ?? this.timeCreateBill
     );
   }
 
@@ -109,6 +115,6 @@ class ModelChuathanhtoan extends Equatable{
 
 
   @override
-  List<Object?> get props =>[idBillRandom,status, nameBill,nameSeller,nameBuyer,date,totalPriceBill,noteBill,listProducts,quantityProductLocal];
+  List<Object?> get props =>[idBillRandom,status, nameBill,nameSeller,nameBuyer,date,totalPriceBill,noteBill,listProducts,quantityProductLocal,timeCreateBill];
 
 }

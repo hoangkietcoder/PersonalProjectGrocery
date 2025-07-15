@@ -128,7 +128,7 @@ class ChiTietHoaDonViewState extends State<ChiTietHoaDonView> {
                             style: TextStyle(fontSize: 14.sp, color: textColor),
                           ),
                           TextSpan(
-                            text: BillDetail?.date ?? '',
+                            text: BillDetail?.timeCreateBill ?? '',
                             style: TextStyle(
                               color: textColor,
                               fontSize: 13.sp,

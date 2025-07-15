@@ -315,11 +315,14 @@ class _GioHangViewState extends State<GioHangView> {
                                 required String nameBuyer,
                                 required String date,
                                 required String note,
-                                required String createdTime,
                               }) async {
 
                                 final productBloc = context.read<ModelProductLocalBloc>();
                                 final cartState = productBloc.state;
+
+                                // Lấy thời gian thực tại lúc nhấn nút
+                                final now = DateTime.now();
+                                final timeNow = DateFormat('HH:mm:ss').format(now); // ví dụ: 14:35:50
 
                                 // 1. Lấy danh sách sản phẩm từ local
                                 final products = cartState.lstModelProductLocal;
@@ -346,6 +349,7 @@ class _GioHangViewState extends State<GioHangView> {
                                   totalPriceBill: totalPrice,
                                   noteBill: note,
                                   listProducts: listProducts,
+                                  timeCreateBill: timeNow
                                 );
 
                                 try {
