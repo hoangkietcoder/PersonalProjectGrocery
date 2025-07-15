@@ -205,12 +205,14 @@ class _GioHangViewState extends State<GioHangView> {
                                           width: 50.w,
                                           fit: BoxFit.cover,
                                         ),
+                                  // tên sản phẩm
                                   title: Text(item.nameProduct,
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis, // dài quá sẽ hiện ...
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           color: textNameProductColor)),
+                                  // giá tiền
                                   subtitle: Text('${formattedPriceProduct} đ',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis, // dài quá sẽ hiện ...
@@ -350,6 +352,10 @@ class _GioHangViewState extends State<GioHangView> {
                                   // 5. Đẩy lên Firebase
                                   final docRef = await FirebaseFirestore.instance.collection("Bill").add(hoaDon.toJsonCreateProduct());
 
+
+                                  final updatedHoaDon = hoaDon.copyWith(idBill: docRef.id);
+
+
                                   // 6. Cập nhật lại idBill nếu muốn
                                   await docRef.update({'idBill': docRef.id});
 
@@ -365,6 +371,7 @@ class _GioHangViewState extends State<GioHangView> {
                                       ),
                                     );
                                     Navigator.pushNamed(context, "/HoaDon", arguments: hoaDon.copyWith(idBill: docRef.id));
+
                                   }
 
                                 } catch (e) {

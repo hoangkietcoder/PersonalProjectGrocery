@@ -2,6 +2,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:personalprojectgrocery/Compoents/CurrencyInputFormatterPrice/CurrencyInputFormatterPrice.dart';
+import 'package:personalprojectgrocery/HomePageFrame/HoaDon/ChiTietHoaDon/ChiTietHoaDon.dart';
+import 'package:personalprojectgrocery/Repository/Bill/bill_repository.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../../../Compoents/Dialog/dialog_auto_deleteBill.dart';
 import '../../../Compoents/Dialog/dialog_delete_bill.dart';
@@ -160,6 +163,8 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
                     itemBuilder: (context, index) {
                       // lấy trong danh sách phù hợp theo từng index
                       final billchuathanhtoan = state.lstBillChuaThanhToan[index];
+                      final priceProduct = billchuathanhtoan.totalPriceBill;
+                      final formatPrice = formatCurrencyVN(priceProduct);
                       return Container(
                         margin: REdgeInsets.only(
                             top: 5, bottom: 5, left: 5, right: 5),
@@ -250,7 +255,7 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
                                         ),
                                       ),
                                       TextSpan(
-                                        text: billchuathanhtoan.totalPriceBill,
+                                        text: formatPrice,
                                         style: TextStyle(
                                             color: Colors.black,
                                             fontSize: 15.sp,
@@ -426,8 +431,7 @@ class _HoaDonChuaThanhToanViewState extends State<HoaDonChuaThanhToanView> {
                                         Expanded(
                                           child: ElevatedButton.icon(
                                             onPressed: () {
-                                              Navigator.pushNamed(context, '/ChiTietHoaDon');
-                                            },
+                                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ChiTietHoaDonPage(billRepository: BillRepository(), idBill: billchuathanhtoan.idBill,)));                                            },
                                             icon: Icon(Icons.edit,
                                                 size: 15.sp,
                                                 color: Colors.white),

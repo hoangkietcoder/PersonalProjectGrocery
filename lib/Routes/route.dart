@@ -16,6 +16,7 @@ import '../Login/loginApp.dart';
 import '../Register/register.dart';
 import '../Splash/splash_screen.dart';
 import 'argument/CapNhatThongTinArgument.dart';
+import 'argument/ChiTietHoaDonAgrument.dart';
 import 'argument/ChiTietSanPhamArgument.dart';
 import 'argument/DangKiArgument.dart';
 import 'argument/FeedBackArgument.dart';
@@ -84,9 +85,10 @@ class RouteGenerator {
           settings: const RouteSettings(name: '/HoaDon'),
           child:  HoaDonPage());
       case '/ChiTietHoaDon':
+        ChiTietHoaDonArgument argument = args as ChiTietHoaDonArgument; // khi cần truyền mới cần tạo argument
         return CustomPageRoute(
             settings: const RouteSettings(name: '/ChiTietHoaDon'),
-            child:  ChiTietHoaDonPage());
+            child:  ChiTietHoaDonPage(billRepository: argument.billRepository, idBill: argument.idBill,));
       case '/FeedBack':
         FeedBackArgument argument = args as FeedBackArgument;
         return CustomPageRoute(

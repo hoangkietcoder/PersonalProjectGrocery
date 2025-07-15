@@ -10,8 +10,7 @@ part 'huy_don_event.dart';
 part 'huy_don_state.dart';
 
 class HuyDonBloc extends Bloc<HuyDonEvent, HuyDonState> {
-  HuyDonBloc({required BillRepository billRepository}) : _billRepository =  billRepository,
-        super(HuyDonState()) {
+  HuyDonBloc({required BillRepository billRepository}) : _billRepository =  billRepository, super(HuyDonState()) {
 
     // đăng kí sự kiện
     on<HuyDonSubscriptionRequested>(_onSubscriptionRequested);

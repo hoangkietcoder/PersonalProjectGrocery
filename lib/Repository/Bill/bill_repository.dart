@@ -139,13 +139,6 @@ class BillRepository {
 
 
 
-
-
-
-
-
-
-
   // xóa 1 bill chưa thanh toán
   Future<void> deleteBillById(String id) async {
     try {
@@ -155,6 +148,25 @@ class BillRepository {
       print("❌ Lỗi khi xóa document: $e");
       rethrow;
     }
-
   }
+
+
+
+  ///  lấy dữ liệu từ chi tiết hóa đơn
+  Future<ModelChuathanhtoan> getBillById(String idBill) async{
+    try {
+      final doc = await _db.collection("Bill").doc(idBill).get();
+
+      // kiểm tra doc đó có tồn tại hay không
+      if (!doc.exists) {
+        throw Exception('Không tìm thấy hóa đơn với id: $idBill');
+      }
+
+      final data = doc.data()!;
+      return ModelChuathanhtoan.fromJson(data);
+    }catch (e) {
+      throw Exception('Lỗi khi lấy hóa đơn: $e');
+    }
+  }
+
 }

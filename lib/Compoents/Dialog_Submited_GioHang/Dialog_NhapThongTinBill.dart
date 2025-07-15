@@ -149,7 +149,7 @@ class _DialogNhapThongTinBillState extends State<DialogNhapThongTinBill> {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.blueAccent,
           ),
-          child: const Text("Tiếp tục", style: TextStyle(color: Colors.white)),
+          child: const Text("Thanh Toán", style: TextStyle(color: Colors.white)),
         ),
       ],
     );
